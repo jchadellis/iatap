@@ -1,0 +1,12 @@
+writable/cache
+writable/debugbar
+writable/logs
+writable/session
+
+tests
+
+public/assets/node_modules
+
+
+# Ignore macOS metadata files (these files, starting with ._, are generated automatically)
+._*

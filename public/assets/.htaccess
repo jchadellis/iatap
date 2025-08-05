@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Allow specific file types
+RewriteCond %{REQUEST_FILENAME} \.(css|pdf|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$ [NC]
+RewriteRule ^.*$ - [L]
+
+# Redirect unauthorized access to CodeIgniter controller
+RewriteRule ^.*$ /index.php/access/denied [R=302,L]
