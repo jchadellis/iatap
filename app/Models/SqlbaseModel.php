@@ -31,4 +31,20 @@ class SqlbaseModel extends Model
 
         return null; 
     }
+
+    public function postData($url, $data)
+    {
+
+        $client = service('curlrequest'); 
+
+        $response = $client->post($url, ['form_params' => $data]);
+
+        if( $response->getStatusCode() === 200){
+            $result = json_decode($response->getBody(), true);
+            return $result; 
+        }
+        
+        return null;  
+        
+    }
 }

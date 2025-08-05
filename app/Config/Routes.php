@@ -311,6 +311,7 @@ $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
          $routes->get('/',  'Production\Schedule\Index::index'); 
          $routes->get('data', 'Production\Schedule\Index::get_data'); 
          $routes->get('data/(:segment)', 'Production\Schedule\Index::get_data/$1'); 
+         $routes->post('mark-complete', 'Production\Schedule\Index::set_operation_complete'); 
          $routes->get('shop-view', 'Production\Schedule\Index::shop_view'); 
          $routes->get('shop-view/(:segment)', 'Production\Schedule\Index::shop_view/$1'); 
       });
