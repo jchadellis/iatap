@@ -245,6 +245,8 @@
             }
         })
 
+        modal = $('#update-row-modal');
+
         table.on('draw', function(){
             $('.collection-1').removeClass('btn-secondary').addClass('btn-primary');
             $('.collection-2').removeClass('btn-secondary').addClass('btn-warning');
@@ -253,6 +255,21 @@
         table.on('select', function(e, dt, type, indexes){
             if( type === 'row' )
             {
+                selectedRow = $(dt.row(indexes).node()); 
+                data = selectedRow.data('url').split('/'); 
+
+                postData = {
+                    'wo_base_id' : data[0],
+                    'wo_sub_id' : data[1],
+                    'seq_no' : data[2]
+                }
+
+                url = `<?= base_url('production/schedule/mark-complete') ?>`; 
+
+                modal.modal('show'); 
+
+                return ; 
+
                 row = $(dt.row(indexes).node()); 
                 data = row.data('url').split('/'); 
                 postData = {
@@ -266,6 +283,18 @@
                 })
             }
         })  
+
+                // Set up modal event handler once
+        modal.on('hidden.bs.modal', function(){
+            if(selectedRow) {
+                row = table.row(selectedRow);
+                row.deselect(); 
+                data = $(row).data('url'); 
+
+                console.log(data); 
+                selectedRow = null;
+            }
+        });
 
 })
 </script>
