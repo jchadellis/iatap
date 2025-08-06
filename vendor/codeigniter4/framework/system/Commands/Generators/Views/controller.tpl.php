@@ -177,10 +177,21 @@ class {class} extends {extends}
     {
         //
     }
+
 <?php else: ?>
     public function index()
     {
-        // 
+        $data = [
+            'site_name' => '{siteName}', 
+            'breadcrumbs' => [
+                ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
+                ['name' => '{moduleName}', 'is_active' => false, 'url' => '{moduleUrl}'],
+                ['name' => '{pageTitle}', 'is_active' => true, 'url' => '#']
+            ],
+            'title' => '{pageTitle}', 
+            'content' => view('{viewPath}'),
+            'js' => view('{jsPath}'), 
+        ];
     }
 <?php endif ?>
 }

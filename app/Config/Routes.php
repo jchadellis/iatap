@@ -25,6 +25,10 @@ $routes->group('employee', static function($routes){
    $routes->get('list', 'Employee\Index::list'); 
 });
 
+$routes->group('orientation', static function($routes){
+   $routes->get('', 'Employee\Orientation\Index::index');
+});
+
 $routes->get('leave/requestform', 'Forms\LeaveRequest::getPdf');
 $routes->get('files', 'Dashboard::files'); 
 $routes->get('download/(:any)', 'Filemanager\FileController::download/$1');
