@@ -44,17 +44,32 @@ class Index extends BaseController
 
     public function set_operation_complete()
     {
+
+        $user = auth()->user(); 
+        
+        $hasPermission =  $user->hasPermission('schedule.edit') || $user->inGroup('sadmin'); 
+
+        if( !$hasPermission )
+        {
+            return $this->response->setJSON([
+                'success' => false, 
+                'message' => 'Only users with schedule editing permissions can mark operations complete.', 
+            ]);
+        }
+
         $postData = $this->request->getPost();
         $wo_base_id = $postData['wo_base_id'];
         $wo_sub_id = $postData['wo_sub_id'];
         $seq_no = $postData['seq_no'];
 
+
         $result = $this->remote_model->getData("http://vatap/mvc/public/api/setcompletedworkorder/$wo_base_id/$wo_sub_id/$seq_no");
 
+        $message = ($result) ? "Successfully marked WO: $wo_base_id / LEG: $wo_sub_id / SEQ NO: $seq_no complete" : "Failed to mark WO: $wo_base_id / LEG: $wo_sub_id / SEQ NO: $seq_no complete";
+  
         return $this->response->setJSON([
-            'data' => $result[0], 
-            'success' => true, 
-            'message' => 'Test Successfull', 
+            'success' => $result, 
+            'message' => $message, 
         ]);
     }
 }

@@ -245,7 +245,7 @@
             }
         })
 
-        modal = $('#update-row-modal');
+        const modal = $('#update-row-modal');
 
         table.on('draw', function(){
             $('.collection-1').removeClass('btn-secondary').addClass('btn-primary');
@@ -256,42 +256,46 @@
             if( type === 'row' )
             {
                 selectedRow = $(dt.row(indexes).node()); 
-                data = selectedRow.data('url').split('/'); 
-
-                postData = {
-                    'wo_base_id' : data[0],
-                    'wo_sub_id' : data[1],
-                    'seq_no' : data[2]
-                }
-
-                url = `<?= base_url('production/schedule/mark-complete') ?>`; 
-
+                
                 modal.modal('show'); 
 
                 return ; 
+            }
+        })  
 
-                row = $(dt.row(indexes).node()); 
-                data = row.data('url').split('/'); 
+        modal.on('show.bs.modal', function(){
+            
+            if(selectedRow){
+                url = `<?= base_url('production/schedule/mark-complete') ?>`; 
+                data = selectedRow.data('url').split('/'); 
                 postData = {
                     'wo_base_id' : data[0],
                     'wo_sub_id' : data[1],
                     'seq_no' : data[2]
                 }
-                url = `<?= base_url('production/schedule/mark-complete') ?>`; 
-                $.post(url, postData, function(response){
-                    console.log(response); 
+
+                op_complete_btn = $('#op-complete-btn'); 
+
+                op_complete_btn.off('click').on('click', function(){
+                    $.post(url, postData, function(response){
+                        console.log(response); 
+                        if(response.success){
+                            alert(response.message);
+                            modal.modal('hide'); 
+                            table.row(selectedRow).deselect(); 
+                        }else{
+                            alert(response.message); 
+                        }
+                    })
                 })
             }
-        })  
+        })
 
                 // Set up modal event handler once
         modal.on('hidden.bs.modal', function(){
             if(selectedRow) {
                 row = table.row(selectedRow);
                 row.deselect(); 
-                data = $(row).data('url'); 
-
-                console.log(data); 
                 selectedRow = null;
             }
         });
