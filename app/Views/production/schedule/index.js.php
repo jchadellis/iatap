@@ -12,70 +12,70 @@
                     data : 'workorder_base_id',
                     title: 'WO ID',    
                     className: 'text-center',   
-                    orderable: true
+                   
                 },
                 {
                     data:  'sequence_no',
                     title: 'SEQ',          
                     className: 'text-center',   
-                    orderable: true
+                   
                 },
                 {
-                data: 'workorder_sub_id',
-                title: 'LEG',
-                className : 'text-center',
-                orderable: true
+                    data: 'workorder_sub_id',
+                    title: 'LEG',
+                    className : 'text-center',
+                   
                 },
                 {
                     data : 'dept',
                     title: 'Dept',                 
                     className: 'text-center text-truncate',   
-                    orderable: true
+                   
                 },
                 {
                     data : 'part_id',
                     title: 'Part #',              
                     className: 'text-start',    
-                    orderable: true
+                   
                 },
                 {
                     data:  'description',
                     title: 'Description',          
                     className: 'text-center text-truncate',   
-                    orderable: true
+                   
                 },
                 {
                     data:  'run_hrs',
                     title: 'Run HRS',              
                     className: 'text-center',   
-                    orderable: true
+                   
                 },
                 {
                     data:  'actual_hrs',
                     title: 'Actual HRS',           
                     className: 'text-center',   
-                    orderable: true
+                   
                 },
                 {
                     data:  'could_start',
                     title: 'Could Start', 
                     render: DataTable.render.date(),
                     className: 'text-center',   
-                    orderable: true
+                   
                 },
                 {
                     data:  'start_date',
                     title: 'Must Start',     
                     render: DataTable.render.date(),      
                     className: 'text-center',   
-                    orderable: true
+                   
                 },
                 {
                     data:  'finish_date',
                     title: 'Finish By',   
                     render: DataTable.render.date(),       
                     className: 'text-center',   
-                    orderable: true
+                   
                 },
             ],
             layout: {
@@ -86,63 +86,63 @@
                         text: 'Dept Select',
                         className:'collection-1',
                         buttons: [
-                        {
-                        text:'Weld',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/weld') ?>').load(); 
-                        }
-                        },
-                        {
-                        text:'Waterjet',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/waterjet') ?>').load(); 
-                        }
-                        },
-                        {
-                        text:'Assembly',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/assembly') ?>').load(); 
-                        }
-                        },
-                        {
-                        text:'Sheetmetal',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/sheetmetal') ?>').load(); 
-                        }
-                        },      
-                        {
-                        text:'Machine Shop',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/machine_shop') ?>').load(); 
-                        }
-                        },
-                        {
-                        text:'Paint',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/paint') ?>').load(); 
-                        }
-                        },
-                        {
-                        text:'Quality',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/quality') ?>').load(); 
-                        }
-                        },                
-                        {
-                        text:'All Departments',
-                        action: function(e, dt, node, config)
-                        {
-                            dt.ajax.url('<?= base_url('production/schedule/data/all') ?>').load(); 
-                        }
-                        },
-                    ]
+                            {
+                                text:'Weld',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/weld') ?>').load(); 
+                                }
+                            },
+                            {
+                                text:'Waterjet',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/waterjet') ?>').load(); 
+                                }
+                            },
+                            {
+                                text:'Assembly',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/assembly') ?>').load(); 
+                                }
+                            },
+                            {
+                                text:'Sheetmetal',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/sheetmetal') ?>').load(); 
+                                }
+                            },      
+                            {
+                                text:'Machine Shop',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/machine_shop') ?>').load(); 
+                                }
+                            },
+                            {
+                                text:'Paint',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/paint') ?>').load(); 
+                                }
+                            },
+                            {
+                                text:'Quality',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/quality') ?>').load(); 
+                                }
+                            },                
+                            {
+                                text:'All Departments',
+                                action: function(e, dt, node, config)
+                                {
+                                    dt.ajax.url('<?= base_url('production/schedule/data/all') ?>').load(); 
+                                }
+                            },
+                        ]
                     },
                     {
                         extend: 'collection',
@@ -150,62 +150,63 @@
                         className:'collection-2',
                         buttons: [
                         {
-                        text:'Weld',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/weld') ?>', '_blank'); 
-                        }
+                            text:'Weld',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/weld') ?>', '_blank'); 
+                            }
                         },
                         {
-                        text:'Waterjet',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/waterjet') ?>', '_blank'); 
-                        }
+                            text:'Waterjet',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/waterjet') ?>', '_blank'); 
+                            }
                         },
                         {
-                        text:'Assembly',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/assembly') ?>', '_blank'); 
-                        }
+                            text:'Assembly',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/assembly') ?>', '_blank'); 
+                            }
                         },
                         {
-                        text:'Sheetmetal',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/sheetmetal') ?>', '_blank'); 
-                        }
+                            text:'Sheetmetal',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/sheetmetal') ?>', '_blank'); 
+                            }
                         },      
                         {
-                        text:'Machine Shop',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/machine_shop') ?>', '_blank'); 
-                        }
+                            text:'Machine Shop',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/machine_shop') ?>', '_blank'); 
+                            }
                         },
                         {
-                        text:'Paint',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/paint') ?>', '_blank');  
-                        }
+                            text:'Paint',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/paint') ?>', '_blank');  
+                            }
                         },
                         {
-                        text:'Quality',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/quality') ?>', '_blank'); 
-                        }
+                            text:'Quality',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/quality') ?>', '_blank'); 
+                            }
                         },                
                         {
-                        text:'All Departments',
-                        action: function(e, dt, node, config)
-                        {
-                            window.open('<?= base_url('production/schedule/shop-view/all') ?>', '_blank'); 
-                        }
+                            text:'All Departments',
+                            action: function(e, dt, node, config)
+                            {
+                                window.open('<?= base_url('production/schedule/shop-view/all') ?>', '_blank'); 
+                            }
                         },
-                    ],},             
+                    ],
+                },             
 
                     {
                         extend: "pageLength",
@@ -233,15 +234,42 @@
                     {
                         extend:'colvis',
                         className: 'text-white',
-                    },              
+                    },   
+                    
+                    
                     ]
-                }
+                },
+                top2Start:{
+                    div:{
+                        html: `<input type="checkbox" checked data-toggle="toggle" id="highlight-toggle" name="highlight-toggle"> <label for="highlight-toggle">Toggle Highlight</label>`,
+                    }
+                },
             },
+            columnDefs:[
+                {
+                    orderable:false, targets: [3,4,5,6,7]
+                }
+            ],
             createdRow: function(row, data, index){
                 wo_base_id = data.workorder_base_id; 
                 wo_sub_id = data.workorder_sub_id; 
                 seq_no = data.sequence_no; 
                 $(row).data('url', `${wo_base_id}/${wo_sub_id}/${seq_no}`); 
+                if(data.is_first){
+                    $(row).addClass('table-success'); 
+                }
+            },
+            drawCallback:function(){
+                highlightedRows = $('.table-success'); 
+                if( $('#highlight-toggle').is(':checked')){
+                    highlightedRows.each(function(){
+                        $(this).addClass('table-success'); 
+                    })
+                }else{
+                    highlightedRows.each(function(){
+                        $(this).removeClass('table-success'); 
+                    })
+                }
             }
         })
 
@@ -256,9 +284,7 @@
             if( type === 'row' )
             {
                 selectedRow = $(dt.row(indexes).node()); 
-                
                 modal.modal('show'); 
-
                 return ; 
             }
         })  
@@ -299,6 +325,14 @@
                 selectedRow = null;
             }
         });
+
+        $('#highlight-toggle').bootstrapToggle();
+
+        $('#highlight-toggle').on('change', function(){
+            highlightedRows.each(function(){
+                $(this).toggleClass('table-success'); 
+            })
+        })
 
 })
 </script>

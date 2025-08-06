@@ -47,7 +47,7 @@ class Index extends BaseController
 
         $user = auth()->user(); 
         
-        $hasPermission =  $user->hasPermission('schedule.edit') || $user->inGroup('sadmin'); 
+        $hasPermission =  $user->hasPermission('schedule.edit') || $user->inGroup('super'); 
 
         if( !$hasPermission )
         {
