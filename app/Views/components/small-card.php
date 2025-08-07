@@ -23,11 +23,15 @@
                 </div>
             </div>
             <div class="col-xxl-2">
-                <div class="d-grid">
-                    <div class="d-grid">
-                        <a href='<?= base_url($card['url']) ?>' class="btn btn-outline-primary" type="button"><?= $card['btn_text'] ?></a>
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <div class="d-grid">
+                            <?php if( isset($card['btn-data'] )) : ?>
+                                <a href='<?= base_url($card['url']) ?>' <?= $card['btn-data'] ?> class="btn btn-outline-primary" type="button"><?= $card['btn_text'] ?></a>
+                            <?php else: ?>
+                                <a href='<?= base_url($card['url']) ?>' class="btn btn-outline-primary" type="button"><?= $card['btn_text'] ?></a>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>

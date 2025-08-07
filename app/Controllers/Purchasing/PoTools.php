@@ -18,6 +18,34 @@ class PoTools extends BaseController
 
     public function index()
     {   
+
+        $cards = [
+            [
+                'name' => "Purchase Order Bookings", 
+                'description' =>  'View / Update PO status',
+                'url' => 'purchasing/po-tools/bookings', 
+                'btn_text' => 'View', 
+                'icon' => 'components/icon/clipboard-document-icon',
+                'color' => 'text-dark', 
+            ],
+            [
+                'name' => "Purchase Order Confirmations", 
+                'description' =>  'View Confirmation',
+                'url' => 'purchasing/po-tools/confirmations', 
+                'btn_text' => 'View', 
+                'icon' => 'components/icon/clipboard-document-icon',
+                'color' => 'text-dark', 
+            ],
+            [
+                'name' => "Purchase Counts", 
+                'description' =>  'View Confirmation',
+                'url' => '#', 
+                'btn_text' => 'View', 
+                'icon' => 'components/icon/clipboard-document-icon',
+                'color' => 'text-dark', 
+                'btn-data' => 'data-bs-toggle="modal" data-bs-target="#po_count_modal"',
+            ],
+        ];
         $date = (new \DateTime())->format('Y-m-d'); 
         $data = $this->remote->getData("http://vatap/mvc/public/api/getpocounts/$date/0"); 
 
@@ -28,7 +56,7 @@ class PoTools extends BaseController
         ];
         $js = view('purchase/po-tools/index.js.php'); 
 
-        $data = ['content' => view('purchase/po-tools/index', ['data' => $data[0]]), 'breadcrumbs' => $breadcrumbs, 'js' => $js, 'title' => 'Purchase Order Tools'];
+        $data = ['content' => view('purchase/po-tools/index', ['data' => $data[0], 'cards' => $cards]), 'breadcrumbs' => $breadcrumbs, 'js' => $js, 'title' => 'Purchase Order Tools'];
         return view('template/index', $data); 
     }
 

@@ -133,7 +133,7 @@ class CustomController extends BaseCommand
                     return false;
                 }
 
-                if(!write_file( $target, 'Template File' )){
+                if(!write_file( $target, '' )){
                     CLI::error('Failed to create directory: ' . $file);
                     return false; 
                 }else{

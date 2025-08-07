@@ -22,7 +22,7 @@ class Index extends BaseController
                 'name' => "Customer Orders", 
                 'description' =>  'List of current released orders',
                 'url' => 'sales/customer/orders/'.$id, 
-                'btn_text' => 'View Orders', 
+                'btn_text' => 'View', 
                 'icon' => 'components/icon/clipboard-document-icon',
                 'color' => 'text-dark', 
             ],

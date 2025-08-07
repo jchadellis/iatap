@@ -217,14 +217,26 @@ $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
     * NOTE: A previously defined vendor list route is commented out.
     */
 
+   $routes->group('purchasing-test', static function($routes){
+      // $routes->get('bookings', 'Purchasing\PO_Tools\Bookings\Index::index'); 
+      // $routes->get('bookings/get/(:any)', 'Purchasing\PO_Tools\Bookings\Index::get_data/$1'); 
+   });
+
+
    $routes->group('purchasing', static  function($routes){
       
       $routes->get('/', 'Purchasing\Index::index');
       
       $routes->get('po-tools', 'Purchasing\PoTools::index'); 
 
-      $routes->get('po-tools/bookings', 'Purchasing\PoTools::bookings'); 
-      $routes->get('bookings/data/(:any)' , 'Purchasing\PoTools::get_data/$1');
+      // $routes->get('po-tools/bookings', 'Purchasing\PoTools::bookings'); 
+      // $routes->get('bookings/data/(:any)' , 'Purchasing\PoTools::get_data/$1');
+      $routes->group('po-tools', static function($routes){
+         $routes->get('bookings', 'Purchasing\PO_Tools\Bookings\Index::index'); 
+         $routes->get('bookings/get/(:any)', 'Purchasing\PO_Tools\Bookings\Index::get_data/$1'); 
+      });
+
+
       $routes->get('po-booking-review/(:any)', 'Purchasing\PoTools::po_booking_review/$1');
       $routes->get('updatestatus/(:any)/(:any)', 'Purchasing\PoTools::update_po_status/$1/$2');
 

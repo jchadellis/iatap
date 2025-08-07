@@ -13,7 +13,7 @@ class Index extends BaseController
             'text' => 'Some quick example text to build on the card title.',
             'btn-url'   => 'orientation/video/playback/1',
             'btn-text'  => 'Play Video', 
-            'card-thumb' => 'assets/video/walking-working-surfaces-supervisor.jpg', 
+            'card-thumb' => 'assets/video/drug-and-alcohol.webm', 
         ],
         [
             'title' => 'Safety Orientation', 
@@ -36,13 +36,13 @@ class Index extends BaseController
             'btn-text'  => 'Play Video', 
             'card-thumb' => 'assets/video/walking-working-surfaces-supervisor.jpg', 
         ],
-        [
-            'title' => 'Walking / Working</br>Surfaces Supervisor', 
-            'text' => 'Some quick example text to build on the card title.',
-            'btn-url'   => 'orientation/video/playback/5',
-            'btn-text'  => 'Play Video', 
-            'card-thumb' => 'assets/video/walking-working-surfaces-supervisor.jpg', 
-        ]
+        // [
+        //     'title' => 'Walking / Working</br>Surfaces Supervisor', 
+        //     'text' => 'Some quick example text to build on the card title.',
+        //     'btn-url'   => 'orientation/video/playback/5',
+        //     'btn-text'  => 'Play Video', 
+        //     'card-thumb' => 'assets/video/walking-working-surfaces-supervisor.jpg', 
+        // ]
     ];
 
     public function index()

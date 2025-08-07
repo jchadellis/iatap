@@ -33,4 +33,9 @@ class {class} extends {extends}
 
         return view('template/index', $data); 
     }
+
+    public function get_data()
+    {
+        
+    }
 }

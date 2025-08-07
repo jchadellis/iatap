@@ -12,7 +12,7 @@ class Index extends BaseController
             'name' => "Customer List", 
             'description' =>  'Exportable list of current customers',
             'url' => 'sales/customers', 
-            'btn_text' => 'View List', 
+            'btn_text' => 'View', 
             'icon' => 'components/icon/table-icon',
             'color' => 'text-dark', 
         ],
