@@ -1,0 +1,1 @@
+<?= view('components/tool-card', ['data' => $cards]) ?>

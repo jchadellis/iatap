@@ -1,6 +1,6 @@
 
 
-<div class="card border-0 h-100" style="border-color: var(--bs-purple);">
+<div class="card border h-100 px-2 rounded-0">
     <div class="card-body">
         <div class="row no-gutters align-items-center">
             <div class="col mr-2">
@@ -13,7 +13,7 @@
                     <?php if( $start >= $today ): ?>
                     <div class="row my-3">
                         <div class="col">
-                            <div class="row shadow-sm border-bottom border-end rounded border-secodary p-2">
+                            <div class="row p-2">
                                 <div class="d-none d-xl-block col-2"><div class="d-flex justify-content-center align-items-center h-100"><img style="width:32px" src="<?= base_url('assets/img/'.$row->icon) ?>" alt=""></div></div>
                                 <div class="col-lg-12 col-xl-10">
                                     <div class="row">
@@ -32,9 +32,6 @@
                     <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
-            </div>
-            <div class="col-auto">
-                
             </div>
         </div>
     </div>

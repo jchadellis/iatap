@@ -7,6 +7,18 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class {class} extends {extends}
 {
+
+    private $cards = [
+        [
+            'name' => "", 
+            'description' =>  '',
+            'url' => '', 
+            'btn_text' => '', 
+            'icon' => '',
+            'color' => '', 
+        ],
+    ];
+
     public function index()
     {
         $data = [
@@ -18,5 +30,7 @@ class {class} extends {extends}
             'content' => view('{viewPath}'),
             'js' => view('{jsPath}'), 
         ];
+
+        return view('template/index', $data); 
     }
 }

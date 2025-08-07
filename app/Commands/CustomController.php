@@ -63,7 +63,7 @@ class CustomController extends BaseCommand
         $replacements = [
             '<@php' => '<?php', 
             '{namespace}' => 'App\\Controllers\\'.implode('\\', $controllerPath),
-            '{useStatement}' => 'CodeIgniter\\Controller',
+            '{useStatement}' => 'App\\Controllers\\BaseController',
             '{class}' => $className,
             '{extends}' => 'BaseController',
             '{siteName}' => $siteName,

@@ -25,6 +25,15 @@ $routes->group('employee', static function($routes){
    $routes->get('list', 'Employee\Index::list'); 
 });
 
+$routes->group('sales', static function($routes){
+   $routes->get('', 'Sales\Index::index'); 
+   $routes->get('customers', 'Sales\Customers\Index::index'); 
+   $routes->get('customers/get', 'Sales\Customers\Index::get_data'); 
+   
+   $routes->get('customer/orders/(:num)', 'Sales\Customer\Orders\Index::index/$1'); 
+   $routes->get('customer/(:segment)', 'Sales\Customer\Index::index/$1'); 
+});
+
 $routes->group('orientation', static function($routes){
    $routes->get('', 'Employee\Orientation\Index::index');
 });
