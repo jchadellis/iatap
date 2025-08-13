@@ -231,9 +231,15 @@ $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
 
       // $routes->get('po-tools/bookings', 'Purchasing\PoTools::bookings'); 
       // $routes->get('bookings/data/(:any)' , 'Purchasing\PoTools::get_data/$1');
-      $routes->group('po-tools', static function($routes){
-         $routes->get('bookings', 'Purchasing\PO_Tools\Bookings\Index::index'); 
-         $routes->get('bookings/get/(:any)', 'Purchasing\PO_Tools\Bookings\Index::get_data/$1'); 
+      
+      $routes->group('tools', static function($routes){
+         $routes->group('bookings', static function($routes){
+            $routes->get('/', 'Purchasing\Tools\Bookings\Index::index'); 
+            $routes->get('data/(:any)', 'Purchasing\Tools\Bookings\Index::get_data/$1'); 
+            //$routes->post('bookings/po/', 'Purchasing\Tools\Bookings\Index::get_po'); 
+            $routes->post('view-email', 'Purchasing\Tools\Bookings\Index::view_email'); 
+            $routes->post('send-email', 'Purchasing\Tools\Bookings\Index::send_email'); 
+         });
       });
 
 

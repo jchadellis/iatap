@@ -17,7 +17,7 @@ $(document).ready(() => {
     const table = new DataTable('.table', {
 
         ajax: {
-            url : "<?= base_url('purchasing/po-tools/bookings/get/-30') ?>",
+            url : "<?= base_url('purchasing/tools/bookings/data/-30') ?>",
             dataSrc: 'data', 
         },
         columns:[
@@ -44,11 +44,11 @@ $(document).ready(() => {
                 title:'Last Vendor Update Req.',
                 width: '5%',
             },
-            {
-                data: 'next_vendor_update_at', 
-                title: 'Next Vendor Update Req.',
-                width: '5%',
-            },
+            // {
+            //     data: 'next_vendor_update_at', 
+            //     title: 'Next Vendor Update Req.',
+            //     width: '5%',
+            // },
             {
                 data: 'linear_progress', 
                 visible: false, 
@@ -76,7 +76,7 @@ $(document).ready(() => {
                         <div class="d-flex justify-content-center align-items-center" style="height: 100%; min-height: 20px;">
                             <div class="progress w-100" style="max-width: 300px; height: 20px;">
                                 <div class="progress-bar ${colorClass}" role="progressbar" style="width: ${clamped}%;">
-                                  ${clamped}% of ${row.lead_time_days} / ${Math.min(Math.max(row.elapsed_days, 0),row.lead_time_days) } &nbsp; 
+                                  ${clamped}% &nbsp; 
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,8 @@ $(document).ready(() => {
             {
                 data: 'buyer', 
                 title: 'Buyer', 
-                width: '5%'},
+                width: '5%'
+            },
             {
                 data: 'contact_first_name', 
                 // title:'C. Name', 
@@ -110,21 +111,20 @@ $(document).ready(() => {
                 // width: '10%'},
                 visible: false,
             },
-            {
-                data: 'id', 
-                title: 'Details',
-                render: function(data, type, row){
-                    return `
-                        <button class="btn btn-sm btn-primary update-btn" data-id="${data}">
-                            OPEN
-                        </button> 
-                    `; 
+            // {
+            //     data: 'id', 
+            //     title: 'Details',
+            //     render: function(data, type, row){
+            //         return `
+            //             <button class="btn btn-sm btn-primary update-btn" data-id="${data}">
+            //                 OPEN
+            //             </button> 
+            //         `; 
                     
-                }, 
-                className: 'd-grid',
-                width: '5%',
-            }
-
+            //     }, 
+            //     className: 'd-grid',
+            //     width: '5%',
+            // }
         ],
         createdRow: function( row, data, dataIndex ){
             const date = new Date(data.true_promise.date);
@@ -139,8 +139,8 @@ $(document).ready(() => {
         pageLength: 200,
 
         lengthMenu: [
-            [10, 20, 50, 100, 200, -1],
-            [10, 20, 50, 100, 200, 'Show All']
+            [10, 20, 50, 100, 200, -1],//Values
+            [10, 20, 50, 100, 200, 'Show All']//labels
         ],
 
         layout: {
@@ -161,6 +161,7 @@ $(document).ready(() => {
                     }
                 ]
             },
+            top2End: 'search',
             topStart: {
                 buttons: [
                     {
@@ -168,7 +169,7 @@ $(document).ready(() => {
                         className: 'btn-outline-danger filter-btn active',
                         action: function () {
                             // get new date based on filter button
-                            table.ajax.url('<?= base_url('purchasing/bookings/data/-30')?>').load();
+                            table.ajax.url('<?= base_url('purchasing/tools/bookings/data/-30')?>').load();
                             
                             // Update active button
                             $('.filter-btn').removeClass('active');
@@ -180,7 +181,7 @@ $(document).ready(() => {
                         className: 'btn-outline-orange filter-btn',
                         action: function () {
                             // get new date based on filter button
-                            table.ajax.url('<?= base_url('purchasing/bookings/data/30-75')?>').load();
+                            table.ajax.url('<?= base_url('purchasing/tools/bookings/data/30-75')?>').load();
                             
                             // Update active button
                             $('.filter-btn').removeClass('active');
@@ -192,7 +193,7 @@ $(document).ready(() => {
                         className: 'btn-outline-primary filter-btn',
                         action: function () {
                             // get new date based on filter button
-                            table.ajax.url('<?= base_url('purchasing/bookings/data/75-120')?>').load();
+                            table.ajax.url('<?= base_url('purchasing/tools/bookings/data/75-120')?>').load();
                             
                             // Update active button
                             $('.filter-btn').removeClass('active');
@@ -204,7 +205,7 @@ $(document).ready(() => {
                         className: 'btn-outline-success filter-btn',
                         action: function () {
                             // get new date based on filter button
-                            table.ajax.url('<?= base_url('purchasing/bookings/data/120+')?>').load();
+                            table.ajax.url('<?= base_url('purchasing/tools/bookings/data/120+')?>').load();
                             
                             // Update active button
                             $('.filter-btn').removeClass('active');
@@ -216,15 +217,38 @@ $(document).ready(() => {
                         className: 'btn-outline-dark filter-btn',
                         action: function () {
                             // get new date based on filter button
-                            table.ajax.url('<?= base_url('purchasing/bookings/data/all')?>').load();
+                            table.ajax.url('<?= base_url('purchasing/tools/bookings/data/all')?>').load();
                             
                             // Update active button
                             $('.filter-btn').removeClass('active');
                             $(this[0].node).addClass('active');
                         }
+                    },
+                ],
+            },
+            topEnd:[
+                {
+                    div: {
+                        className:'layout-full',
+                        html: ` 
+                            <select class="form-select" name="buyer" placeholder="" id="buyer-select">
+                                <option value="all" selected>All Buyers</option>
+                                <?php if(isset($buyers)) : ?>
+                                    <?php foreach($buyers as $key => $value ) : ?>
+                                        <option value="<?= $value ?>"><?= $value ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        ` 
                     }
-                ]
-            }
+                },
+                {
+                    div:{
+                        html: `<button type="button" class="btn btn-primary" id="review-vendor" disabled><i class="bi bi-envelope-arrow-up-fill"></i>&nbsp; Request Update For Selected POs</button>`,
+                    }
+                }
+            ]
+
         },
 
         columnDefs: [
@@ -259,32 +283,120 @@ $(document).ready(() => {
         }
     });
 
+    $('#buyer-select').on('change', function(){
+        buyer = $(this).val(); 
+        if( buyer === 'all' ){
+            table.column(7).search('').draw();
+        } else{
+            table.column(7).search(buyer).draw(); 
+        } 
+    })
+
     // Row selection behavior
     table.on('select', function (e, dt, type, indexes) {
-        if (type === 'row') {
-            const rowNode = table.row(indexes[0]).node();
-            const vendor = $(rowNode).data('vendor');
-            const purchase_order = $(rowNode).data('purchase_order');
-            const promise_date = $(rowNode).data('promise_date');
-
-            const id = 'poLoadingModal';
-            const loadingModal = showLoadingModal(id, 'Loading Purchase Order', `Please wait while the Purchase Order: ${purchase_order}`);
-            const poModal = document.getElementById(id);
-
-            poModal.addEventListener('shown.bs.modal', function onShown() {
-                setTimeout(() => {}, 1000);
-                poModal.removeEventListener('shown.bs.modal', onShown);
-
-                const url = '<?= base_url('purchasing/po-booking-review/') ?>' + vendor + '/' + purchase_order + '/' + promise_date;
-                $.get(url, function (response) {
-                    loadingModal.hide();
-                    const modal = $('#content_modal');
-                    modal.find('.modal-content').html(response);
-                    modal.modal('show');
-                });
-            });
-        }
+        $('#review-vendor').attr('disabled', false); 
     });
+
+    table.on('deselect', function(e,dt,type, indexes){
+        $('#review-vendor').attr('disabled', true); 
+    });
+
+    $('#review-vendor').on('click', function(e){
+        e.preventDefault(); 
+
+        const id = 'poLoadingModal';
+
+        selectedRows = table.rows({ selected: true }); 
+
+        postData = {
+            items : [],
+        };
+    
+        //SETUP VARS TO CHECK IF VENDOR IS UNIQUE; 
+        let firstVendorId = null;
+        let allSameVendor = true;
+
+        $.each(selectedRows[0], function(){
+            row = $(table.row(this).node()); 
+            row = $(table.row(this).node()); 
+            const vendorId = row.data('vendor');
+            const poId = row.data('purchase_order');
+            
+            // Set first vendor ID as reference
+            if (firstVendorId === null) {
+                firstVendorId = vendorId;
+            }
+            
+            // Check if current vendor matches first vendor
+            if (vendorId !== firstVendorId) {
+                allSameVendor = false;
+                return false; // Break out of loop
+            }
+            
+            globalThis.vendor = vendorId; 
+            globalThis.po = poId; 
+            
+            postData.items.push({
+                po_id : poId,
+                vendor_id : vendorId
+            }); 
+        });
+
+            // Check if all vendors are the same
+        if (!allSameVendor) {
+            Swal.fire({
+                title: 'Vendor Selection Error',
+                text: 'Please select Purchase Orders from the same vendor only.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        const loadingModal = showLoadingModal(id, 'Loading Purchase Order', `Please wait while the Purchase Order`);
+        const poModal = document.getElementById(id);
+
+        poModal.addEventListener('shown.bs.modal', function onShown() {
+            setTimeout(() => {}, 1000);
+            poModal.removeEventListener('shown.bs.modal', onShown);
+
+            let url = '<?= base_url('purchasing/tools/bookings/view-email') ?>';
+            $.post(url, postData, function (response) {
+                if( response.success ){
+                    loadingModal.hide();
+                    const modal = $('#email_modal');
+                    modal.find('.modal-content').html(response.html);
+                    modal.modal('show');
+
+                    $('#email-vendor').on('click', function(e){
+                        e.preventDefault();
+                        data = $('#email-form').serialize(); 
+                        let url = "<?= base_url('purchasing/tools/bookings/send-email') ?>";
+                        $.post(url, data, function(response){
+                            if (response.success) {
+                                modal.modal('hide'); 
+                                Swal.fire({
+                                    title: `${response.title}`,
+                                    html: `${response.message}`,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                });
+                                //modal.modal('hide'); 
+                                return;
+                            } else {
+                                Swal.fire({
+                                    title: `${response.title}`,
+                                    html: `${response.message}`,
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        })
+                    })
+                }   
+            });
+        });
+    })
 
     // Email form AJAX logic
     $('#email_form').on('submit', function (e) {

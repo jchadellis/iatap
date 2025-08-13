@@ -31,7 +31,9 @@
     <link rel="stylesheet" href="<?= base_url(MANAGEDASSETS.'bootstrap5-toggle/css/bootstrap5-toggle.css')?>">
 
     <link rel="stylesheet" href="<?= base_url(MANAGEDASSETS.'flatpickr/dist/flatpickr.css')?>">
-
+    <link rel="stylesheet" href="<?= base_url(MANAGEDASSETS.'sweetalert2/dist/sweetalert2.min.css')?>">
+    <link rel="stylesheet" href="<?= base_url(MANAGEDASSETS.'trumbowyg/dist/ui/trumbowyg.min.css')?>">
+    
     <style>
         .text-bg-lite-blue{
             background-color: #dbedfe;

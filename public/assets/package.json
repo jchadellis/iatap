@@ -25,6 +25,9 @@
     "jquery.dirtyforms": "^2.0.0",
     "jquery.easing": "^1.4.1",
     "jszip": "^3.10.1",
-    "pdfmake": "^0.2.18"
+    "pdfmake": "^0.2.18",
+    "quill": "^2.0.3",
+    "sweetalert2": "^11.6.13",
+    "trumbowyg": "^2.31.0"
   }
 }

@@ -20,9 +20,17 @@
 </table>
 
 <!-- Modal -->
-<div class="modal fade" id="content_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="content_modal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
-    <form action="" id="email_form">
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="email_modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <form action="" id="email-form">
       <div class="modal-content">
       </div>
     </form>

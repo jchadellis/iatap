@@ -23,7 +23,7 @@ class PoTools extends BaseController
             [
                 'name' => "Purchase Order Bookings", 
                 'description' =>  'View / Update PO status',
-                'url' => 'purchasing/po-tools/bookings', 
+                'url' => 'purchasing/tools/bookings', 
                 'btn_text' => 'View', 
                 'icon' => 'components/icon/clipboard-document-icon',
                 'color' => 'text-dark', 
