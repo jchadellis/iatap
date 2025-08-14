@@ -8,10 +8,12 @@
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $user->first_name .' ' . $user->last_name ?> &nbsp;</span>
                 <img class="img-profile rounded-circle" src="<?= base_url(ASSETSPATH.'img/undraw_profile.png') ?>" style="width: 25px; height: 25px; "> 
                 <?php if($user->inGroup('it')) : ?>
+                    <?php if( $count > 0 ) : ?>
                     <span class="position-absolute top-0 start-75 translate-middle badge rounded-pill bg-primary">
                         <?= ($count) ?? '' ?>
                         <span class="visually-hidden">IT Service Tickets</span>
-                    </span>   
+                    </span> 
+                    <?php endif; ?>
                 <?php endif; ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">

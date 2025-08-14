@@ -6,7 +6,7 @@
         $.extend(true, $.fn.dataTable.Buttons.defaults, {
             dom: {
                 button: {
-                    className: 'btn btn-outline-primary'
+                    className: 'btn btn-primary'
                 }
             }
         });

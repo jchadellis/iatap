@@ -23,7 +23,7 @@ class Index extends BaseController
                 'description' => 'Submit a IT Support Request Tickets', 
                 'btn_text' => 'Create Ticket', 
                 'icon' => 'components/icon/ticket-icon',
-                'url'   => 'service-tickets/engineering',
+                'url'   => 'service-tickets/it',
                 'color' => 'text-dark',  
             ],
         ];
