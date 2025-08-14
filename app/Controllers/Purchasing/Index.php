@@ -42,7 +42,7 @@ class Index extends BaseController
             [
                 'name' => "PO Related Tools", 
                 'description' =>  'View PO Bookings, Comformations, Count',
-                'url' => 'purchasing/po-tools', 
+                'url' => 'purchasing/tools', 
                 'btn_text' => 'Open Tools', 
                 'icon' => 'components/icon/tool-icon',
                 'color' => 'text-dark', 

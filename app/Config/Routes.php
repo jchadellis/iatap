@@ -181,86 +181,35 @@ $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
 
  $routes->group('', ['filter' => 'session'], static function($routes){
 
-   /**
-    * --------------------------------------------------------------------
-    * Purchasing Routes Group
-    * --------------------------------------------------------------------
-    * Defines all routes under the 'purchasing' URI prefix.
-    * These routes map to various controllers handling purchasing-related 
-    * tools and reports, including:
-    * 
-    * - PO Tools: general tools for managing purchase orders
-    *     - '/po-tools'                   → Main PO tools dashboard
-    *     - '/po-tools/bookings'         → PO bookings interface
-    *     - '/bookings/data/(:any)'      → Fetch bookings data (filtered)
-    *     - '/po-booking-review/(:any)'  → Review a specific booking
-    *     - '/updatestatus/(:any)/(:any)'→ Update PO status
-    * 
-    * - PO Confirmations:
-    *     - '/po-tools/confirmations'        → PO confirmations interface
-    *     - '/po-confirmation-review/(:any)' → Review a specific confirmation
-    * 
-    * - PO Counts:
-    *     - '/po-tools/counts'   → Counts dashboard
-    *     - '/po-counts'         → Retrieve counts data
-    * 
-    * - Reports:
-    *     - '/fabrication-report'        → Fabrication report view
-    *     - '/fabrication-report/data'   → Fabrication report data
-    *     - '/paint-report'              → Paint report view
-    *     - '/paint-report/data'         → Paint report data
-    * 
-    * - Safety Stock:
-    *     - '/safety-stock'        → Safety stock overview
-    *     - '/safety-stock/data'   → Fetch safety stock data
-    * 
-    * NOTE: A previously defined vendor list route is commented out.
-    */
-
-   $routes->group('purchasing-test', static function($routes){
-      // $routes->get('bookings', 'Purchasing\PO_Tools\Bookings\Index::index'); 
-      // $routes->get('bookings/get/(:any)', 'Purchasing\PO_Tools\Bookings\Index::get_data/$1'); 
-   });
-
-
    $routes->group('purchasing', static  function($routes){
       
       $routes->get('/', 'Purchasing\Index::index');
-      
-      $routes->get('po-tools', 'Purchasing\PoTools::index'); 
 
-      // $routes->get('po-tools/bookings', 'Purchasing\PoTools::bookings'); 
-      // $routes->get('bookings/data/(:any)' , 'Purchasing\PoTools::get_data/$1');
+      $routes->get('fabrication-report', 'Purchasing\Fabrication\Index::index'); 
+      $routes->get('fabrication-report/data', 'Purchasing\Fabrication\Index::get_data'); 
+
+      $routes->get('paint-report', 'Purchasing\Paint\Index::index'); 
+      $routes->get('paint-report/data', 'Purchasing\Paint\Index::get_data'); 
+
+      $routes->get('safety-stock', 'Purchasing\Stock\Index::index');
+      $routes->get('safety-stock/data', 'Purchasing\Stock\Index::get_data');
       
       $routes->group('tools', static function($routes){
+         $routes->get('/', 'Purchasing\Tools\Index::index'); 
+         $routes->get('data', 'Purchasing\Tools\Index::get_data');
          $routes->group('bookings', static function($routes){
             $routes->get('/', 'Purchasing\Tools\Bookings\Index::index'); 
             $routes->get('data/(:any)', 'Purchasing\Tools\Bookings\Index::get_data/$1'); 
-            //$routes->post('bookings/po/', 'Purchasing\Tools\Bookings\Index::get_po'); 
-            $routes->post('view-email', 'Purchasing\Tools\Bookings\Index::view_email'); 
+            $routes->post('review', 'Purchasing\Tools\Bookings\Index::review_email'); 
             $routes->post('send-email', 'Purchasing\Tools\Bookings\Index::send_email'); 
          });
+         $routes->group('confirmations', static function($routes){
+            $routes->get('/', 'Purchasing\Tools\Confirmations\Index::index'); 
+            $routes->post('review', 'Purchasing\Tools\Confirmations\Index::review_email'); 
+            $routes->post('send-email', 'Purchasing\Tools\Confirmations\Index::send_email'); 
+         });
       });
-
-
-      $routes->get('po-booking-review/(:any)', 'Purchasing\PoTools::po_booking_review/$1');
-      $routes->get('updatestatus/(:any)/(:any)', 'Purchasing\PoTools::update_po_status/$1/$2');
-
-      $routes->get('po-tools/confirmations', 'Purchasing\PoTools::confirmations');              
-      $routes->get('po-confirmation-review/(:any)', 'Purchasing\PoTools::po_confirmation_review/$1');
-
-      $routes->get('po-tools/counts', 'Purchasing\PoTools::counts'); 
-      $routes->get('po-counts', 'Purchasing\PoTools::po_counts'); 
       
-      $routes->get('fabrication-report', 'Purchasing\FabricationReport::index'); 
-      $routes->get('fabrication-report/data', 'Purchasing\FabricationReport::get_data'); 
-
-      $routes->get('paint-report', 'Purchasing\PaintReport::index'); 
-      $routes->get('paint-report/data', 'Purchasing\PaintReport::get_data'); 
-
-      $routes->get('safety-stock', 'Purchasing\SafetyStock::index');
-      $routes->get('safety-stock/data', 'Purchasing\SafetyStock::get_data');
-
    });
 
 

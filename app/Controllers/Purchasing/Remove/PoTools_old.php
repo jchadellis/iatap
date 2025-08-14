@@ -52,7 +52,7 @@ class PoTools extends BaseController
         $breadcrumbs = [
             ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
             ['name' => 'Purchasing', 'is_active' => false, 'url' => '/purchasing'],
-            ['name' => 'PO Tools', 'is_active' => true, 'url' => '#'],
+            ['name' => 'Tools', 'is_active' => true, 'url' => '#'],
         ];
         $js = view('purchase/po-tools/index.js.php'); 
 
@@ -84,7 +84,7 @@ class PoTools extends BaseController
         $breadcrumbs = [
             ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
             ['name' => 'Puchasing', 'is_active' => false, 'url' => '/purchasing'],
-            ['name' => 'PO Tools',  'is_active' => false, 'url' => 'purchasing/po-tools'],
+            ['name' => 'Tools',  'is_active' => false, 'url' => 'purchasing/po-tools'],
             ['name' => 'Confirmations',  'is_active' => true, 'url' => '#']
         ];
 

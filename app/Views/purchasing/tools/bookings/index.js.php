@@ -360,7 +360,7 @@ $(document).ready(() => {
             setTimeout(() => {}, 1000);
             poModal.removeEventListener('shown.bs.modal', onShown);
 
-            let url = '<?= base_url('purchasing/tools/bookings/view-email') ?>';
+            let url = '<?= base_url('purchasing/tools/bookings/review') ?>';
             $.post(url, postData, function (response) {
                 if( response.success ){
                     loadingModal.hide();

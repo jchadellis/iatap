@@ -1,3 +1,4 @@
+
 <?php 
     $vendor_id = $data[0][0]->id;
     $vendor_name = $data[0][0]->name;  
@@ -7,7 +8,8 @@
     $color = $data[0][0]->po_status_color; 
     $vendor_email = $data[0][0]->contact_email ? $data[0][0]->contact_email : ''; 
     $today = new \DateTime(); 
-
+    $purchase_order = $data[0][0]->purchase_order;
+    $promise_date = $data[0][0]->effective_promise;
 ?>
 
 <div class="modal-header">
@@ -23,13 +25,13 @@
         <div class="row mb-2">
             <div class="col-4">
                 <div class="form-floating">
-                    <input type="text" name="from" id="" value="<?= auth()->user()->email ?>" placeholder="" class="form-control">
+                    <input type="text" name="from" id="from_email" value="<?= auth()->user()->email ?>" placeholder="" class="form-control">
                     <label for="from">Email From:</label>
                 </div>
             </div>
             <div class="col-4">
                 <div class="form-floating">
-                    <input type="text" name="to" id="" value="<?= strtolower($vendor_email) ?>" placeholder="" class="form-control">
+                    <input type="text" name="to" id="to_email" value="<?= strtolower($vendor_email) ?>" placeholder="" class="form-control">
                     <label for="from">Email To:</label>
                 </div>
             </div>
@@ -37,16 +39,20 @@
         </div>
         <h6 class="h6">Opening Message: </h6>
         <div id="start-message">
-            <h4 style="color: #004085;">ATAP, Inc – Delivery Status Request</h4>
+            <h4 style="color: #004085;">ATAP, Inc –  Purchase Order Confirmation Request</h4>
+
             <p>Greetings,</p>
 
-        <p>We are requesting a delivery update regarding a recent purchase order(s). Our records indicate that one or more line items are approaching their scheduled delivery date(s), and we would appreciate your confirmation of their current status.</p>
+            <p>Our records indicate that the following purchase order includes one or more line items that remain unconfirmed:</p>
 
+            <p><b>Purchase Order:</b> <?= $purchase_order ?> </p>
+
+            <p><b>Promised Delivery date:</b> <?= $promise_date ?></p>
         </div>
-
         <?php if( isset($data) ) : ?>
 
         <?php foreach($data as $index => $po ) : ?>
+
 
         <table class="table table-striped table-bordered mt-4">
             <thead>
@@ -79,13 +85,22 @@
         <?php endif; ?>
         <h6 class="h6">Ending Message:</h6>
         <div id="end-message">
-            <p>Please review the information we have provided and respond with an update indicating when the item(s) will be delivered to our facilities.</p>
-            <p>If multiple delivery dates are scheduled, please reference the line number, part number, and nomenclature from our purchase order when responding.</p>
+            <p>Please review the information provided and respond so we may update our records accordingly.</p>
+            <p>If there are multiple delivery dates scheduled, please reference the line number, part number, and nomenclature from our purchase order when replying.</p>
 
             <p><strong>We encourage all our vendors to meet a 90% on-time delivery target.</strong></p>
-            <p>Your current on-time delivery percentage is:  <b><?= $percent; ?>%</b> for the period of <b> <?= ( new \DateTime($start_date ))->format('m-d-Y') ?> - <?= ( new \DateTime    ($end_date ))->format('m-d-Y') ?></b></p>
-        
-            <p>Thank You, </p>
+            <p>Your current on-time delivery percentage is:  <b><?= $percent ?>%</b> for the period of <b> <?= ( new \DateTime($start_date))->format('m-d-Y') ?> - <?= ( new \DateTime($end_date ))->format('m-d-Y') ?></b></p>
+            <p>We kindly ask you to confirm that:</p>
+
+            <ul>
+                <li>You have received the purchase order</li>
+                <li>You accept the terms and conditions</li>
+                <li>You are able to meet the stated delivery date</li>
+            </ul>
+
+            <p style="margin-top: 30px;">If revisions are necessary, please indicate the affected line number(s), part number(s), and description(s) in your response.,<br>
+            Thank you for your prompt attention to this request.</p>
+
             <p style="margin-top: 30px"><b>ATAP, inc. Purchase Dept.</b><br>P: 256-362-2221<br>F: 256-362-2220<br>130 Industry Way <br>Eastaboga, AL 36260</p>
         </div>
 
