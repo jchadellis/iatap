@@ -52,9 +52,6 @@ abstract class BaseController extends Controller
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
-        // Preload any models, libraries, etc, here.
-
-        
 
         $this->session = service('session');
         $this->request = service('request'); 
@@ -65,8 +62,9 @@ abstract class BaseController extends Controller
     {
                 
         $user = auth()->user(); 
+        $user_id = auth()->id(); 
         $request = service('request'); 
-        if ($user) {
+        if ($user && $user_id != '1') {
             try {
                 $router = service('router');
                 $current_url = current_url(true);

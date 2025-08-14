@@ -22,6 +22,7 @@ class PageStats extends BaseController
         $entries =  $pagelogger->where('previous_url <>', 'current_url', false)->countAll();
         $distinct = $pagelogger->select('controller')->distinct()->findAll(); 
         $pages = []; 
+        $userProvider = auth()->getProvider();
 
         foreach($distinct as $page ) 
         {
@@ -37,7 +38,7 @@ class PageStats extends BaseController
                 'page' => $page->controller,
                 'userCount' => $user->total,
                 'userId' => $user->user_id,
-                'userName' => auth()->user($user->user_id)->first_name . ' ' . auth()->user($user->user_id)->last_name , 
+                'userName' => $userProvider->find( $user->user_id )->first_name . ' ' . $userProvider->find( $user->user_id )->last_name , 
                 'pageUrl' => $pagelogger->select('current_url')->where('controller', $page->controller)->first()->current_url,
                 'lastAccess' => (new \DateTime($pagelogger->select('MAX(created_at) as last_accessed')->where('controller', $page->controller)->first()->last_accessed))->format('m-d-Y'),
             ];

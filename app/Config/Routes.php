@@ -36,6 +36,7 @@ $routes->group('sales', static function($routes){
 
 $routes->group('orientation', static function($routes){
    $routes->get('', 'Employee\Orientation\Index::index');
+   $routes->get('playback/(:num)', 'Employee\Orientation\Index::playback/$1'); 
 });
 
 $routes->get('leave/requestform', 'Forms\LeaveRequest::getPdf');
