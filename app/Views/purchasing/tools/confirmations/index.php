@@ -7,8 +7,8 @@
     <thead>
         <tr>
             <th class="text-center">PO No.</th>
-            <th class="text-center">Promise Date</th>
-            <th class="text-center">Lead Time Progress</th>
+            <th class="text-center">Order Date</th>
+            <th class="text-center">Last Vendor Update</th>
             <th class="text-center">Buyer</th>
             <th class="text-center">Name</th>
             <th class="text-center">Phone</th>
@@ -19,8 +19,9 @@
         <?php foreach($data as $row ) : ?>
         <tr data-vendor="<?= $row->vendor_id ?>" data-purchase_order="<?= $row->id ?>" data-promise_date="<?= $row->true_promise ?>">
             <td class="text-center col-1 <?// $row->color ?>"><?= $row->id ?> <?= $row->confirmed == 'X' ? '<span class="badge bg-success">C</span>' : '' ?></td>
-            <td class="text-center col-2" data-order="<?= $row->true_promise ?>" ><?= $row->true_promise ?></td>
-            <td class="text-center col-2">
+            <td class="text-center col-2" data-order="<?= $row->order_d ?>" ><?= $row->order_d ?></td>
+            <td class="text-center"><?= (new DateTime($row->last_vendor_update_at))->format('m-d-Y') ?></td>
+            <!-- <td class="text-center col-2">
               <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="<?= $row->percentage_complete ?>" aria-valuemin="0" aria-valuemax="100">
               <?php 
                 if( $row->percentage_complete <= 25 ){
@@ -38,7 +39,7 @@
               
               <div class="progress-bar <?=$color ?>" style="width: <?= $row->percentage_complete ?>%"> <?= ($row->percentage_complete <= 99 ) ? $row->percentage_complete.'%' : '100%' ?> </div>
               </div>
-            </td>
+            </td> -->
             <td class="text-center col-1"><?= $row->buyer ?></td>
 
             <td class="text-start text-truncate col-3"> 

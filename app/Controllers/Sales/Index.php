@@ -16,6 +16,14 @@ class Index extends BaseController
             'icon' => 'components/icon/table-icon',
             'color' => 'text-dark', 
         ],
+        [
+            'name' => "Customer Order Bookings", 
+            'description' =>  'List of Customer Orders',
+            'url' => 'sales/customers/bookings', 
+            'btn_text' => 'View', 
+            'icon' => 'components/icon/table-icon',
+            'color' => 'text-dark', 
+        ],
     ];
     public function index()
     {

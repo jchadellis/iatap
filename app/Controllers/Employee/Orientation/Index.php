@@ -14,6 +14,7 @@ class Index extends BaseController
             'btn-url'   => 'orientation/playback/0',
             'btn-text'  => 'Play Video', 
             'card-thumb' => 'assets/video/drug-and-alcohol.jpg', 
+            'url' => 'assets/video/drug-and-alcohol.webm',
         ],
         [
             'title' => 'Safety Orientation', 
@@ -21,6 +22,7 @@ class Index extends BaseController
             'btn-url'   => 'orientation/playback/1',
             'btn-text'  => 'Play Video', 
             'card-thumb' => 'assets/video/safety-orientation.jpg', 
+            'url' => 'assets/video/safety-orientation.webm',
         ],
         [
             'title' => 'Walking / Working</br>Surfaces Employees', 
@@ -28,6 +30,7 @@ class Index extends BaseController
             'btn-url'   => 'orientation/playback/2',
             'btn-text'  => 'Play Video', 
             'card-thumb' => 'assets/video/walking-working-surfaces-employees.jpg', 
+            'url' => 'assets/video/walking-working-surfaces-employees.webm',
         ],
         [
             'title' => 'Export Control Awareness', 
@@ -35,6 +38,7 @@ class Index extends BaseController
             'btn-url'   => 'orientation/playback/3',
             'btn-text'  => 'Play Video', 
             'card-thumb' => 'assets/video/export-control-awareness.jpg', 
+            'url' => 'assets/video/export-control-awareness.webm',
         ],
     ];
 

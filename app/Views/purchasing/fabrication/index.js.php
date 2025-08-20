@@ -53,7 +53,7 @@
                     "spacer",
                     {
                         extend: "pdf",
-                        text: "Print To PDF",
+                        text: `<i class="bi bi-file-earmark-pdf"></i>&nbsp;Print To PDF`,
                         title: "Paint Purchase Report <?=date('m-d-Y')?>",
                         filename: "paint_purchase_report_<?=date('Ymd'); ?>",
                         orientation: "landscape",
@@ -62,7 +62,7 @@
                     "spacer",
                     {
                         extend: "excel",
-                        text: "Export to Excel",
+                        text: `<i class="bi bi-file-earmark-excel"></i>&nbsp;Export to Excel`,
                         title: "Paint Purchase Report <?=date('m-d-Y')?>",
                         filename: "paint_purchase_report_<?=date('Ymd')?>",
                         sheetName: "Purchase Report",
@@ -73,7 +73,13 @@
                     }
                     ]
                 }
-            }
+            },
+            language:{
+                buttons:{
+                    pageLength: '<i class="bi bi-binoculars"></i>&nbsp;Show %d rows',
+                    colvis: `<i class="bi bi-eye-slash"></i>&nbsp;Hide / Show Columns`
+                }
+            },
         }); 
     })
 </script>

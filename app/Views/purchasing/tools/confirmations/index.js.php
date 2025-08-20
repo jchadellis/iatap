@@ -14,7 +14,11 @@ $(document).ready(()=>{
             autoWidth: false,
             select: true,
             pageLength: 100,
-
+            language:{
+                buttons:{
+                    pageLength: '<i class="bi bi-binoculars"></i>&nbsp;Show %d rows',
+                }
+            },
             layout: {
                 topStart: {
                     buttons: [
@@ -22,7 +26,7 @@ $(document).ready(()=>{
                         "spacer",
                         {
                             extend: "excel",
-                            text: "Export to Excel",
+                            text: `<i class="bi bi-file-spreadsheet"></i>&nbsp; Export to Excel`,
                             title: "PO Bookings <?=date('m-d-Y')?>",
                             filename: "po_booking_<?=date('Ymd')?>",
                             sheetName: "Purchase Order Bookings",
@@ -55,8 +59,8 @@ $(document).ready(()=>{
             },
 
             columnDefs: [
-                { targets: [2,3,4,5],  orderable: false },
-                { targets: 1, type: 'date-eu' } // if you're using DD-MM-YYYY
+                { targets: [2,3,4],  orderable: false },
+                { targets: 1, type: 'date' } // if you're using DD-MM-YYYY
             ],
 
             order: [[1, 'asc']]

@@ -25,6 +25,16 @@
                 <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
+            <tfoot>
+                <tr>
+                    <th class="border-0"></th>
+                    <th class="border-0"></th>
+                    <th class="border-0"></th>
+                    <th class="border-0"></th>
+                    <th class="border-0"></th>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

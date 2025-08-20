@@ -57,59 +57,73 @@ class Index extends BaseController
         return view('template/index-full', $data); 
     }
 
+
     public function get_data($percentage = 'all')
     {
-        $model = $this->model; 
-
-        if($percentage == 'all')
-        {
-            $model->orderBy('desired_recv_date', 'asc'); 
-        }elseif($percentage == '-30'){
-            $model
-                ->where('true_promise <', date('Y-m-d', strtotime('+30 days')))
-                ->whereIn('percentage_complete', [90, 100]); 
-        }elseif($percentage == '30-75'){
-            $model
-                ->where('true_promise >=', date('Y-m-d', strtotime('+30 days')))
-                ->where('true_promise <=', date('Y-m-d', strtotime('+75 days')))
-                ->groupStart()
-                    ->where('next_vendor_update_at >=', date('Y-m-d'))
-                    ->where('next_vendor_update_at <=', date('Y-m-d', strtotime('+30 days')))
-                    ->orWhere('next_vendor_update_at', null)
-                ->groupEnd()
-                ->whereIn('percentage_complete', [25, 50, 90]);
-
-        }elseif( $percentage == '75-120' ){
-            $model
-                ->where('true_promise >', date('Y-m-d', strtotime('+75 days')))
-                ->where('true_promise <=', date('Y-m-d', strtotime('+120 days')))                
-                ->groupStart()
-                    ->where('next_vendor_update_at >=', date('Y-m-d'))
-                    ->where('next_vendor_update_at <=', date('Y-m-d', strtotime('+30 days')))
-                    ->orWhere('next_vendor_update_at', null)
-                ->groupEnd()
-                ->whereIn('percentage_complete', [25,50]); 
-        }elseif($percentage == '120') {
-            $model
-                ->where('true_promise >', date('Y-m-d', strtotime('+120 days')))
-                ->groupStart()
-                    ->where('next_vendor_update_at >=', date('Y-m-d'))
-                    ->where('next_vendor_update_at <=', date('Y-m-d', strtotime('+30 days')))
-                    ->orWhere('next_vendor_update_at', null)
-                ->groupEnd()
-                ->whereIn('percentage_complete', [25]);
-        }
-
-        $data = $model->findAll(); 
-
-        if($data){
-            return $this->response->setJSON([
-                'data' => $data, 
-                'message' => 'Data fetched successfully', 
-                'success' => true, 
-            ]);
+        $model = $this->model;
+        
+        // Pre-calculate common dates
+        $today = date('Y-m-d');
+        $thirtyDays = date('Y-m-d', strtotime('+30 days'));
+        $seventyFiveDays = date('Y-m-d', strtotime('+75 days'));
+        $oneHundredTwentyDays = date('Y-m-d', strtotime('+120 days'));
+        
+        switch($percentage) {
+            case 'all':
+                $model->orderBy('desired_recv_date', 'asc');
+                break;
+                
+            case '-30':
+                $model
+                    ->where('true_promise <', $thirtyDays)
+                    ->whereIn('percentage_complete', [90, 100]);
+                break;
+                
+            case '30-75':
+                $model
+                    ->where('true_promise >=', $thirtyDays)
+                    ->where('true_promise <=', $seventyFiveDays)
+                    ->whereIn('percentage_complete', [25, 50, 90]);
+                $this->addVendorUpdateConditions($model, $today, $thirtyDays);
+                break;
+                
+            case '75-120':
+                $model
+                    ->where('true_promise >', $seventyFiveDays)
+                    ->where('true_promise <=', $oneHundredTwentyDays)
+                    ->whereIn('percentage_complete', [25, 50]);
+                $this->addVendorUpdateConditions($model, $today, $thirtyDays);
+                break;
+                
+            case '120':
+                $model
+                    ->where('true_promise >', $oneHundredTwentyDays)
+                    ->whereIn('percentage_complete', [25]);
+                $this->addVendorUpdateConditions($model, $today, $thirtyDays);
+                break;
         }
         
+        $data = $model->findAll();
+        
+        if($data) {
+            return $this->response->setJSON([
+                'data' => $data,
+                'message' => 'Data fetched successfully',
+                'success' => true,
+            ]);
+        }
+    }
+
+    /**
+     * Add vendor update conditions to the model
+     */
+    private function addVendorUpdateConditions($model, $today, $thirtyDays)
+    {
+        $model->groupStart()
+            ->where('next_vendor_update_at >=', $today)
+            ->where('next_vendor_update_at <=', $thirtyDays)
+            ->orWhere('next_vendor_update_at', null)
+        ->groupEnd();
     }
 
     public function review_email()

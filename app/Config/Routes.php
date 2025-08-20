@@ -25,15 +25,6 @@ $routes->group('employee', static function($routes){
    $routes->get('list', 'Employee\Index::list'); 
 });
 
-$routes->group('sales', static function($routes){
-   $routes->get('', 'Sales\Index::index'); 
-   $routes->get('customers', 'Sales\Customers\Index::index'); 
-   $routes->get('customers/get', 'Sales\Customers\Index::get_data'); 
-   
-   $routes->get('customer/orders/(:num)', 'Sales\Customer\Orders\Index::index/$1'); 
-   $routes->get('customer/(:segment)', 'Sales\Customer\Index::index/$1'); 
-});
-
 $routes->group('orientation', static function($routes){
    $routes->get('', 'Employee\Orientation\Index::index');
    $routes->get('playback/(:num)', 'Employee\Orientation\Index::playback/$1'); 
@@ -52,44 +43,6 @@ service('auth')->routes($routes);
 $routes->get('user/profile', 'User\Index::index'); 
 $routes->get('user/profile/(:num)', 'User\Index::index/$1'); 
 
-
-/**
- * --------------------------------------------------------------------
- * Superadmin Routes Group
- * --------------------------------------------------------------------
- * Routes accessible only to users in the 'superadmin' group.
- * URI prefix: /sadmin
- * 
- * This section provides access to privileged administrative tools, 
- * including:
- * 
- * - Control Panel:
- *     - '/control-panel' → Superadmin dashboard
- * 
- * - User Management:
- *     - '/user-management'         → Manage user accounts
- *     - '/user/edit/(:num)'        → Edit a specific user
- *     - '/user/create'             → Create a new user
- *     - '/user/update/(:num)'      → Update existing user
- *     - '/create-guest'            → Create a guest account
- * 
- * - Network Assets Management:
- *     - '/workstation/add/(:num)'       → Assign asset to workstation
- *     - '/asset-manager'                → View asset management dashboard
- *     - '/asset/create'                 → Create new asset
- *     - '/asset/edit/(:num)'            → Edit asset
- *     - '/asset/update/(:num)'          → Update asset
- *     - '/asset/remove/(:num)'          → Remove asset
- *     - '/asset/delete/(:num)'          → Permanently delete asset
- *     - '/asset/get/(:num)'             → Get asset details
- *     - '/assets/print'                 → Print all assets
- *     - '/assets/print-details'         → Print detailed asset view
- * 
- * - Login Management:
- *     - '/logins/add/(:num)'            → Add login credentials to a user
- *     - '/login/delete/(:num)'          → Delete a login record
- */
-
 $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
    
     $routes->get('control-panel', 'Admin\Index::index' ); 
@@ -103,27 +56,11 @@ $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
     $routes->post('user/update/(:num)', 'Admin\Users::update/$1'); 
     $routes->get('create-guest', 'Admin\Users::create_guest');
 
-
-    /**
-     * Networks Assets Management
-     */
-
-    //$routes->post('workstation/add/(:num)', 'Admin\NetAssets::add/$1'); 
-    //$routes->get('asset-manager', 'Admin\NetAssets::index'); 
-    //$routes->post('asset/create', 'Admin\NetAssets::create'); 
-
-
     $routes->group('assets-manager', static function($routes){
       $routes->get('/', 'Admin\AssetsManager::index');
       $routes->get('print', 'Admin\AssetsManager::print');
     });
 
-    
-    //$routes->get('asset/edit/(:num)', 'Admin\NetAsset::edit/$1'); 
-    //$routes->post('asset/update/(:num)', 'Admin\NetAssets::update/$1'); 
-    //$routes->get('asset/remove/(:num)', 'Admin\NetAssets::remove/$1'); 
-   //  $routes->get('asset/get/(:num)', 'Admin\NetAssets::lookup/$1'); 
-   //  $routes->get('asset/delete/(:num)', 'Admin\NetAssets::delete/$1'); 
     $routes->get('assets/print', 'Admin\NetAssets::print'); 
     $routes->get('assets/print-details', 'Admin\NetAssets::print_details');
 
@@ -156,100 +93,95 @@ $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
  });
 
 
-/**
- * --------------------------------------------------------------------
- * Protected Routes Group (Session Filter)
- * --------------------------------------------------------------------
- * All routes within this group are protected by the 'session' filter, 
- * ensuring that only authenticated users with an active session can 
- * access them.
- * 
- * This group includes:
- * 
- * - Purchasing Routes:
- *     Routes for tools, reports, and safety stock management under
- *     the 'purchasing' URI prefix.
- * 
- * - Vendor Routes:
- *     Routes for handling individual vendor operations, including 
- *     performance metrics and email-based actions, under the 'vendor' URI prefix.
- * 
- * - Vendors Routes:
- *     Routes for listing and retrieving data for all vendors, under 
- *     the 'vendors' URI prefix.
- */
-
-
  $routes->group('', ['filter' => 'session'], static function($routes){
 
-   $routes->group('purchasing', static  function($routes){
-      
-      $routes->get('/', 'Purchasing\Index::index');
+      $routes->group('purchasing', static  function($routes){
+         
+         $routes->get('/', 'Purchasing\Index::index');
 
-      $routes->get('fabrication-report', 'Purchasing\Fabrication\Index::index'); 
-      $routes->get('fabrication-report/data', 'Purchasing\Fabrication\Index::get_data'); 
+         $routes->get('fabrication-report', 'Purchasing\Fabrication\Index::index'); 
+         $routes->get('fabrication-report/data', 'Purchasing\Fabrication\Index::get_data'); 
 
-      $routes->get('paint-report', 'Purchasing\Paint\Index::index'); 
-      $routes->get('paint-report/data', 'Purchasing\Paint\Index::get_data'); 
+         $routes->get('paint-report', 'Purchasing\Paint\Index::index'); 
+         $routes->get('paint-report/data', 'Purchasing\Paint\Index::get_data'); 
 
-      $routes->get('safety-stock', 'Purchasing\Stock\Index::index');
-      $routes->get('safety-stock/data', 'Purchasing\Stock\Index::get_data');
-      
-      $routes->group('tools', static function($routes){
-         $routes->get('/', 'Purchasing\Tools\Index::index'); 
-         $routes->get('data', 'Purchasing\Tools\Index::get_data');
-         $routes->group('bookings', static function($routes){
-            $routes->get('/', 'Purchasing\Tools\Bookings\Index::index'); 
-            $routes->get('data/(:any)', 'Purchasing\Tools\Bookings\Index::get_data/$1'); 
-            $routes->post('review', 'Purchasing\Tools\Bookings\Index::review_email'); 
-            $routes->post('send-email', 'Purchasing\Tools\Bookings\Index::send_email'); 
-         });
-         $routes->group('confirmations', static function($routes){
-            $routes->get('/', 'Purchasing\Tools\Confirmations\Index::index'); 
-            $routes->post('review', 'Purchasing\Tools\Confirmations\Index::review_email'); 
-            $routes->post('send-email', 'Purchasing\Tools\Confirmations\Index::send_email'); 
+         $routes->get('safety-stock', 'Purchasing\Stock\Index::index');
+         $routes->get('safety-stock/data', 'Purchasing\Stock\Index::get_data');
+         
+         $routes->group('tools', static function($routes){
+            $routes->get('/', 'Purchasing\Tools\Index::index'); 
+            $routes->get('data', 'Purchasing\Tools\Index::get_data');
+            $routes->group('bookings', static function($routes){
+               $routes->get('/', 'Purchasing\Tools\Bookings\Index::index'); 
+               $routes->get('data/(:any)', 'Purchasing\Tools\Bookings\Index::get_data/$1'); 
+               $routes->post('review', 'Purchasing\Tools\Bookings\Index::review_email'); 
+               $routes->post('send-email', 'Purchasing\Tools\Bookings\Index::send_email'); 
+            });
+            $routes->group('confirmations', static function($routes){
+               $routes->get('/', 'Purchasing\Tools\Confirmations\Index::index'); 
+               $routes->post('review', 'Purchasing\Tools\Confirmations\Index::review_email'); 
+               $routes->post('send-email', 'Purchasing\Tools\Confirmations\Index::send_email'); 
+            });
+      });
+   });
+
+
+   $routes->group('', ['filter' => 'session'], static function($routes){
+      $routes->group('production', static function($routes){
+        $routes->get('/', 'Production\Index::index');
+      });
+   });
+
+
+  // $routes->get('production', 'Production\Index::index');
+   $routes->get('production/workorders', 'Production\Workorders::index');
+   $routes->get('production/workorder/(:num)/(:num)', 'Production\Workorders::get_workorder/$1/$2');
+   $routes->get('production/print', 'Production\Workorders::print_list'); 
+   $routes->post('production/print', 'Production\Workorders::print_list'); 
+
+   $routes->get('production/spreadsheets', 'Production\Spreadsheet\Index::index'); 
+   $routes->get('production/spreadsheet/trucks/(:segment)', 'Production\Spreadsheet\Trucks::index/$1'); 
+   $routes->get('production/truck/(:num)', 'Production\Spreadsheet\Truck::index/$1'); 
+
+   $routes->group('production', static function($routes){
+      $routes->group('schedule', static function($routes){
+         $routes->get('/',  'Production\Schedule\Index::index'); 
+         $routes->get('data', 'Production\Schedule\Index::get_data'); 
+         $routes->get('data/(:segment)', 'Production\Schedule\Index::get_data/$1'); 
+         $routes->post('mark-complete', 'Production\Schedule\Index::set_operation_complete'); 
+         $routes->get('shop-view', 'Production\Schedule\Index::shop_view'); 
+         $routes->get('shop-view/(:segment)', 'Production\Schedule\Index::shop_view/$1'); 
+      });
+   });
+
+
+
+      $routes->group('sales', static function($routes){
+         $routes->get('/', 'Sales\Index::index'); 
+         $routes->get('customers', 'Sales\Customers\Index::index'); 
+         $routes->get('customers/get', 'Sales\Customers\Index::get_data'); 
+         
+         $routes->get('customer/orders/(:num)', 'Sales\Customer\Orders\Index::index/$1'); 
+         $routes->get('customer/(:segment)', 'Sales\Customer\Index::index/$1'); 
+
+         $routes->group('ede', static function($routes){
+            $routes->get('report', 'Sales\EDE\Report\Index::index'); 
+            $routes->get('report/data', 'Sales\EDE\Report\Index::get_data'); 
+            $routes->get('report/spreadsheet', 'Sales\EDE\Report\Index::get_spreadsheet'); 
          });
       });
       
-   });
+      $routes->group('vendor', static function($routes){
+         $routes->get('performance/(:any)', 'Vendors\Index::get_performance/$1'); 
+         $routes->get('reminder_review/(:any)', 'Vendors\Index::reminder_review/$1');
+         $routes->get('email-delivery-update', 'Vendors\Email::update_delivery'); 
+         $routes->get('email-confirmation', 'Vendors\Email::confirmation'); 
+      });
 
-
-   /**
-    * --------------------------------------------------------------------
-    * Vendor Routes
-    * --------------------------------------------------------------------
-    * Routes related to individual vendor operations and actions.
-    * URI prefix: /vendor
-    * 
-    * - '/performance/(:any)'         → Fetch vendor performance metrics
-    * - '/reminder_review/(:any)'     → Display vendor reminder review
-    * - '/email-delivery-update'      → Handle email delivery update (AJAX/trigger)
-    * - '/email-confirmation'         → Handle email confirmation (AJAX/trigger)
-    */
-
-   /**
-    * --------------------------------------------------------------------
-    * Vendors Routes (List & Data)
-    * --------------------------------------------------------------------
-    * Routes related to the vendors listing and associated data retrieval.
-    * URI prefix: /vendors
-    * 
-    * - '/'          → Vendor listing page
-    * - '/data'      → Retrieve vendor data (for DataTables or API)
-    */
-
-   $routes->group('vendor', static function($routes){
-      $routes->get('performance/(:any)', 'Vendors\Index::get_performance/$1'); 
-      $routes->get('reminder_review/(:any)', 'Vendors\Index::reminder_review/$1');
-      $routes->get('email-delivery-update', 'Vendors\Email::update_delivery'); 
-      $routes->get('email-confirmation', 'Vendors\Email::confirmation'); 
-   });
-
-   $routes->group('vendors', static function($routes){
-      $routes->get('/', 'Vendors\Index::index'); 
-      $routes->get('data', 'Vendors\Index::get_data'); 
-   });
-
+      $routes->group('vendors', static function($routes){
+         $routes->get('/', 'Vendors\Index::index'); 
+         $routes->get('data', 'Vendors\Index::get_data'); 
+      });
 
 
 
@@ -277,26 +209,6 @@ $routes->group('sadmin', ['filter' => 'group:super'], function($routes){
     * Production Related Routes
     */
 
-   $routes->get('production', 'Production\Index::index');
-   $routes->get('production/workorders', 'Production\Workorders::index');
-   $routes->get('production/workorder/(:num)/(:num)', 'Production\Workorders::get_workorder/$1/$2');
-   $routes->get('production/print', 'Production\Workorders::print_list'); 
-   $routes->post('production/print', 'Production\Workorders::print_list'); 
-
-   $routes->get('production/spreadsheets', 'Production\Spreadsheet\Index::index'); 
-   $routes->get('production/spreadsheet/trucks/(:segment)', 'Production\Spreadsheet\Trucks::index/$1'); 
-   $routes->get('production/truck/(:num)', 'Production\Spreadsheet\Truck::index/$1'); 
-
-   $routes->group('production', static function($routes){
-      $routes->group('schedule', static function($routes){
-         $routes->get('/',  'Production\Schedule\Index::index'); 
-         $routes->get('data', 'Production\Schedule\Index::get_data'); 
-         $routes->get('data/(:segment)', 'Production\Schedule\Index::get_data/$1'); 
-         $routes->post('mark-complete', 'Production\Schedule\Index::set_operation_complete'); 
-         $routes->get('shop-view', 'Production\Schedule\Index::shop_view'); 
-         $routes->get('shop-view/(:segment)', 'Production\Schedule\Index::shop_view/$1'); 
-      });
-   });
 
    $routes->Get('access/denied', 'Errors::denied');
 

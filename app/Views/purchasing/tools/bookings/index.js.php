@@ -142,7 +142,11 @@ $(document).ready(() => {
             [10, 20, 50, 100, 200, -1],//Values
             [10, 20, 50, 100, 200, 'Show All']//labels
         ],
-
+        language:{
+            buttons:{
+                pageLength: '<i class="bi bi-binoculars"></i>&nbsp;Show %d rows',
+            }
+        },
         layout: {
             top2Start: {
                 buttons: [
@@ -153,7 +157,7 @@ $(document).ready(() => {
                     "spacer",
                     {
                         extend: "excel",
-                        text: "Export to Excel",
+                        text: `<i class="bi bi-file-spreadsheet"></i>&nbsp;Export to Excel`,
                         title: "PO Bookings <?=date('m-d-Y')?>",
                         filename: "po_booking_<?=date('Ymd')?>",
                         sheetName: "Purchase Order Bookings",

@@ -29,7 +29,7 @@
                     },
                     error: function(xhr, status, error){
                         loadingModal.hide(); 
-s                    }
+                    }
                 })
             },
             processing: false, 
@@ -65,6 +65,11 @@ s                    }
                
             ],
             select: true, 
+            language:{
+                buttons:{
+                    pageLength: '<i class="bi bi-binoculars"></i>&nbsp;Show %d rows',
+                }
+            },
             layout:{
                 top2Start: {
                     buttons: [
@@ -74,7 +79,7 @@ s                    }
                         "spacer",
                         {
                             extend: "excel",
-                            text: "Export to Excel",
+                            text: `<i class="bi bi-file-earmark-excel"></i>&nbsp;Export to Excel`,
                             title: "Vendors <?=date('m-d-Y')?>",
                             filename: "vendors_<?=date('Ymd')?>",
                             sheetName: "Vendors",
