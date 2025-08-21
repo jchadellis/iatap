@@ -40,6 +40,14 @@ class Index extends BaseController
                 'icon' => 'components/icon/clipboard-document-icon',
                 'color' => 'text-dark', 
             ],
+            [
+                'name' => 'Paint Requirement / Operations', 
+                'description' => 'List of Paint operations with requirements not complete but has stock', 
+                'url' => 'production/requirements/paint', 
+                'btn_text' => 'View List', 
+                'icon' => 'components/icon/clipboard-document-icon',
+                'color' => 'text-dark', 
+            ],
 
         ];
 

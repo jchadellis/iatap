@@ -19,6 +19,11 @@ class {class} extends {extends}
         ],
     ];
 
+    public function __construct()
+    {
+        // initialize default models and parameters
+    }
+
     public function index()
     {
         $data = [

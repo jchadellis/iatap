@@ -24,6 +24,15 @@ class Index extends BaseController
             'icon' => 'components/icon/table-icon',
             'color' => 'text-dark', 
         ],
+        [
+            'name' => "EDE Items Report", 
+            'description' =>  'View and download EDE Report spreadsheet',
+            'url' => 'sales/ede/report/', 
+            'btn_text' => 'View', 
+            'icon' => 'components/icon/table-icon',
+            'color' => 'text-dark', 
+            'permission' => 'edereport.view', 
+        ],
     ];
     public function index()
     {

@@ -83,7 +83,6 @@
                             title: "Vendors <?=date('m-d-Y')?>",
                             filename: "vendors_<?=date('Ymd')?>",
                             sheetName: "Vendors",
-                                //insertCells: true,
                                 excelStyles: [
                                 
                                 {
@@ -135,8 +134,7 @@
                                     }
                                 },
 
-                            ]
-                            
+                            ]                 
                         }
                     ]
                 },

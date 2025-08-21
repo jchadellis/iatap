@@ -36,6 +36,7 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'group'         => \Codeigniter\Shield\Filters\GroupFilter::class,
         'permission'    => \Codeigniter\Shield\Filters\PermissionFilter::class, 
+        'edereport'     => \App\Filters\EDEReportPermissionFilter::class,
     ];
 
     /**

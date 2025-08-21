@@ -28,7 +28,8 @@ class RequirementsModel extends Model
         'qty_on_order',
         'status',
         'created_at',
-        'piece_no'
+        'piece_no',
+        'resource_id', 
     ];
 
     protected bool $allowEmptyInserts = false;

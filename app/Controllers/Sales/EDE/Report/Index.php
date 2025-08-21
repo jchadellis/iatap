@@ -34,8 +34,7 @@ class Index extends BaseController
             'breadcrumbs' => [
                 ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard' ],
 				['name' => 'Sales', 'is_active' => false, 'url' => 'sales'],
-				['name' => 'EDE', 'is_active' => false, 'url' => 'sales/ede'],
-				['name' => 'Report', 'is_active' => true, 'url' => '#']
+				['name' => 'EDE Report', 'is_active' => true, 'url' => '#']
             ],
             'title' => 'EDE Report', 
             'content' => view('sales/ede/report/index'),

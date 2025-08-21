@@ -12,6 +12,7 @@ class Index extends BaseController
     {
         $this->remote_model = new SqlbaseModel(); 
     }
+    
     public function index()
     {
         $data = [
