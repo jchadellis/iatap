@@ -27,7 +27,8 @@
         ?>
         <?php if ($canView): ?>
             <li class="nav-item">
-                <a href="<?= ($page->url !== 'null') ? $page->url : site_url($page->uri) ?>"
+                <!-- <a href="<?= ($page->url !== 'null') ? $page->url : site_url($page->uri) ?>" -->
+                <a href="<?= site_url($page->uri) ?? '' ?>"
                   class="nav-link px-2 <?= $isCurrent ?>">
                     <i class="<?= $page->icon ?> me-3"></i><?= $page->name ?>
                 </a>

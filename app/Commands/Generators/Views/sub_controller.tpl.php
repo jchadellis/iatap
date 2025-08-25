@@ -41,6 +41,23 @@ class {class} extends {extends}
 
     public function get_data()
     {
-        
+        $data = [['col-1' => 'data']]; //get data from db or remote json
+
+        if( $data )
+        {
+            return $this->response->setJSON(
+                [
+                    'data' => $data, 
+                    'success' => true,
+                    'message' => 'Retrieved Data',
+                ]
+            );
+        }
+        return $this->response->setJSON(
+            [
+                'success' => false, 
+                'message' => 'Failed to get data', 
+            ]
+        );  
     }
 }

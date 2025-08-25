@@ -3,11 +3,13 @@
 namespace App\Controllers\User;
 use App\Controllers\BaseController; 
 use App\Models\UserModel; 
+use App\Models\EmployeeModel; 
 
 class Index extends BaseController
 {
     public function index($id = null): string
     {
+        $employee = new EmployeeModel(); 
         
         if( is_null($id) )
         {
@@ -17,17 +19,16 @@ class Index extends BaseController
                 ['name' => auth()->user()->first_name . ' ' . auth()->user()->last_name , 'is_active' => true, 'url' => '#'],
             ];
     
-            $user['user'] = auth()->user();
-            $data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => auth()->user()->first_name . ' ' . auth()->user()
-            ->last_name .' - Profile', 'content' => view('user/index', $user) ];
+            $user = auth()->user();
+            $details = $employee->where('employee_id', $user->employee_id )->first(); 
+            $data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => $user->first_name . ' ' . $user
+            ->last_name .' - Profile', 'content' => view('user/index', ['user' => $user , 'details' => $details ] ) , 'js' => ''];
             return view('template/index', $data);
         }
 
         $model = new UserModel(); 
-        $user['user'] = $model->find($id); 
-        $firstname = $user['user']->first_name; 
-        $lastname = $user['user']->last_name; 
-        $id = $user['user']->id; 
+        $user = $model->find($id); 
+        $details = $$employee->where('employee_id', $user->employee_id )->first();
 
         if( $user )
         {
@@ -35,11 +36,17 @@ class Index extends BaseController
                 ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
                 ['name' => 'Control Panel', 'is_active' => false, 'url' => '/sadmin/control-panel'],
                 ['name' => 'Users', 'is_active' => false, 'url' => '/sadmin/user-management'],
-                ['name' => 'Edit', 'is_active' => false, 'url' => '/sadmin/user/edit/'.$id],
-                ['name' => $firstname . ' ' . $lastname , 'is_active' => true, 'url' => '#'],
+                ['name' => 'Edit', 'is_active' => false, 'url' => '/sadmin/user/edit/'.$user->id],
+                ['name' => $user->first_name . ' ' . $user->last_name , 'is_active' => true, 'url' => '#'],
             ];
 
-            $data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => $firstname . ' ' . $lastname.' - Profile', 'content' => view('user/index', $user) ];
+            $data = [
+                'site_name' => 'iATAP', 
+                'breadcrumbs' => $breadcrumbs, 
+                'title' =>$user->first_name . ' ' . $user->last_name.' - Profile', 
+                'content' => view('user/index', ['user' => $user, 'details' => $details]),
+                'js' => '', 
+            ];
 
 
             return view('template/index', $data);

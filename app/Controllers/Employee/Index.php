@@ -98,7 +98,8 @@ class Index extends BaseController
     protected $resources = [
         [
             'name' => 'Employee Training Records', 
-            'url'   => 'employee/training', 
+            //'url'   => 'employee/training', 
+            'url' => '#',
             'btn_text' => 'Open', 
             'icon' => 'components/icon/globe-icon',
             'color' => 'text-dark',  
@@ -127,7 +128,7 @@ class Index extends BaseController
 
     public function list()
     {
-        $employees = $this->employeeModel->getData('http://vatap/mvc/public/api/getemployees/'); 
+        $employees = $this->employeeModel->getData('http://vatap/mvc/public/api/getemployees/0'); 
         return $employees; 
     }
 }

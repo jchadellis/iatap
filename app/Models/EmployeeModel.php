@@ -10,10 +10,42 @@ class EmployeeModel extends Model
     protected $table            = 'employees';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['employee_id', 'first_name', 'last_name', 'middle_inital', 'addr_1', 'addr_2', 'addr_3', 'city', 'state', 'zipcode', 'phone', 'department_id'];
+    protected $allowedFields    = [
+        'employee_id', 
+        'first_name', 
+        'last_name', 
+        'middle_initial', 
+        'addr_1', 
+        'addr_2', 
+        'addr_3', 
+        'city', 
+        'state', 
+        'zipcode', 
+        'phone', 
+        'department_id',
+        'birth_date', 
+        'hire_date', 
+        'vac_days', 
+        'free_days', 
+        'last_visual_updated_at', 
+        'group', 
+        'work_email', 
+        'personal_email', 
+        'phone_2', 
+        'contact_2', 
+        'contact_2_relationship', 
+        'contact_2_cell', 
+        'contact_2_work', 
+        'contact_2_home', 
+        'contact_3', 
+        'contact_3_relationship', 
+        'contact_3_cell', 
+        'contact_3_work', 
+        'contact_3_home', 
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

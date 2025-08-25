@@ -258,6 +258,24 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->get('/', 'Engineering\Index::index');
     });
 
+    $routes->group('hr', static function($routes){
+        $routes->get('/', 'HR\Index::index'); 
+        $routes->group('employee', static function($routes){
+            $routes->get('management', 'HR\Employee\Management\Index::index');
+            $routes->get('management/data', 'HR\Employee\Management\Index::get_data');
+            $routes->post('management/employee', 'HR\Employee\Management\Index::get_employee');
+            $routes->post('management/employee/save', 'HR\Employee\Management\Index::save_employee');
+        });
+    });
+
+    // Test\Index Routes
+    $routes->group('test', static function($routes) {
+        $routes->get('/', 'Test\Index::index');
+        $routes->get('test', 'Test\Test\Index::index'); 
+        $routes->get('test/data', 'Test\Test\Index::get_data'); 
+    });
+
+
     // Error Routes
     $routes->get('access/denied', 'Errors::denied');
 });
