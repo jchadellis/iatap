@@ -16,3 +16,13 @@
         </figure>
     </div>
 </div>
+
+<div class="row gap-2">
+    <div class="card my-4 rounded-0" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">SEC Games For Week <?= $week ?></h5>
+        <p class="card-text">View the complete schedule for upcoming SEC football games this week.</p>
+        <div class="d-grid"><a href="<?= base_url('games') ?>" class="btn btn-primary stretched-link">View Games</a></div>
+    </div>
+    </div>
+</div>

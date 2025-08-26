@@ -12,7 +12,7 @@
             select: true, 
             lengthMenu: [25, 50, 100, 200, { label: 'All', value: -1 }],
             ajax:{
-                url: '<?= base_url('test/test/data') ?>', 
+                url: '<?= base_url('path/to/data') ?>', 
                 dataSrc: 'data',
             },        
             pageLength: 25,    

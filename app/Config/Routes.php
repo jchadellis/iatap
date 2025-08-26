@@ -14,8 +14,10 @@ use CodeIgniter\Router\RouteCollection;
 $routes->group('', static function($routes) {
     $routes->get('/', 'Dashboard::index');
     $routes->get('dashboard', 'Dashboard::index');
-    $routes->get('weather', 'Dashboard::get_weather');
-    $routes->get('files', 'Dashboard::files');
+    // $routes->get('weather', 'Dashboard::get_weather');
+    // $routes->get('files', 'Dashboard::files');
+    $routes->get('games', 'Dashboard::get_games'); 
+    $routes->get('games/refresh', 'Dashboard::force_refresh_games');
 });
 
 // Directory Routes

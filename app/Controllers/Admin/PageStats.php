@@ -41,6 +41,7 @@ class PageStats extends BaseController
                 'userName' => $userProvider->find( $user->user_id )->first_name . ' ' . $userProvider->find( $user->user_id )->last_name , 
                 'pageUrl' => $pagelogger->select('current_url')->where('controller', $page->controller)->first()->current_url,
                 'lastAccess' => (new \DateTime($pagelogger->select('MAX(created_at) as last_accessed')->where('controller', $page->controller)->first()->last_accessed))->format('m-d-Y'),
+                'orderDate' => (new \DateTime($pagelogger->select('MAX(created_at) as last_accessed')->where('controller', $page->controller)->first()->last_accessed))->format('Y-m-d'),
             ];
 
             $pages[] = $page;
@@ -54,7 +55,7 @@ class PageStats extends BaseController
             'title' => "Page Logs", 
             'breadcrumbs' => $breadcrumbs,
             'content' => view('admin/pagelog/index', ['data' => $pages]),
-            'js' => '', 
+            'js' => view('admin/pagelog/index.js.php'), 
         ];
 
         return view('template/index', $data);

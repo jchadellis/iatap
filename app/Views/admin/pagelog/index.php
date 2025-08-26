@@ -15,7 +15,7 @@
                     <td class="text-start"><a href="<?= $row['pageUrl'] ?>"><?= $row['page'] ?></a></td>
                     <td class="text-center"><?= $row['count'] ?></td>
                     <td class="text-center"><?= $row['userName'] ?></td>
-                    <td class="text-center"><?= $row['lastAccess'] ?></td>
+                    <td class="text-center" data-order="<?= $row['orderDate'] ?>"><?= $row['lastAccess'] ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
