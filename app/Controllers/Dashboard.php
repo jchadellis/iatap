@@ -40,7 +40,6 @@ class Dashboard extends BaseController
 
         $recordsLookup = array_column($records, null, 'id'); 
 
-        // Use array_map to efficiently transform the games array
         $games = array_map(function($game) use ($teamLookup, $recordsLookup) {
             $game['homeLogo'] = "http://a.espncdn.com/i/teamlogos/ncaa/500-dark/{$game['homeId']}.png";
             $game['awayLogo'] = "http://a.espncdn.com/i/teamlogos/ncaa/500/{$game['awayId']}.png";

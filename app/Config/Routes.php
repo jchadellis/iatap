@@ -149,6 +149,16 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
                 $routes->post('send-email', 'Purchasing\Tools\Confirmations\Index::send_email');
             });
         });
+
+        $routes->group('workrequest', static function($routes){
+            $routes->get('/', 'Purchasing\WorkRequest\Index::index'); 
+            $routes->get('data', 'Purchasing\WorkRequest\Index::get_data'); 
+            $routes->post('get', 'Purchasing\WorkRequest\Index::get_request');  
+            $routes->post('update', 'Purchasing\WorkRequest\Index::update_request'); 
+            $routes->post('save', 'Purchasing\WorkRequest\Index::save_request');  
+            $routes->post('close', 'Purchasing\WorkRequest\Index::close_request'); 
+            $routes->post('restore', 'Purchasing\WorkRequest\Index::restore_request'); 
+        });
     });
 
 
@@ -207,8 +217,13 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     });
 
     $routes->group('vendors', static function($routes) {
-        $routes->get('/', 'Vendors\Index::index');
-        $routes->get('data', 'Vendors\Index::get_data');
+        $routes->get('tools', 'Vendors\Index::index');
+        $routes->get('performance', 'Vendors\Performance\Index::index'); 
+        $routes->get('performance/data', 'Vendors\Performance\Index::get_data'); 
+        $routes->get('jcp-report', 'Vendors\JCPReport\Index::index');
+        $routes->get('jcp-report/data', 'Vendors\JCPReport\Index::get_data'); 
+        $routes->get('list', 'Vendors\List\Index::index'); 
+        $routes->get('list/data', 'Vendors\List\Index::get_data'); 
     });
 
     // Warehouse Routes
@@ -260,6 +275,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->get('/', 'Engineering\Index::index');
     });
 
+    //HR Routes
     $routes->group('hr', static function($routes){
         $routes->get('/', 'HR\Index::index'); 
         $routes->group('employee', static function($routes){
@@ -269,14 +285,6 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->post('management/employee/save', 'HR\Employee\Management\Index::save_employee');
         });
     });
-
-    // Test\Index Routes
-    $routes->group('test', static function($routes) {
-        $routes->get('/', 'Test\Index::index');
-        $routes->get('test', 'Test\Test\Index::index'); 
-        $routes->get('test/data', 'Test\Test\Index::get_data'); 
-    });
-
 
     // Error Routes
     $routes->get('access/denied', 'Errors::denied');

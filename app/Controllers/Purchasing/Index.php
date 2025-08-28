@@ -32,11 +32,11 @@ class Index extends BaseController
                 'color' => 'text-dark', 
             ],
             [
-                'name' => "Vendor List", 
-                'description' =>  'Vendor List: Company Names, Contact Info, and Supplied Materials/Services',
-                'url' => 'vendors', 
-                'btn_text' => 'View List', 
-                'icon' => 'components/icon/list-icon',
+                'name' => "Vendor Tools", 
+                'description' =>  'Tools related to vendors. List Vendors, Get Performance, See JCP Expirations',
+                'url' => 'vendors/tools', 
+                'btn_text' => 'View Tools', 
+                'icon' => 'components/icon/building-storefront',
                 'color' => 'text-dark', 
             ],
             [

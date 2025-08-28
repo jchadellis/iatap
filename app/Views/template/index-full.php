@@ -51,7 +51,7 @@
                 </main>
                 
                 <!-- Sticky Footer -->
-                <footer class="footer text-body-tertiary"><span>Copyright &copy; <?= (isset($site_name)) ? $site_name : ''  ?> <?= date('Y'); ?></span></footer>
+                <footer class="footer text-body-tertiary"><span> <?= (isset($site_name)) ? $site_name : ''  ?> <?= date('Y'); ?></span></footer>
             </div>
         </div>
     </div>

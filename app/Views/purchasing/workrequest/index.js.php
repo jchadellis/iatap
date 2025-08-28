@@ -1,9 +1,18 @@
 <script>
     $(document).ready(function(){
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success m-2",
+                cancelButton: "btn btn-danger m-2"
+            },
+            buttonsStyling: false
+        });
+
         $.extend(true, $.fn.dataTable.Buttons.defaults, {
             dom: {
                 button: {
-                    className: 'btn btn-primary' // new default
+                    className: 'btn btn-primary' 
                 }
             }
         });
@@ -12,12 +21,12 @@
             select: true, 
             lengthMenu: [25, 50, 100, 200, { label: 'All', value: -1 }],
             ajax:{
-                url: '<?= base_url('path/to/data') ?>', 
+                url: '<?= base_url('purchasing/workrequest/data') ?>', 
                 dataSrc: 'data',
             },        
             pageLength: 25,    
             responsive: true,
-            order:[[0, 'desc']],
+            order:[[5, 'desc']],
             language:{
                 buttons:{
                     colvis: `<i class="bi bi-eye-slash"></i>&nbsp;Show/Hide Columns`, 
@@ -28,25 +37,44 @@
             },
             columns:[
                 {
-                    data: 'col-1', 
-                    title: 'column 1', 
-                    render: function(data, type, row){
-                        // Add null/undefined check
-                        if (type === 'display' || type === 'type') {
-                            return data || '-';
-                        }
-                        return data; 
-                    }, 
+                    data: 'request_id', 
+                    title: 'Request ID', 
+                    visible: false, 
                 },
-                // {
-                //     data: null,
-                //     orderable: false, 
-                //     className: 'd-grid', 
-                //     render: function(data, type, row)
-                //     {
-                //         return `<button class="btn btn-primary edit-btn"><i class="bi bi-pencil"></i>&nbsp;Edit</button>`;
-                //     }
-                // }
+                {
+                    data: 'work_order', 
+                    title: 'Work Order', 
+                },
+                {
+                    data: 'request_by_email', 
+                    title: 'Requested By', 
+                },
+                {
+                    data: 'qty', 
+                    title: 'Qty', 
+                },
+                {
+                    data: 'part_id', 
+                    title: 'Part ID', 
+                },
+                {
+                    data: 'created_at', 
+                    title: 'Created Date', 
+                    render: function(data, type, row)
+                    {   
+                        var dt = new Date(data);
+
+                        year  = dt.getFullYear();
+                        month = (dt.getMonth() + 1).toString().padStart(2, "0");
+                        day   = dt.getDate().toString().padStart(2, "0");
+                        str = year + '-' + month + '-' + day;
+                        return str ; 
+                    }
+                },
+                {
+                    data: 'due_date', 
+                    title: 'Due Date', 
+                },
             ],
             columnDefs:[
                 {
@@ -62,24 +90,13 @@
                 topStart:{
                     buttons:[
                         'pageLength', 
+                        'excel',
                         {
-                            extend: 'excelHtml5', 
-                            title: 'Custom Title', 
-                            filename: function() {
-                                return 'Custom_File_Name_' + new Date().toISOString().slice(0,10);
-                            }
-                        },
-                        {
-                            extend: 'pdf', 
-                            title: 'Custom Title', 
-                            filename: function() {
-                                return 'Custom_File_Name_' + new Date().toISOString().slice(0,10);
-                            },
-                        },
-                        {
-                            text: 'Button Text', 
+                            text: '<i class="bi bi-plus-square"></i>&nbsp;New Work Request', 
+                            className: 'btn-success',
                             action: function(e, dt, node, config ){
-                                //do something
+                                let modal = $('#add-modal'); 
+                                modal.modal('show'); 
                                 return; 
                             }
                         }
@@ -87,7 +104,8 @@
                 }
             },
             createdRow: function(row, data, dataIndex){
-                //Change Table Row Attributes 
+                $(row).data('id', data.id); 
+                $(row).data('request_id', data.request_id);
             }
 
         });
@@ -96,30 +114,66 @@
             if (type === 'row') {
                 row = dt.row(indexes[0]).node(); 
                 modal = $('#content-modal'); 
-                modal.modal('show'); 
+
                 selectedRow = $(dt.row(indexes).node()); 
-                //data = { 'id' => $(row).data('id') };
-                //url = `base_url'`;
+                data = { 'id' : $(row).data('id') };
+                url = `<?= base_url('purchasing/workrequest/get') ?>`;
                 
-                //$.post(url, data, function(response){
-                    //do something with data.
-                    //  if(response.success)
-                    //  {
-                    //     Swal.fire({
-                    //         title: `${response.title}`,
-                    //         text: `${response.message}`,
-                    //         icon: 'success',
-                    //         confirmButtonText: 'OK'
-                    //     });
-                    //  }else{
-                    //     Swal.fire({
-                    //         title: `${response.title}`,
-                    //         text: `${response.message}`,
-                    //         icon: 'warning',
-                    //         confirmButtonText: 'OK'
-                    //     });
-                    //  }
-                //})
+                $.post(url, data, function(response){
+
+                     if(response.success)
+                     {
+                        modal.modal('show'); 
+                        content = modal.find('.modal-content > .modal-body'); 
+                        content.html(response.data); 
+                        $('.datepicker').flatpickr({
+                            dateFormat: 'Y-m-d',
+                        }); 
+
+                        $('.demand-type-select').on('change', function(){
+                            val = $(this).val();
+                            if(val == '1'){
+                                $('.demand-id-input').attr('disabled', false); 
+                            }else{
+                                $('.demand-id-input').attr('disabled', true); 
+                            }
+                        })
+
+                        form = modal.find('form'); 
+                        form.off('submit').on('submit', function(e){
+                            e.preventDefault(); 
+                            data = $(this).serialize(); 
+                            url = "<?= base_url('purchasing/workrequest/update')?>"; 
+                            $.post(url, data, function(response){
+                                if(response.success)
+                                {
+                                    Swal.fire({
+                                        title: `${response.title}`,
+                                        text: `${response.message}`,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    });
+
+                                } else {
+                                    Swal.fire({
+                                        title: `${response.title}`,
+                                        text: `${response.message}`,
+                                        icon: 'warning',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            });
+                        });
+
+                     }else{
+                        Swal.fire({
+                            title: `${response.title}`,
+                            text: `${response.message}`,
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                     }
+                })
             }
         });
 
@@ -135,6 +189,46 @@
             modal.modal('show'); 
         });
 
+        $('#close-btn').on('click', function(){
+            swalWithBootstrapButtons.fire({
+                title: "Are you sure?",
+                text: "Closing the request will remove it from the list.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Close",
+                cancelButtonText: "Cancel",
+                reverseButtons: true
+            }).then((result) => {
+            if (result.isConfirmed) {
+                if(selectedRow)
+                {
+                    row = table.row(selectedRow).node(); 
+                    url = `<?= base_url('purchasing/workrequest/close') ?>`; 
+                    data = { 'id' :  $(row).data('id'), 'request_id' : $(row).data('request_id')}; 
+                    $.post(url, data, function(response){
+                        if(response.success)
+                        {
+                            swalWithBootstrapButtons.fire({
+                                title: "Close Work Request!",
+                                text: "The Work Request has been closed!",
+                                icon: "success"
+                            });
+                            modal.modal('hide'); 
+                        }
+                    });
+                }
+
+            } else if ( result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "Closing Work Request has been canceled.",
+                    icon: "error"
+                });
+                modal.modal('hide'); 
+            }
+            });
+        })
+
         $('#content-modal').on('hidden.bs.modal', function(){
             if(selectedRow) {
                 row = table.row(selectedRow);
@@ -143,6 +237,19 @@
             }
         });
 
+
+        $('.datepicker').flatpickr({
+            dateFormat: 'Y-m-d',
+        }); 
+
+        $('.demand-type-select').on('change', function(){
+            val = $(this).val();
+            if(val == '1'){
+                $('.demand-id-input').attr('disabled', false); 
+            }else{
+                $('.demand-id-input').attr('disabled', true); 
+            }
+        })
 
 
     })

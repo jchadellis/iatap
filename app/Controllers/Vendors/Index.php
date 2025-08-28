@@ -7,36 +7,75 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Index extends BaseController
 {
+
+    private $cards = [
+        [
+            'name' => "Vendor List", 
+            'description' =>  'List of all vendors',
+            'url' => 'vendors/list', 
+            'btn_text' => 'View', 
+            'icon' => 'components/icon/list-bullet',
+            'color' => 'text-dark', 
+        ],
+        [
+            'name' => "Performance", 
+            'description' =>  'List of vendors and their on-time delivery performance over last ninty days.',
+            'url' => 'vendors/performance', 
+            'btn_text' => 'View', 
+            'icon' => 'components/icon/chart-bar',
+            'color' => 'text-dark', 
+        ],
+        [
+            'name' => "JCP Experation Report", 
+            'description' =>  'Vendors with JCP Experation',
+            'url' => 'vendors/jcp-report', 
+            'btn_text' => 'View', 
+            'icon' => 'components/icon/document-chart',
+            'color' => 'text-dark', 
+        ],
+    ];
+
     public function __construct()
     {
-        $this->db = \Config\Database::connect('visual_cache');
-        $this->data = $this->db->query("SELECT * FROM vendor_cache")->getResult(); 
+        // initialize default models and parameters
     }
 
     public function index()
     {
-        $breadcrumbs = [
-            ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
-            ['name' => 'Puchasing', 'is_active' => false, 'url' => '/purchasing'],
-            ['name' => 'Vendors',  'is_active' => true, 'url' => '#']
+        $data = [
+            'site_name' => 'iATAP', 
+            'breadcrumbs' => [
+                ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard' ],
+                ['name' => 'Purchasing', 'is_active' => false, 'url' => '/purchasing' ],
+				['name' => 'Vendor Tools', 'is_active' => true, 'url' => '#'],
+            ],
+            'title' => 'Vendor Tools', 
+            'content' => view('vendors/index',['cards' => $this->cards]),
+            'js' => view('vendors/index.js.php'), 
         ];
 
-        $data = $this->data; 
-        $content = view('vendors/index', ['data' => $data ]); 
-        $js = view('vendors/index.js.php'); 
-
-        return view('template/index', ['content' => $content, 'title' => 'Vendors', 'js' => $js , 'breadcrumbs' => $breadcrumbs]);
+        return view('template/index', $data); 
     }
 
     public function get_data()
     {
-        foreach($this->data as $row)
-        {
-            //Convert date strings to date objects
-            $row->open_date = new \DateTime($row->open_date); 
-            $row->modify_date = new \DateTime($row->modify_date); 
-        }
+        $data = [['col-1' => 'data']]; //get data from db or remote json
 
-        return $this->response->setJSON(['data' => $this->data]); 
+        if( $data )
+        {
+            return $this->response->setJSON(
+                [
+                    'data' => $data, 
+                    'success' => true,
+                    'message' => 'Retrieved Data',
+                ]
+            );
+        }
+        return $this->response->setJSON(
+            [
+                'success' => false, 
+                'message' => 'Failed to get data', 
+            ]
+        );  
     }
 }
