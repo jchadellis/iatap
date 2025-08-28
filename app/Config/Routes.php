@@ -150,7 +150,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             });
         });
 
-        $routes->group('workrequest', static function($routes){
+        $routes->group('work-request', static function($routes){
             $routes->get('/', 'Purchasing\WorkRequest\Index::index'); 
             $routes->get('data', 'Purchasing\WorkRequest\Index::get_data'); 
             $routes->post('get', 'Purchasing\WorkRequest\Index::get_request');  

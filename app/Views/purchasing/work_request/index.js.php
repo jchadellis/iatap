@@ -21,7 +21,7 @@
             select: true, 
             lengthMenu: [25, 50, 100, 200, { label: 'All', value: -1 }],
             ajax:{
-                url: '<?= base_url('purchasing/workrequest/data') ?>', 
+                url: '<?= base_url('purchasing/work-request/data') ?>', 
                 dataSrc: 'data',
             },        
             pageLength: 25,    
@@ -117,7 +117,7 @@
 
                 selectedRow = $(dt.row(indexes).node()); 
                 data = { 'id' : $(row).data('id') };
-                url = `<?= base_url('purchasing/workrequest/get') ?>`;
+                url = `<?= base_url('purchasing/work-request/get') ?>`;
                 
                 $.post(url, data, function(response){
 
@@ -143,7 +143,7 @@
                         form.off('submit').on('submit', function(e){
                             e.preventDefault(); 
                             data = $(this).serialize(); 
-                            url = "<?= base_url('purchasing/workrequest/update')?>"; 
+                            url = "<?= base_url('purchasing/work-request/update')?>"; 
                             $.post(url, data, function(response){
                                 if(response.success)
                                 {
@@ -203,7 +203,7 @@
                 if(selectedRow)
                 {
                     row = table.row(selectedRow).node(); 
-                    url = `<?= base_url('purchasing/workrequest/close') ?>`; 
+                    url = `<?= base_url('purchasing/work-request/close') ?>`; 
                     data = { 'id' :  $(row).data('id'), 'request_id' : $(row).data('request_id')}; 
                     $.post(url, data, function(response){
                         if(response.success)

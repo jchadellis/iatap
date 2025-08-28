@@ -32,6 +32,14 @@ class Index extends BaseController
                 'color' => 'text-dark', 
             ],
             [
+                'name' => "Work Request Manager", 
+                'description' =>  'View, edit and close Internal Work Request',
+                'url' => 'purchasing/work-request', 
+                'btn_text' => 'View Report', 
+                'icon' => 'components/icon/dollar-icon',
+                'color' => 'text-dark', 
+            ],
+            [
                 'name' => "Vendor Tools", 
                 'description' =>  'Tools related to vendors. List Vendors, Get Performance, See JCP Expirations',
                 'url' => 'vendors/tools', 

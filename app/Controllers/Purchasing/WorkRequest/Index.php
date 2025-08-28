@@ -39,11 +39,11 @@ class Index extends BaseController
             'breadcrumbs' => [
                 ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard' ],
 				['name' => 'Purchasing', 'is_active' => false, 'url' => 'purchasing'],
-				['name' => 'WorkRequest', 'is_active' => true, 'url' => '#']
+				['name' => 'Work Request', 'is_active' => true, 'url' => '#']
             ],
             'title' => 'Work Request', 
-            'content' => view('purchasing/workrequest/index',['cards' => $this->cards, 'demand_types' => $this->demand_types, 'inspection_levels' => $this->inspection_levels]),
-            'js' => view('purchasing/workrequest/index.js.php'), 
+            'content' => view('purchasing/work_request/index',['cards' => $this->cards, 'demand_types' => $this->demand_types, 'inspection_levels' => $this->inspection_levels]),
+            'js' => view('purchasing/work_request/index.js.php'), 
         ];
 
         return view('template/index', $data); 
@@ -93,7 +93,7 @@ class Index extends BaseController
             return $this->response->setJSON(
                 [
                     'title' => 'Data Received', 
-                    'data' => view('purchasing/workrequest/modal', ['data' => $data, 'demand_types' => $this->demand_types, 'inspection_levels' => $this->inspection_levels]), 
+                    'data' => view('purchasing/work_request/modal', ['data' => $data, 'demand_types' => $this->demand_types, 'inspection_levels' => $this->inspection_levels]), 
                     'success' => true,
                     'message' => 'Retrieved Data',
                 ]
