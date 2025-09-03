@@ -98,8 +98,8 @@
                 modal = $('#content-modal'); 
                 modal.modal('show'); 
                 selectedRow = $(dt.row(indexes).node()); 
-                //data = { 'id' => $(row).data('id') };
-                //url = `base_url'`;
+                //data = { 'id' : $(row).data('id') };
+                //url = `base_url()`;
                 
                 //$.post(url, data, function(response){
                     //do something with data.

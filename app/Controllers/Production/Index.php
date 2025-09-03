@@ -15,13 +15,21 @@ class Index extends BaseController
             ['name' => 'Production', 'is_active' => true, 'url' => '#'],
         ];
 
-        $tool_cards = [
+        $secure_tool_cards = [
             [
                 'name' => 'Open Work Orders', 
                 'description' => 'Review All Currently Open Work Orders, Categorized According to the Department Responsible for Their Completion', 
                 'url' => 'workorders/36', 
                 'btn_text' => 'View Workorders', 
                 'icon' => 'components/icon/cloud-icon',
+                'color' => 'text-dark', 
+            ],
+            [
+                'name' => "Work Request Manager", 
+                'description' =>  'View, edit and close Internal Work Request',
+                'url' => 'purchasing/work-request', 
+                'btn_text' => 'View Request', 
+                'icon' => 'components/icon/inbox-arrow-down-icon',
                 'color' => 'text-dark', 
             ],
             [
@@ -51,7 +59,15 @@ class Index extends BaseController
 
         ];
 
-        $this->data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => 'Production', 'content' => view('production/index', ['tool_cards' => $tool_cards]), 'js' => '' ];
+        $groups = ['production', 'super'];
+
+        $this->data = [
+            'site_name' => 'iATAP', 
+            'breadcrumbs' => $breadcrumbs, 
+            'title' => 'Production', 
+            'content' => view('production/index', ['secure_tool_cards' => $secure_tool_cards, 'groups' => $groups]), 
+            'js' => '' 
+        ];
         return view('template/index', $this->data);
     }
 

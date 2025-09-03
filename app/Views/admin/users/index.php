@@ -63,55 +63,55 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-floating">
+                                <!-- <div class="form-floating">
                                     <input type="text" class="form-control date-picker" id="floatingInput" placeholder="Date of Birth" name="user[date_of_birth]">
                                     <label for="floatingInput">Date of Birth</label>
-                                </div>
+                                </div> -->
                             </div>
                         </div>                   
                         <div class="row">
                             <div class="col">
-                                <div class="form-floating mb-2">
+                                <!-- <div class="form-floating mb-2">
                                     <input type="text" class="form-control" id="floatingStreetInput" name="user[street]" placeholder="<?= lang('Auth.street') ?>">
                                     <label for="floatingStreetnput"><?= lang('Auth.street') ?></label>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-5">
-                                <div class="form-floating mb-2">
+                                <!-- <div class="form-floating mb-2">
                                     <input type="text" class="form-control" id="floatingStateInput" name="user[city]" placeholder="<?= lang('Auth.city') ?>">
                                     <label for="floatingCityInput"><?= lang('Auth.city') ?></label>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="col-4">
-                                <div class="form-floating mb-2">
+                                <!-- <div class="form-floating mb-2">
                                     <input type="text" class="form-control" id="floatingStateInput" name="user[state]" placeholder="<?= lang('Auth.state') ?>" value="<?= (old('state') == '') ? 'AL' : old('state') ?>" >
                                     <label for="floatingStateInput"><?= lang('Auth.state') ?></label>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="col">
-                                <div class="form-floating mb-2">
+                                <!-- <div class="form-floating mb-2">
                                     <input type="text" class="form-control" id="floatingStateInput" name="user[zip]" placeholder="<?= lang('Auth.zip') ?>">
                                     <label for="floatingZipInput"><?= lang('Auth.zip') ?></label>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-6">
                                 <!-- Primary Phone -->
-                                <div class="form-floating mb-2">
+                                <!-- <div class="form-floating mb-2">
                                     <input type="text" class="form-control phone" id="floatingPhone1Input" name="user[primary_number]" inputmode="tel" placeholder="<?= lang('Auth.phone1') ?>">
                                     <label for="floatingPhone1Input"><?= lang('Auth.primary_phone') ?></label>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="col-6">
                                 <!-- Primary Phone -->
-                                <div class="form-floating mb-2">
+                                <!-- <div class="form-floating mb-2">
                                     <input type="text" class="form-control phone" id="floatingPhone2Input" name="user[secondary_number]" inputmode="tel" placeholder="<?= lang('Auth.phone2') ?>">
                                     <label for="floatingPhone2Input"><?= lang('Auth.secondary_phone') ?></label>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <!-- Email -->
@@ -131,16 +131,16 @@
                         </div>
 
                         <!-- Password -->
-                        <div class="form-floating mb-2">
+                        <!-- <div class="form-floating mb-2">
                             <input type="password" class="form-control" id="floatingPasswordInput" name="user[password]" inputmode="text" autocomplete="new-password" placeholder="<?= lang('Auth.password') ?>">
                             <label for="floatingPasswordInput"><?= lang('Auth.password') ?></label>
-                        </div>
+                        </div> -->
 
                         <!-- Password (Again) -->
-                        <div class="form-floating mb-2">
+                        <!-- <div class="form-floating mb-2">
                             <input type="password" class="form-control" id="floatingPasswordConfirmInput" name="user[password_confirm]" inputmode="text" autocomplete="new-password" placeholder="<?= lang('Auth.passwordConfirm') ?>">
                             <label for="floatingPasswordConfirmInput"><?= lang('Auth.passwordConfirm') ?></label>
-                        </div>
+                        </div> -->
                         <div class="row mb-2">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
@@ -168,7 +168,7 @@
        
                     </div>
                     <div class="col">
-                        <div class="row mb-2">
+                        <!-- <div class="row mb-2">
                             <h6 class="h6 mb-3">Emergency Contact Numbers</h6>
                             <div class="col-6">
                                 <div class="form-floating">
@@ -203,9 +203,9 @@
                                     <label for="">Home Number</label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row mb-3 row-gap-2">
-                            <h6 class="h6 mb-3">User Groups</h6>
+                            <h6 class="h6 mb-3">Sections User Can Access</h6>
                             <?php foreach($groups as $group) : ?>
                                 <?php if($group->name != 'guest') : ?>
                                 <div class="col-4">
@@ -217,7 +217,6 @@
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
-
                         <div class="row mb-3">
                             <h6 class="h6 mb-3">Assign User Workstation</h6>
                             <?= formFloatingInput(['name' => 'user[host_id]', 'label' => lang('Auth.workstation'),  'colClass' => 'col-5', 'type' => 'select', 'select_options' => $workstations ]); ?>         

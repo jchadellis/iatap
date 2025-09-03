@@ -71,6 +71,16 @@ $routes->group('user', static function($routes) {
 $routes->group('sadmin', ['filter' => 'group:super'], static function($routes) {
     $routes->get('control-panel', 'Admin\Index::index');
     
+    $routes->group('user-manager', static function($routes){
+        $routes->get('', 'Admin\UserManager\Index::index'); 
+        $routes->get('data', 'Admin\UserManager\Index::get_data'); 
+        $routes->post('edit', 'Admin\UserManager\Index::get_edit_user');
+        $routes->post('new', 'Admin\UserManager\Index::get_new_user');
+        $routes->post('save', 'Admin\UserManager\Index::save_user'); 
+        $routes->post('add', 'Admin\UserManager\Index::add_user'); 
+        $routes->post('email', 'Admin\UserManager\Index::email_credentials');
+    });
+
     // User Management
     $routes->group('', static function($routes) {
         $routes->get('user-management', 'Admin\Users::index');

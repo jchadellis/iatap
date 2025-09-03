@@ -20,7 +20,6 @@ class Index extends BaseController
         $this->dept_types              = $this->db->table('tbl_depts')->orderBy('name', 'ASC')->get()->getResult(); 
         $this->host_types               = $this->db->table('tbl_net_asset_types')->orderBy('name', 'ASC')->get()->getResult();
         $this->switches                 = $this->db->table('tbl_net_assets')->where('type_id', '8')->orWhere('type_id', '9')->get()->getResult(); 
-
     }
 
     public function index($id)
@@ -30,10 +29,10 @@ class Index extends BaseController
         $breadcrumbs = [
             ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
             ['name' => 'Control Panel', 'is_active' => false, 'url' => '/sadmin/control-panel'],
-            ['name' => 'Assets', 'is_active' => false, 'url' => 'sadmin/asset-manager'],
+            ['name' => 'Assets', 'is_active' => false, 'url' => 'sadmin/assets-manager'],
             ['name' => $asset->display_name, 'is_active' => true, 'url' => '#']
         ];
-
+        
         if($asset->assigned_to)
         {
             $userModel = new UserModel; 

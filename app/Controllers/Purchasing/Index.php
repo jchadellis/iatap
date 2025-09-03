@@ -36,7 +36,7 @@ class Index extends BaseController
                 'description' =>  'View, edit and close Internal Work Request',
                 'url' => 'purchasing/work-request', 
                 'btn_text' => 'View Report', 
-                'icon' => 'components/icon/dollar-icon',
+                'icon' => 'components/icon/inbox-arrow-down-icon',
                 'color' => 'text-dark', 
             ],
             [

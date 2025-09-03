@@ -27,7 +27,7 @@ class Index extends BaseController
         [
             'name' => 'User Manager', 
             'description' => 'Used to manage iATAP site users and logins. Add, Edit and Delete users.', 
-            'url' => 'sadmin/user-management', 
+            'url' => 'sadmin/user-manager', 
             'btn_text' => 'Open Manager', 
             'icon' => 'components/icon/users-icon',
             'color' => 'text-dark', 

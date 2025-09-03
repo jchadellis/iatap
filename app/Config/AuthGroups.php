@@ -36,7 +36,6 @@ class AuthGroups extends ShieldAuthGroups
         $db = \Config\Database::connect(); 
 
         $query  = $db->table('auth_groups')->orderBy('sort_order', 'ASC'); 
-         // Debug: Check the generated SQL
 
         $this->groups = []; 
 
@@ -46,6 +45,15 @@ class AuthGroups extends ShieldAuthGroups
                 'title'     => $group->name, 
                 'description' => $group->description
             ];
+        }
+
+        $this->permissions = [];
+
+        $query  = $db->table('auth_permissions'); 
+
+        foreach($query->get()->getResult() as $permission)
+        {
+            $this->permissions[$permission->group.'.'.$permission->function] = $permission->description;
         }
     }
     /**
@@ -101,15 +109,15 @@ class AuthGroups extends ShieldAuthGroups
      *
      * If a permission is not listed here it cannot be used.
      */
-    public array $permissions = [
-        'admin.access'        => 'Can access the sites admin area',
-        'admin.settings'      => 'Can access the main site settings',
-        'users.manage-admins' => 'Can manage other admins',
-        'users.create'        => 'Can create new non-admin users',
-        'users.edit'          => 'Can edit existing non-admin users',
-        'users.delete'        => 'Can delete existing non-admin users',
-        'beta.access'         => 'Can access beta-level features',
-    ];
+    // public array $permissions = [
+    //     'admin.access'        => 'Can access the sites admin area',
+    //     'admin.settings'      => 'Can access the main site settings',
+    //     'users.manage-admins' => 'Can manage other admins',
+    //     'users.create'        => 'Can create new non-admin users',
+    //     'users.edit'          => 'Can edit existing non-admin users',
+    //     'users.delete'        => 'Can delete existing non-admin users',
+    //     'beta.access'         => 'Can access beta-level features',
+    // ];
 
     /**
      * --------------------------------------------------------------------

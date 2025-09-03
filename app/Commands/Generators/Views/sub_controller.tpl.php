@@ -8,16 +8,6 @@ use CodeIgniter\HTTP\ResponseInterface;
 class {class} extends {extends}
 {
 
-    private $cards = [
-        [
-            'name' => "", 
-            'description' =>  '',
-            'url' => '', 
-            'btn_text' => '', 
-            'icon' => '',
-            'color' => '', 
-        ],
-    ];
 
     public function __construct()
     {
@@ -32,7 +22,7 @@ class {class} extends {extends}
                 {breadCrumbs}
             ],
             'title' => '{pageTitle}', 
-            'content' => view('{viewPath}',['cards' => $this->cards]),
+            'content' => view('{viewPath}',[]),
             'js' => view('{jsPath}'), 
         ];
 

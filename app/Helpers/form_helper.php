@@ -21,7 +21,6 @@ if(!function_exists('formFloatingInput'))
     }
 }
 
-
 function get_options(array $options = []): array
 {
 
