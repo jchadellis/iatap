@@ -78,6 +78,7 @@ $routes->group('sadmin', ['filter' => 'group:super'], static function($routes) {
         $routes->post('new', 'Admin\UserManager\Index::get_new_user');
         $routes->post('save', 'Admin\UserManager\Index::save_user'); 
         $routes->post('add', 'Admin\UserManager\Index::add_user'); 
+        $routes->post('remove', 'Admin\UserManager\Index::remove_user'); 
         $routes->post('email', 'Admin\UserManager\Index::email_credentials');
     });
 

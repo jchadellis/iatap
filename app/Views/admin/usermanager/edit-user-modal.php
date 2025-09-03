@@ -165,6 +165,7 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-square"></i>&nbsp;Close</button>
+    <button type="button" class="btn btn-danger rm-btn"><i class="bi bi-trash"></i>&nbsp;Remove</button>
     <button type="button" class="btn btn-warning save-btn" disabled><i class="bi bi-floppy"></i>&nbsp;Save</button>
 </div>
 </form>

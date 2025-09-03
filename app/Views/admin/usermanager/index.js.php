@@ -12,7 +12,8 @@
                 add: '<?= base_url('sadmin/user-manager/add') ?>',
                 edit: '<?= base_url('sadmin/user-manager/edit') ?>',
                 save: '<?= base_url('sadmin/user-manager/save') ?>',
-                email: '<?= base_url('sadmin/user-manager/email') ?>'
+                email: '<?= base_url('sadmin/user-manager/email') ?>',
+                remove: '<?= base_url('sadmin/user-manager/remove') ?>', 
             },
             modals: {
                 new: '#new-user-modal',
@@ -123,10 +124,6 @@
                 }
             });
 
-            $('.edit-btn').on('click', () => {
-                $(this.config.modals.edit).modal('show');
-            });
-
             $(this.config.modals.edit).on('hidden.bs.modal', () => {
                 this.handleModalClose();
             });
@@ -178,7 +175,9 @@
         // Setup form with common functionality
         setupForm(modal, action, userData = null) {
             const saveBtn = $('.save-btn');
+            const rmBtn = $('.rm-btn'); 
             const form = modal.find('form');
+
             this.form = form; 
             
             form.dirtyForms();
@@ -188,7 +187,27 @@
             
             saveBtn.on('click', (e) => {
                 e.preventDefault();
-                this.handleFormSave(form, action, modal);
+                this.handleFormAction(form, action, modal);
+            });
+
+            rmBtn.on('click', (e) => {
+                e.preventDefault(); 
+                this.handleRemoveUser(form, modal);
+            })
+
+            $('.input-required').blur( ()=>{
+                this.handlePasswordButton(); 
+            })
+
+            $('#employee_id').change((object)=>{
+                select = $(':selected', $(object.target)); 
+                fname = select.data('fname');
+                lname = select.data('lname'); 
+                $('#first_name').val(fname); 
+                $('#last_name').val(lname); 
+
+                this.handlePasswordButton();
+                this.generateAndSetPassword(); 
             });
             
             $('.gen-pw').on('click', () => {
@@ -197,7 +216,7 @@
         },
 
         // Handle form save
-        async handleFormSave(form, action, modal) {
+        async handleFormAction(form, action, modal) {
             const url = this.config.urls[action];
             const data = form.serialize();
             
@@ -264,6 +283,12 @@
             }
         },
 
+        async handleRemoveSuccess(response){
+            if( response.success){
+                ths.showSuccess(response.title, response.message);
+            }
+        },
+
         // Send password email
         async sendPasswordEmail(id, password) {
             try {
@@ -280,17 +305,41 @@
             }
         },
 
+        async handleRemoveUser(form, modal){
+            try{
+                const response = await this.makeRequest(this.config.urls.remove, form.serialize());
+                const alertType = response.success ? 'success' : 'warning';
+                
+                Swal.fire({
+                    title: response.title,
+                    text: response.message,
+                    icon: alertType
+                });
+
+                if(this.selectedRow){
+                    this.table.row(this.selectedRow).remove().draw();
+                    modal.modal('hide');
+                }
+            } catch( error ){
+                this.showError('Error removing user', error.message); 
+            }
+        },
+
+
         // Generate password and set in form
         generateAndSetPassword(userData = null) {
             const password = this.generatePassword(userData);
             const pwField = $('#password');
-            
             pwField.val(password).text(password).trigger('input').trigger('change');
-            $('form').find('#user\\[password\\]').val(password);
         },
 
         // Generate password based on user data
         generatePassword(userData = null) {
+            
+            if($('.gen-pw').attr('disabled')){
+                return; 
+            }
+
             const chars = '!@#$%^&*';
             let fName, lName;
             
@@ -307,7 +356,23 @@
                 password += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             
-            return fName.substring(0, 3) + lName.substring(0, 3) + password;
+            return fName.substring(0,3) +password.substring(0,1) + lName.substring(0, 3) + fName.substring(3, 3) + password.substring(2,4);
+        },
+
+        handlePasswordButton(){
+            fields = []; 
+            $('.input-required').each((index, el)=>{
+                if($(el).val() == ''){
+                    fields.push(el); 
+                } 
+            });
+
+            if( fields.length <= 0){
+                $('.gen-pw').attr('disabled', false); 
+            }else{
+                $('.gen-pw').attr('disabled', true); 
+                $('#password').val('');
+            }
         },
 
         // Handle modal close

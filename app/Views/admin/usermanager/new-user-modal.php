@@ -7,31 +7,35 @@
     <div class="row mb-2">
         <div class="col-4">
             <div class="form-floating">
+                <?php $value = $data->employee_id ?? '' ?>
+                <select name="employee_id" id="employee_id" class="form-select">
+                    <option value="0">Select</option>
+                    <?php if(isset($employees)) : ?>
+                    <?php foreach($employees as $item) : ?>
+                    <option 
+                        value="<?= $item->employee_id ?>"
+                        data-fname="<?= $item->first_name ?>"
+                        data-lname="<?= $item->last_name ?>"
+                    ><?= $item->first_name ?> <?= $item->last_name ?></option>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+                <!-- <input type="text" class="form-control" name="employee_id" id="employee_id" placeholder="" value="<?= $value ?>"> -->
+                <label for="">Empl. ID</label>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-floating">
                 <?php $value = $data->first_name ?? '' ?>
-                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="" value="<?= $value ?>">
+                <input type="text" class="form-control input-required" name="first_name" id="first_name" placeholder="" value="<?= $value ?>">
                 <label for="">First Name</label>
             </div>
         </div>
         <div class="col-4">
             <div class="form-floating">
                 <?php $value = $data->last_name ?? '' ?>
-                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="" value="<?= $value ?>">
+                <input type="text" class="form-control input-required" name="last_name" id="last_name" placeholder="" value="<?= $value ?>">
                 <label for="">Last Name</label>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="form-floating">
-                <?php $value = $data->employee_id ?? '' ?>
-                <select name="employee_id" id="" class="form-select">
-                    <option value="0">Select</option>
-                    <?php if(isset($employees)) : ?>
-                    <?php foreach($employees as $item) : ?>
-                    <option value="<?= $item->employee_id ?>"><?= $item->first_name ?> <?= $item->last_name ?></option>
-                    <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-                <!-- <input type="text" class="form-control" name="employee_id" id="employee_id" placeholder="" value="<?= $value ?>"> -->
-                <label for="">Empl. ID</label>
             </div>
         </div>
     </div>
@@ -104,7 +108,7 @@
         </div>
         <div class="col-5">
             <div class="d-flex align-items-center h-100">
-                <button type="button" class="btn btn-success gen-pw">
+                <button type="button" class="btn btn-success gen-pw" disabled>
                     <i class="bi bi-arrow-clockwise"></i>&nbsp;Generate Password
                 </button>
             </div>

@@ -9,6 +9,7 @@ use App\Models\EmployeeModel;
 use App\Entities\CustomUser; 
 use CodeIgniter\Shield\Authentication\Passwords;
 use CodeIgniter\Shield\Controllers\RegisterController; 
+use Exception;
 
 class Index extends RegisterController
 {
@@ -240,6 +241,92 @@ class Index extends RegisterController
                 'message' => "{$post['first_name']} {$post['last_name']} was updated!",
             ]
         );
+    }
+
+    public function remove_user()
+    {
+        $post = $this->request->getPost();
+        $id = $post['id'] ?? null; 
+        if (!$id) 
+        {
+            return $this->response->setJSON([
+                'data' => null,
+                'title' => 'Error',
+                'message' => 'User ID is required',
+                'success' => false,
+            ]);
+        }
+            
+        $userProvider = $this->getUserProvider();
+        $assets = new NetAssetsModel();
+        $user = $this->model->find($id);
+        
+        if (!$user) {
+            return $this->response->setJSON([
+                'data' => null,
+                'title' => 'Error',
+                'message' => 'User not found',
+                'success' => false,
+            ]);
+        }
+        
+        $first_name = $user->first_name ?? '';
+        $last_name = $user->last_name ?? '';
+
+        try {
+            $groups = $user->getGroups();
+            $permissions = $user->getPermissions();
+
+            if (!empty($groups)) {
+                $user->removeGroup(...$groups);
+            }
+
+            if (!empty($permissions)) {
+                $user->removePermission(...$permissions);
+            }
+        } catch (Exception $e) {  // Fixed typo: Exception not Expection
+            return $this->response->setJSON([
+                'data' => null,
+                'title' => 'Groups and Permissions Error',
+                'message' => $e->getMessage(),
+                'success' => false,
+            ]);
+        }
+
+        try {
+            if ($user->host_id !== null) {
+                $host = [
+                    'assigned_to' => null,
+                    'id' => $user->host_id,
+                ];
+                $assets->save($host);
+            }
+        } catch (Exception $e) {
+            return $this->response->setJSON([
+                'data' => null,
+                'title' => 'Error Removing Host',
+                'message' => $e->getMessage(),
+                'success' => false,
+            ]);
+        }
+
+        try {
+            $userProvider->delete($id);
+        } catch (Exception $e) {  // Fixed typo and success value
+            return $this->response->setJSON([
+                'data' => null,
+                'title' => 'Error Deleting User',
+                'message' => $e->getMessage(),
+                'success' => false,  // Changed from true to false
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'data' => null,
+            'title' => 'Removed',
+            'message' => "{$first_name} {$last_name} was successfully removed.",
+            'success' => true,
+        ]);
     }
 
     public function email_credentials()
