@@ -333,12 +333,14 @@ class Index extends RegisterController
     {
         $post = $this->request->getPost(); 
 
+        $user = $this->model->find($post['id']); 
+
         $this->email_service->setMailType('html');
-        $this->email_service->setFrom('admin@atap.com', 'iATAP Admin'); 
-        $this->email_service->setTo('jeremy.ellis@atap.com'); 
+        $this->email_service->setFrom('jeremy.ellis@atap.com', 'iATAP Admin'); 
+        $this->email_service->setTo($user->email); 
         $this->email_service->setSubject('iATAP Login Credentials');
 
-        $message = view('admin/usermanager/email-body', ['data' => $this->model->find($post['id']), 'password' => $post['password']]); 
+        $message = view('admin/usermanager/email-body', ['data' => $user, 'password' => $post['password']]); 
 
         $this->email_service->setMessage($message); 
 

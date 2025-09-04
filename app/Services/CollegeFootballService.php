@@ -14,14 +14,12 @@ class CollegeFootballService
         $this->cache = \Config\Services::cache();
     }
 
-    public function getGames(int $year = null, string $conference = 'sec'): array
+    public function getGames(int $year = null, string $conference = 'sec', $week = null ): array
     {
         $year = $year ?? date('Y');
-        $cacheKey = "cfb_games_{$year}_{$conference}";
-        
+        $week = $week ?? $this->getWeek(); 
+        $cacheKey = "cfb_games_{$year}_{$week}_{$conference}";
         $games = $this->cache->get($cacheKey);
-        $week = $this->getWeek(); 
-        
         if (!$games) {
             $games = $this->fetchGames($year, $week, $conference);
             if ($games) {
@@ -49,7 +47,7 @@ class CollegeFootballService
         return $teams ?: [];
     }
 
-    public function getRecords(int $year = null, string $conference = '', string $team = 'Aurburn' ): array
+    public function getRecords(int $year = null, $conference = null, $team = null ): array
     {
         $year = $year ?? date('Y'); 
         $cacheKey = "cfb_records_{$year}"; 
@@ -85,6 +83,27 @@ class CollegeFootballService
         return $calendar ?: [];
     }
 
+    public function getWeeks(): array
+    {
+        $calendar = $this->getCalendar(); 
+        $calendarLookup = array_column($calendar, null, 'startDate'); 
+        $weeks = null; 
+
+        foreach($calendarLookup as $key => $value)
+        {
+            $startDate = new \DateTime($key); 
+            $endDate = new \DateTime($value['endDate']); 
+            $todaysDate = new \DateTime(); 
+
+            if ( $startDate <= $todaysDate) 
+            {
+                $weeks[] = $value['week']; 
+            }
+        }
+
+        return $weeks; 
+    }
+
     public function getWeek(): string
     {
         $calendar = $this->getCalendar(); 
@@ -118,7 +137,7 @@ class CollegeFootballService
         return $this->makeApiRequest($url);
     }
 
-    public function fetchRecords(int $year, string $conference, string $team): ?array
+    public function fetchRecords(int $year, ?string $conference, ?string $team): ?array
     {
         $url = "https://api.collegefootballdata.com/records?year={$year}";
         

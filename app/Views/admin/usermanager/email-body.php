@@ -10,8 +10,10 @@
     <p>Hello <?= $data->first_name ?> <?= $data->last_name ?>,</p>
     
     <p>Your account information is provided below. Please find your login credentials:</p>
+
+    <p>Click <a href="http://connectportal/login">here</a> to login. </p>
     
-    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+    <div style="padding: 15px; border-radius: 5px; margin: 20px 0;">
         <strong>Username:</strong> <?= $data->email ?> <br>
         <strong>Password:</strong> <?= $password ?>
     </div>

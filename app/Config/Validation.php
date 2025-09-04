@@ -158,4 +158,28 @@ class Validation extends BaseConfig
             'rules' => 'permit_empty', 
         ],
     ];
+
+    public array $login = [
+        'email' => [
+            'label' => 'Auth.email',
+            'rules' => 'required', // Removed valid_email rule
+            'errors' => [
+                'required' => 'Auth.error.email.required',
+            ],
+        ],
+        // 'username' => [
+        //     'lable' => 'Auth.username',
+        //     'rules' => 'required', 
+        //     'errors' => [
+        //         'required' => 'Username Required', 
+        //     ]
+        // ],
+        'password' => [
+            'label' => 'Auth.password',
+            'rules' => 'required',
+            'errors' => [
+                'required' => 'Auth.error.password.required',
+            ],
+        ],
+    ];
 }

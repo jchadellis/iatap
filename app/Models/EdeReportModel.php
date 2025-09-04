@@ -13,7 +13,34 @@ class EdeReportModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['order_id', 'order_clin', 'order_no_mod', 'requisition_no', 'nsn_no', 'order_qty', 'unit_price', 'order_date', 'due_date', 'recovery_date', 'ship_date', 'deliver_loc', 'shipment', 'tracking_no', 'comments', 'noun', 'part_no', 'vendor_name', 'vendor_cage_code', 'vendor_bus_size', 'qty_shipped', 'invoice_no', 'finacial_impact', 'mitig_strat_b'];
+    protected $allowedFields    = [
+        'order_id', 
+        'order_clin', 
+        'order_no_mod', 
+        'requisition_no', 
+        'nsn_no', 
+        'order_qty', 
+        'unit_price', 
+        'order_date', 
+        'due_date', 
+        'recovery_date', 
+        'ship_date', 
+        'deliver_loc', 
+        'shipment', 
+        'oc',
+        'sir',
+        'tracking_no', 
+        'comments', 
+        'noun', 
+        'part_no', 
+        'vendor_name', 
+        'vendor_cage_code', 
+        'vendor_bus_size', 
+        'qty_shipped', 
+        'invoice_no', 
+        'finacial_impact', 
+        'mitig_strat_b'
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

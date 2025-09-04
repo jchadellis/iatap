@@ -16,8 +16,17 @@ $routes->group('', static function($routes) {
     $routes->get('dashboard', 'Dashboard::index');
     // $routes->get('weather', 'Dashboard::get_weather');
     // $routes->get('files', 'Dashboard::files');
-    $routes->get('games', 'Dashboard::get_games'); 
-    $routes->get('games/refresh', 'Dashboard::force_refresh_games');
+
+    $routes->group('games', static function($routes){
+        $routes->get('', 'Games\Index::index'); 
+        $routes->get('week/(:num)', 'Games\Week\Index::index/$1'); 
+        $routes->get('refresh', 'Games\Index::refresh_cache');
+        $routes->get('games', 'Games\Index::get_games'); 
+        $routes->get('teams', 'Games\Index::get_teams'); 
+        $routes->get('records/(:any)', 'Games\Index::get_records/$1'); 
+        $routes->get('weeks', 'Games\Index::get_weeks'); 
+    });
+
 });
 
 // Directory Routes
@@ -55,7 +64,11 @@ $routes->group('orientation', static function($routes) {
 // =============================================================================
 // AUTHENTICATION ROUTES
 // =============================================================================
-service('auth')->routes($routes);
+//service('auth')->routes($routes);
+
+service('auth')->routes($routes, ['except' => ['login']]);
+$routes->get('login', '\App\Controllers\Auth\LoginController::loginView', ['as' => 'login']);
+$routes->post('login', '\App\Controllers\Auth\LoginController::loginAction');
 
 // =============================================================================
 // USER PROFILE ROUTES

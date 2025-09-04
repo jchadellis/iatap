@@ -69,6 +69,16 @@
                     visible: false, 
                 },
                 {
+                    data: 'oc', 
+                    title: 'O/C', 
+                    visible: false,
+                },
+                {
+                    data: 'sir', 
+                    title: 'SIR', 
+                    visible: false,
+                },
+                {
                     data: 'tracking_no', 
                     title: 'TRACKING NUMBER', 
                     visible : false, 

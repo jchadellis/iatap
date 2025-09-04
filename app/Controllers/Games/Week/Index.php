@@ -1,32 +1,21 @@
-<?php
+<?php 
 
-namespace App\Controllers;
+namespace App\Controllers\Games\Week;
 
+use App\Controllers\BaseController;
+use CodeIgniter\HTTP\ResponseInterface;
 use App\Services\CollegeFootballService; 
 
-class Dashboard extends BaseController
+class Index extends BaseController
 {
-    public function index(): string
+
+
+    public function __construct()
     {
-        $cfbService = new CollegeFootballService();
-        $week = $cfbService->getWeek();
-
-        $breadcrumbs = [
-            ['name' => 'Dashboard', 'is_active' => true, 'url' => '/dashboard'],
-        ];
-
-        $games = $this->get_games(); 
-        $data = [
-            'site_name' => 'iATAP', 
-            'breadcrumbs' => $breadcrumbs, 
-            'title' => 'Dashboard', 
-            'content' => view('dashboard/index', ['games' => '', 'week' => $week]), 
-            'js' => ''
-        ];
-        return view('template/index', $data);
+        // initialize default models and parameters
     }
 
-    public function get_games( int $week = null )
+    public function index($week)
     {
         $cfbService = new CollegeFootballService();
         
@@ -68,6 +57,7 @@ class Dashboard extends BaseController
 
         $breadcrumbs = [
             ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
+            ['name' => 'Season', 'is_active' => false, 'url' => 'games'],
             ['name' => "SEC Games Week {$week}", 'is_active' => true, 'url' => '#'],
         ];
         $content = view('components/game-cards', ['games' => $games]);
@@ -80,35 +70,5 @@ class Dashboard extends BaseController
         ];
         return view('template/index', $data); 
     }
-
-
-    public function get_weeks( )
-    {
-        $weeks = $cfbService->getWeeks();
-        return view('template/index', $data); 
-    }
-
-
-    public function force_refresh_games()
-    {
-        $cfbService = new CollegeFootballService();
-        
-        // // Clear cache first
-        // $cfbService->clearGamesCache(date('Y'), 'sec');
-        // $cfbService->clearTeamsCache();
-        // $cfbService->clearRecordsCache(); 
-        // $cfbService->clearCalendarCache();
-        
-        // Then fetch fresh data
-        $games = $cfbService->getGames(date('Y'), 'sec');
-        $teams = $cfbService->getTeams();
-        $records = $cfbService->getRecords(); 
-        $weeks = $cfbService->getWeeks(); 
-        
-        echo '<pre>'; 
-        print_r($weeks); 
-        echo '</pre>'; 
-    }
-
 
 }
