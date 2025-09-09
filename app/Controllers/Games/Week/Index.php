@@ -27,20 +27,19 @@ class Index extends BaseController
         // Create a lookup array for teams by ID for O(1) access
         $teamLookup = array_column($teams, null, 'id');
 
-        $recordsLookup = array_column($records, null, 'id'); 
+        $recordsLookup = array_column($records, null, 'teamId'); 
 
         $games = array_map(function($game) use ($teamLookup, $recordsLookup) {
-            $game['homeLogo'] = "http://a.espncdn.com/i/teamlogos/ncaa/500-dark/{$game['homeId']}.png";
-            $game['awayLogo'] = "http://a.espncdn.com/i/teamlogos/ncaa/500/{$game['awayId']}.png";
+            $game['homeLogo'] = "http://a.espncdn.com/i/teamlogos/ncaa/500/{$game['homeId']}.png";
+            $game['awayLogo'] = "http://a.espncdn.com/i/teamlogos/ncaa/500-dark/{$game['awayId']}.png";
             
             // Add team colors using the lookup array
-            $game['homeColor'] = $teamLookup[$game['homeId']]['color'] ?? '#FFFFFF';
-            $game['homeAlternateColor'] = $teamLookup[$game['homeId']]['alternateColor'] ?? '#FFFFFF';
-            $game['awayColor'] = $teamLookup[$game['awayId']]['alternateColor'] ?? '#000000';
-            // $game['homeName']  = $teamLookup[$game['homeId']]['alternateNames'][0];
-            // $game['awayName']  = $teamLookup[$game['awayId']]['alternateNames'][0];
+            $game['homeColor'] = $teamLookup[$game['homeId']]['alternateColor'] ?? '#FFFFFF';
+            $game['awayColor'] = $teamLookup[$game['awayId']]['color'] ?? '#000000';
             $game['homeName']  = $teamLookup[$game['homeId']]['abbreviation'];
             $game['awayName']  = $teamLookup[$game['awayId']]['abbreviation'];
+            $game['homeRank']  = $teamLookup[$game['homeId']]['ranks']['ap'] ?? ''; 
+            $game['awayRank']  = $teamLookup[$game['awayId']]['ranks']['ap'] ?? ''; 
             
             $game['homeTeamWins'] = $recordsLookup[$game['homeId']]['total']['wins'] ?? '0'; 
             $game['homeTeamLosses'] = $recordsLookup[$game['homeId']]['total']['losses'] ?? '0'; 
@@ -57,14 +56,14 @@ class Index extends BaseController
 
         $breadcrumbs = [
             ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
-            ['name' => 'Season', 'is_active' => false, 'url' => 'games'],
-            ['name' => "SEC Games Week {$week}", 'is_active' => true, 'url' => '#'],
+            ['name' => 'College Football', 'is_active' => false, 'url' => 'cfb-football'],
+            ['name' => "Week {$week}", 'is_active' => true, 'url' => '#'],
         ];
-        $content = view('components/game-cards', ['games' => $games]);
+        $content = view('components/game-cards', ['games' => $games, 'week' => $week]);
         $data = [
             'site_name' => 'iATAP', 
             'breadcrumbs' => $breadcrumbs, 
-            'title' => 'Dashboard', 
+            'title' => "Week {$week}", 
             'content' => $content, 
             'js' => ''
         ];

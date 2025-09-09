@@ -13,6 +13,7 @@
             scrollCollapse: true,
             pageLength: 100, 
             autoWidth: false,
+            order: [[6, 'asc']],
             pageMenu: [ 50, 100, 200, 250, { label: 'All', value : -1} ],
             ajax: {
                 url : `<?= base_url('sales/ede/report/data') ?>`,

@@ -14,19 +14,18 @@ use CodeIgniter\Router\RouteCollection;
 $routes->group('', static function($routes) {
     $routes->get('/', 'Dashboard::index');
     $routes->get('dashboard', 'Dashboard::index');
-    // $routes->get('weather', 'Dashboard::get_weather');
-    // $routes->get('files', 'Dashboard::files');
 
-    $routes->group('games', static function($routes){
+    $routes->group('cfb-football', static function($routes){
         $routes->get('', 'Games\Index::index'); 
         $routes->get('week/(:num)', 'Games\Week\Index::index/$1'); 
         $routes->get('refresh', 'Games\Index::refresh_cache');
         $routes->get('games', 'Games\Index::get_games'); 
         $routes->get('teams', 'Games\Index::get_teams'); 
+        $routes->get('team/(:any)', 'Games\Team\Index::index/$1');
         $routes->get('records/(:any)', 'Games\Index::get_records/$1'); 
         $routes->get('weeks', 'Games\Index::get_weeks'); 
+        $routes->get('rankings', 'Games\Index::get_rankings'); 
     });
-
 });
 
 // Directory Routes
@@ -258,6 +257,14 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->post('get-transactions', 'Warehouse\InventoryTransactions::get_data');
         $routes->get('receipts', 'Warehouse\Receiver::index');
         $routes->get('po/getpo/(:num)', 'Warehouse\Receiver::get_purchase_order/$1');
+        $routes->group('parts', static function($routes){
+            $routes->get('', 'Warehouse\Parts\Index::index'); 
+            $routes->get('part-lookup', 'Warehouse\Parts\PartLookup\Index::index'); 
+            $routes->get('part-lookup/data', 'Warehouse\Parts\PartLookup\Index::get_data'); 
+            $routes->post('part-lookup/data', 'Warehouse\Parts\PartLookup\Index::get_data'); 
+            $routes->post('part-lookup/details', 'Warehouse\Parts\PartLookup\Index::get_details'); 
+            $routes->get('part-lookup/details/(:any)', 'Warehouse\Parts\PartLookup\Index::get_details/$1'); 
+        });
     });
 
 

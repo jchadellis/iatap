@@ -20,7 +20,7 @@
 
 <div class="row gap-2">
     <div class="col-3">
-        <a href="<?= base_url('games') ?>" class="text-decoration-none">
+        <a href="<?= base_url('cfb-football') ?>" class="text-decoration-none">
         <div class="card d-flex flex-row rounded-0" style="">
             <img src="<?= base_url('assets/img/sec_logo.jpg')?>" class="rounded-0" alt="">
             <div class="card-body">

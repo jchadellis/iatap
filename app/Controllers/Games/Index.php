@@ -20,7 +20,7 @@ class Index extends BaseController
             $this->cards[] = [
                 'name' => "Week {$week}", 
                 'description' =>  "SEC Football Week {$week}",
-                'url' => "games/week/{$week}", 
+                'url' => "cfb-football/week/{$week}", 
                 'btn_text' => 'Open', 
                 'icon' => 'components/icon/calendar-days',
                 'color' => 'text-dark', 
@@ -61,7 +61,7 @@ class Index extends BaseController
         $weeks = $cfbService->getWeeks(); 
         
         echo '<pre>'; 
-        print_r($teams); 
+        print_r($records); 
         echo '</pre>'; 
     }
 
@@ -83,5 +83,11 @@ class Index extends BaseController
     public function get_weeks()
     {
         print_array($this->cfbService->getWeeks()); 
+    }
+
+
+    public function get_rankings()
+    {
+        print_array($this->cfbService->getRank('Alabama'));
     }
 }

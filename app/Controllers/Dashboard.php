@@ -70,7 +70,7 @@ class Dashboard extends BaseController
             ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
             ['name' => "SEC Games Week {$week}", 'is_active' => true, 'url' => '#'],
         ];
-        $content = view('components/game-cards', ['games' => $games]);
+        $content = view('components/game-cards');
         $data = [
             'site_name' => 'iATAP', 
             'breadcrumbs' => $breadcrumbs, 
@@ -87,28 +87,5 @@ class Dashboard extends BaseController
         $weeks = $cfbService->getWeeks();
         return view('template/index', $data); 
     }
-
-
-    public function force_refresh_games()
-    {
-        $cfbService = new CollegeFootballService();
-        
-        // // Clear cache first
-        // $cfbService->clearGamesCache(date('Y'), 'sec');
-        // $cfbService->clearTeamsCache();
-        // $cfbService->clearRecordsCache(); 
-        // $cfbService->clearCalendarCache();
-        
-        // Then fetch fresh data
-        $games = $cfbService->getGames(date('Y'), 'sec');
-        $teams = $cfbService->getTeams();
-        $records = $cfbService->getRecords(); 
-        $weeks = $cfbService->getWeeks(); 
-        
-        echo '<pre>'; 
-        print_r($weeks); 
-        echo '</pre>'; 
-    }
-
 
 }

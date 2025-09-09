@@ -81,7 +81,7 @@ class Index extends BaseController
         $sheet->setTitle($title);
         
         // Get data from model
-        $data = $this->model->findAll();
+        $data = $this->model->orderBy('order_date', 'asc')->orderBy('order_no_mod')->findAll();
         
         // Headers
         $headers = array(
