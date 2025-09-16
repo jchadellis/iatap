@@ -52,6 +52,9 @@ $routes->group('employee', static function($routes) {
     $routes->get('training/data', 'Employee\Training\Index::get_data');
     $routes->get('training/resources', 'Employee\Training\Index::get_resources');
     $routes->get('list', 'Employee\Index::list');
+    $routes->group('email-signature-gen', static function($routes){
+        $routes->get('', 'Employee\Email_Signature_Gen\Index::index'); 
+    });
 });
 
 // Orientation Routes
@@ -173,6 +176,13 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             });
         });
 
+        $routes->group('orders', static function($routes){
+            $routes->get('/', 'Purchasing\Orders\Index::index'); 
+            $routes->get('data/(:any)', 'Purchasing\Orders\Index::get_data/$1'); 
+            $routes->get('data', 'Purchasing\Orders\Index::get_data');
+        });
+
+
         $routes->group('work-request', static function($routes){
             $routes->get('/', 'Purchasing\WorkRequest\Index::index'); 
             $routes->get('data', 'Purchasing\WorkRequest\Index::get_data'); 
@@ -182,6 +192,8 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->post('close', 'Purchasing\WorkRequest\Index::close_request'); 
             $routes->post('restore', 'Purchasing\WorkRequest\Index::restore_request'); 
         });
+
+
     });
 
 

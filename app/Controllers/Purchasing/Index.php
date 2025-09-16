@@ -16,6 +16,15 @@ class Index extends BaseController
 
         $tool_cards = [
             [
+                'name' => "Work Orders Purchase Report", 
+                'description' =>  'View work orders with purchase requirements, for parts, paint, material, chemical, fabricated and wire',
+                'url' => 'purchasing/orders', 
+                'btn_text' => 'View', 
+                'icon' => 'components/icon/clipboard-document-icon',
+                'color' => 'text-dark', 
+                'btn-data' => 'data-bs-toggle="modal" data-bs-target="#po_count_modal"',
+            ],
+            [
                 'name' => "Fabrication Purchasing", 
                 'description' =>  'Fabrication Purchasing Report: Part Needs, Associated Work Orders',
                 'url' => 'purchasing/fabrication-report', 

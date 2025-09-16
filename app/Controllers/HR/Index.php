@@ -10,7 +10,7 @@ class Index extends BaseController
 
     private $cards = [
         [
-            'name' => "Employee Emgergency Contact Manager", 
+            'name' => "Employee Emergency Contact Manager", 
             'description' =>  'Update Employee Emergency Contact Info',
             'url' => 'hr/employee/management', 
             'btn_text' => 'View', 

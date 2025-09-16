@@ -163,5 +163,4 @@
         font-size: 2.5rem; 
         color:rgb(244, 244, 244);
     }
-
 </style>

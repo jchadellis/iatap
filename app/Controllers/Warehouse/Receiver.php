@@ -28,9 +28,10 @@ class Receiver extends BaseController
 
     public function get_purchase_order($po_number)
     {
+        
         $url = "http://vatap/mvc/public/api/getpurchaseorder/$po_number";
         $data['data'] = $this->remote_model->getData($url); 
-
+        return print_array($data); 
         return view('warehouse/purchase_order', $data); 
     }
 }

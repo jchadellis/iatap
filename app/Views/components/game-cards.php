@@ -88,7 +88,7 @@
             <div class="row g-0 border-top" style="background-color: #333333; color: #FFFFFF">
                 <div class="col">
                     <?php if($today <= $startDate): ?>
-                    <h6 class="h6 text-center text-white"><span class="align-middle"><?= (new DateTime($game["startDate"]))->setTimezone(new DateTimeZone('America/Chicago'))->format('g:i a') ?>&nbsp;CST</span></h6>
+                    <h6 class="h6 text-center text-white"><span class="align-middle"><?= (new DateTime($game["startDate"]))->setTimezone(new DateTimeZone('America/Chicago'))->format('D, d @ g:i a') ?>&nbsp;CST</span></h6>
                     <?php else: ?>
                         <h6 class="h6 text-center text-white"><span class="align-middle">FINAL</span></h6>
                     <?php endif; ?>

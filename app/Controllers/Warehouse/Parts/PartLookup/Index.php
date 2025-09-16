@@ -67,12 +67,13 @@ class Index extends BaseController
         $url = "http://vatap/mvc/public/api/partlookup"; 
 
         $data = $this->remote_model->postData($url, $post);
- 
+
         if( $data )
         {
             return $this->response->setJSON(
                 [
-                    'data' => $data, 
+                    'data' => $data['data'], 
+                    'post' => $post, 
                     'success' => true,
                     'message' => 'Retrieved Data',
                 ]
@@ -81,6 +82,7 @@ class Index extends BaseController
         return $this->response->setJSON(
             [
                 'success' => false, 
+                'data' => $post,
                 'title' => 'Not Found', 
                 'message' => "We couldn’t find any items or parts matching your search. '{$post['id']}, {$post['description']}'", 
             ]
@@ -97,14 +99,13 @@ class Index extends BaseController
 
         $data = $this->remote_model->postData($url, ['id' => $id]); 
 
- 
         if($data)
         {
             $processed = $this->processTransactionData($data); 
         }
 
         return $this->response->setJSON([
-            'data' => view('warehouse/parts/partlookup/modal', ['data' => $data]), 
+            'data' => view('warehouse/parts/partlookup/modal', ['data' => $processed]), 
             'success' => true, 
         ]);
     }
@@ -210,41 +211,41 @@ class Index extends BaseController
         $transType = $this->getTransactionType($transaction);
         
         // Format quantity
-        $transQty = number_format((float)($transaction->qty ?? 0));
+        $transQty = number_format((float)($transaction['qty'] ?? 0));
         
         // Format date
-        $formattedDate = $this->formatTransactionDate($transaction->transaction_date ?? '');
+        $formattedDate = (new \DateTime( $transaction['transaction_date'] ))->format('Y-m-d');
         
         // Calculate costs
         $costs = $this->calculateTransactionCosts($transaction);
         
         // Get reference ID
-        $refId = ($transaction->workorder_base_id ?? '') . 
-                ($transaction->purc_order_id ?? '') . 
-                ($transaction->cust_order_id ?? '');
+        $refId = ($transaction['workorder_base_id'] ?? '') . 
+                ($transaction['purc_order_id'] ?? '') . 
+                ($transaction['cust_order_id'] ?? '');
         
         return (object)[
-            'transaction_id' => $transaction->transaction_id ?? '',
+            'transaction_id' => $transaction['transaction_id'] ?? '',
             'formatted_date' => $formattedDate,
             'type' => $transType,
             'ref_id' => $refId,
-            'location_id' => $transaction->location_id ?? '',
+            'location_id' => $transaction['location_id'] ?? '',
             'quantity' => $transQty,
             'running_qty' => $runningQty,
             'total_cost' => $costs['total_cost'],
             'cost_breakdown' => $costs['breakdown'],
-            'description' => $transaction->description ?? '',
+            'description' => $transaction['description'] ?? '',
             'original' => $transaction
         ];
     }
 
     private function getTransactionType($transaction)
     {
-        $type = $transaction->type ?? '';
-        $class = $transaction->class ?? '';
-        $transferTransId = $transaction->transfer_trans_id ?? null;
-        $purcOrderId = $transaction->purc_order_id ?? null;
-        $custOrderId = $transaction->cust_order_id ?? null;
+        $type = $transaction['type'] ?? '';
+        $class = $transaction['class'] ?? '';
+        $transferTransId = $transaction['transfer_trans_id'] ?? null;
+        $purcOrderId = $transaction['purc_order_id'] ?? null;
+        $custOrderId = $transaction['cust_order_id'] ?? null;
         
         // Check for Receipt Types
         if ($type === "I" && $class === "R") {
@@ -279,29 +280,13 @@ class Index extends BaseController
         return "";
     }
 
-    private function formatTransactionDate($dateString)
-    {
-        if (empty($dateString)) {
-            return '';
-        }
-        
-        $splitDate = explode(" ", $dateString);
-        $tDate = explode("-", $splitDate[0]);
-        
-        if (count($tDate) >= 3) {
-            return $tDate[1] . '/' . $tDate[2] . '/' . substr($tDate[0], -2);
-        }
-        
-        return $dateString;
-    }
-
     private function calculateTransactionCosts($transaction)
     {
-        $qty = (float)($transaction->qty ?? 0);
-        $mcost = (float)($transaction->act_material_cost ?? 0);
-        $lcost = (float)($transaction->act_labor_cost ?? 0);
-        $bcost = (float)($transaction->act_burden_cost ?? 0);
-        $scost = (float)($transaction->act_service_cost ?? 0);
+        $qty = (float)($transaction['qty'] ?? 0);
+        $mcost = (float)($transaction['act_material_cost'] ?? 0);
+        $lcost = (float)($transaction['act_labor_cost'] ?? 0);
+        $bcost = (float)($transaction['act_burden_cost'] ?? 0);
+        $scost = (float)($transaction['act_service_cost'] ?? 0);
         
         $totalCost = $mcost + $lcost + $bcost + $scost;
         $unitCost = $qty > 0 ? $totalCost / $qty : 0;

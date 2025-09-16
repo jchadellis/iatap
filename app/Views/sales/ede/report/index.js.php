@@ -80,8 +80,23 @@
                     visible: false,
                 },
                 {
+                    data: 'sir_request_date', 
+                    title: 'SIR REQUEST DATE', 
+                    visible: false,
+                },
+                {
+                    data: 'sir_instructions_received_date', 
+                    title: 'SIR INSTRUCTIONS RECEIVED DATE', 
+                    visible: false,
+                },
+                {
                     data: 'tracking_no', 
                     title: 'TRACKING NUMBER', 
+                    visible : false, 
+                },
+                {
+                    data: 'tcn_tracking', 
+                    title: 'TCN FOR 2ND DESTINATION TRACKING', 
                     visible : false, 
                 },
                 {

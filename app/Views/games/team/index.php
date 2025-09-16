@@ -32,8 +32,8 @@
 
         <?php foreach ($team['stats'] as $stat): ?>
             <tr>
-                <td class="fw-bold"><?= $stat['statName'] ?></td>
-                <td class="text-center"><?= $stat['teamStat'] ?></td>
+                <td class="fw-bold"><?= $stat['statName'] ?? '' ?></td>
+                <td class="text-center"><?= $stat['teamStat'] ?? '' ?></td>
                 <td class="text-center"><?= $stat['opponentStat'] ?? 'N/A' ?></td>
             </tr>
         <?php endforeach; ?>

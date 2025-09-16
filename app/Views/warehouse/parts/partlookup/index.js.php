@@ -91,6 +91,47 @@
                      if(response.success)
                      {
                         modal.find('.modal-content').html(response.data);
+                        $('.costing').on('change', function(){
+                            input = $(this).attr('id'); 
+                            start_value = $(this).data('initial_value'); 
+                            current_value = $(this).val(); 
+                            changed = false;
+                            if(current_value != start_value)
+                            {
+                                changed = true; 
+                            }
+                            if(changed)
+                            {
+                                total_cost = $('#total_cost_input');
+                                sale_price = $('#sale_price_input');
+                                gross_margin = $('#gross_margin_input');
+                                mark_up = $('#mark_up_input');
+
+                                tcval = parseFloat(total_cost.val()); 
+                                spval = parseFloat(sale_price.val());
+                                gmval = parseFloat(gross_margin.val());
+                                muval = parseFloat(mark_up.val()); 
+                                
+                                switch( input )
+                                {
+                                    case 'total_cost_input':
+                                        sale_price.val( sale_price_cal( tcval, gmval).toFixed(2)); 
+                                        break;
+                                    case 'sale_price_input': 
+                                        gross_margin.val( gross_margin_cal( spval, tcval ).toFixed(2)); 
+                                        mark_up.val( mark_up_cal( spval, tcval).toFixed(2)); 
+                                        break; 
+                                    case 'gross_margin_input':
+                                        spval = sale_price.val( sale_price_cal( tcval, gmval).toFixed(2)); 
+                                        mark_up.val( mark_up_cal( parseFloat(spval.val()), tcval).toFixed(2)); 
+                                        break;
+                                    case 'mark_up_input': 
+                                        spval = sale_price.val( sale_price_cal( tcval, gmval, spval, muval ).toFixed(2)); 
+                                        gross_margin.val( gross_margin_cal( parseFloat(spval.val()), tcval ).toFixed(2)); 
+                                        break; 
+                                }
+                            }
+                        });
                      }else{
                         Swal.fire({
                             title: `${response.title}`,
@@ -123,9 +164,21 @@
             }
         });
 
-        $('#search-btn').on('click', function(e){
+        $('#part-search-form').on('submit', function(e){
             e.preventDefault(); 
-            Swal.showLoading()
+            Swal.fire({
+                title:'Searching...',
+                text: 'Please wait for the search to complete.', 
+                allowOutsideClick: false, 
+                showClass: {
+                    popup:  `animate__animated  animate__fadeInUp animate_slow`, 
+                    backdrop: 'swal2-backdrop-show',
+                },
+                opOpen: () =>{
+                    Swal.showLoading();
+                }
+            })
+            
             form = $('#part-search-form'); 
             url = '<?= base_url('warehouse/parts/part-lookup/data') ?>'; 
             data = form.serialize(); 
@@ -144,6 +197,36 @@
                 }
             })
         })
+
+        function sale_price_cal( cost, grossMargin, salePrice = null, markup = null )
+        {
+            if( markup == null )
+            {
+                sale_price = ((cost/(100-grossMargin))*100).toPrecision(4); 
+                return parseFloat(sale_price); 
+            }
+ 
+            markup = markup / 100; 
+            markup_cost = cost * markup; 
+            sale_price = markup_cost + cost;
+
+            return parseFloat(sale_price); 
+
+        }
+
+        function gross_margin_cal( salePrice, cost)
+        {
+            gross_margin = (((salePrice - cost)/salePrice)*100).toPrecision(4)
+            return parseFloat(gross_margin); 
+        }
+
+        function mark_up_cal( salePrice, cost)
+        {
+            mark_up = (((salePrice - cost) / cost ) * 100 ).toPrecision(4);
+            return parseFloat(mark_up);  
+        }
+
+        
 
     })
 </script>

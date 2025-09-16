@@ -33,6 +33,15 @@ class Index extends BaseController
             'color' => 'text-dark', 
             'permission' => 'edereport.view', 
         ],
+        [
+            'name' => "Part Lookup", 
+            'description' =>  'Lookup Parts and view Sale, Purchase and Quote History',
+            'url' => 'warehouse/parts/part-lookup', 
+            'btn_text' => 'View', 
+            'icon' => 'components/icon/table-icon',
+            'color' => 'text-dark', 
+            'permission' => 'edereport.view', 
+        ],
     ];
     public function index()
     {

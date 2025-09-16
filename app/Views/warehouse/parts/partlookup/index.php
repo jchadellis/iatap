@@ -1,3 +1,10 @@
+<style>
+    /* Or target DataTables specifically */
+    .dataTable.table-striped tbody tr:nth-of-type(odd) td {
+        background-color: #e9fcb9ff !important;
+        color: #333 !important;
+    }
+</style>
 <form action="" id="part-search-form">
     <div class="row mx-auto">
         <div class="col-2">
@@ -6,7 +13,7 @@
                 <label for="id">Part ID</label>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="form-floating">
                 <input type="text" name="description" id="description" class="form-control" placeholder="">
                 <label for="id">Description</label>
@@ -52,10 +59,10 @@
                 >
             </div>
         </div>
-        <div class="col-1">
+        <div class="col-2">
             <div class="d-flex justify-content-center align-items-center h-100">
                 <div class="d-grid">
-                    <button type="button" class="btn btn-primary" id="search-btn"><i class="bi bi-search"></i>&nbsp;Search</button>
+                    <button type="submit" class="btn btn-primary" id="search-btn"><i class="bi bi-search"></i>&nbsp;Search</button>
                 </div>
             </div>
         </div>
