@@ -21,11 +21,9 @@ class Index extends BaseController
             'breadcrumbs' => [
                 ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard' ],
 				['name' => 'Purchasing', 'is_active' => false, 'url' => 'purchasing'],
-				['name' => 'Part', 'is_active' => false, 'url' => 'purchasing/part'],
-				['name' => 'Name', 'is_active' => false, 'url' => 'purchasing/part/name'],
-				['name' => 'Generator', 'is_active' => true, 'url' => '#']
+				['name' => 'Part Number Generator', 'is_active' => true, 'url' => '#']
             ],
-            'title' => 'Generator', 
+            'title' => 'Part Number Generator', 
             'content' => view('purchasing/part/name/generator/index',[]),
             'js' => view('purchasing/part/name/generator/index.js.php'), 
         ];

@@ -44,11 +44,6 @@ $(document).ready(() => {
                 title:'Last Vendor Update Req.',
                 width: '5%',
             },
-            // {
-            //     data: 'next_vendor_update_at', 
-            //     title: 'Next Vendor Update Req.',
-            //     width: '5%',
-            // },
             {
                 data: 'linear_progress', 
                 visible: false, 
@@ -98,33 +93,12 @@ $(document).ready(() => {
             },
             {
                 data: 'contact_first_name', 
-                // title:'C. Name', 
-                // width: '5%', 
                 visible: false,
-                // render: function(data, type, row){
-                //     return `${row.contact_first_name} ${row.contact_last_name} `; 
-                // }
             },
             {
                 data: 'phone', 
-                // title: 'C. Phone', 
-                // width: '10%'},
                 visible: false,
             },
-            // {
-            //     data: 'id', 
-            //     title: 'Details',
-            //     render: function(data, type, row){
-            //         return `
-            //             <button class="btn btn-sm btn-primary update-btn" data-id="${data}">
-            //                 OPEN
-            //             </button> 
-            //         `; 
-                    
-            //     }, 
-            //     className: 'd-grid',
-            //     width: '5%',
-            // }
         ],
         createdRow: function( row, data, dataIndex ){
             const date = new Date(data.true_promise.date);
@@ -256,7 +230,7 @@ $(document).ready(() => {
         },
 
         columnDefs: [
-            { targets: [2, 3, 4, 5, 6, 7,8,9], orderable: false },
+            { targets: [2, 3, 4,5, 7 ], orderable: false },
             { targets: 1, type: 'date-eu' },
             { targets: [0, 1, 2, 3, 4, 6,  8, 9], className: 'align-middle text-center'},
             { target : [7], className: 'align-middle text-start text-truncate'}

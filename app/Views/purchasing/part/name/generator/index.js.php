@@ -1,149 +1,218 @@
 <script>
     $(document).ready(function(){
-        $.extend(true, $.fn.dataTable.Buttons.defaults, {
-            dom: {
-                button: {
-                    className: 'btn btn-primary' // new default
-                }
-            }
-        });
 
-        const table = new DataTable('.table', {
-            select: true, 
-            lengthMenu: [25, 50, 100, 200, { label: 'All', value: -1 }],
-            ajax:{
-                url: '<?= base_url('path/to/data') ?>', 
-                dataSrc: 'data',
-            },        
-            pageLength: 25,    
-            responsive: true,
-            order:[[0, 'desc']],
-            language:{
-                buttons:{
-                    colvis: `<i class="bi bi-eye-slash"></i>&nbsp;Show/Hide Columns`, 
-                    pageLength: '<i class="bi bi-binoculars"></i>&nbsp;Show %d rows',
-                    excel: `<i class="bi bi-file-earmark-excel"></i>&nbsp;Export to Excel`,
-                    pdf: `<i class="bi bi-file-earmark-pdf"></i>&nbsp;Export to PDF`,
-                }
-            },
-            columns:[
+        function generateDigits() {
+            const min = 10000;
+            const max = 99999;
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function selectText(input) {
+
+            if($(input).val() === '') return; 
+            label = $(input).siblings('label'); 
+            text  = label.text();
+            label.text( text + '  * Successfully Copied *'); 
+            input.select();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(input.value);
+            } else {
+                document.execCommand('copy');
+            }
+
+            setTimeout(() => {
+                label.text(text);
+            }, 3000);
+        }
+
+
+
+
+
+        $('#description, #part-id').on('focus', function(){
+            selectText(this);
+        })
+
+        function getPartNumber()
+        {
+            inputs = $(collapse).find('.dim');
+
+            form = $('#material-form option:selected').val();
+            material = $('#material-type option:selected').val(); 
+            property = $('#material-property option:selected').val(); 
+            property_value = $('#material-property-value').val(); 
+            standard = $('#standard').val(); 
+            standard_value = $('#standard-number').val(); 
+            um = $('#unit-measurement').val(); 
+
+            serial = generateDigits();
+            part = `${material}-${form}-${serial}`;
+
+            count = inputs.length;
+
+            if( count === 2)
+            {
+                str = ''; 
+                dims = []
+                for(i = 1; i <= count; i++)
                 {
-                    data: 'col-1', 
-                    title: 'column 1', 
-                    render: function(data, type, row){
-                        // Add null/undefined check
-                        if (type === 'display' || type === 'type') {
-                            return data || '-';
+                    field = $(`#field-${i}`, collapse).val(); 
+                    if( i === 1)
+                    {
+                        str += `${field} DIA`; 
+                    }else{
+                        if( field != '')
+                        {
+                            dims.push( ` ${field}`); 
                         }
-                        return data; 
-                    }, 
-                },
-                // {
-                //     data: null,
-                //     orderable: false, 
-                //     className: 'd-grid', 
-                //     render: function(data, type, row)
-                //     {
-                //         return `<button class="btn btn-primary edit-btn"><i class="bi bi-pencil"></i>&nbsp;Edit</button>`;
-                //     }
-                // }
-            ],
-            columnDefs:[
-                {
-                    targets:[0],
-                    className: 'dt-center', 
-                    orderable: true, 
-                    render: function(data, type, row){
-                        return data || '-';
                     }
                 }
-            ],
-            layout:{
-                topStart:{
-                    buttons:[
-                        'pageLength', 
-                        {
-                            extend: 'excelHtml5', 
-                            title: 'Custom Title', 
-                            filename: function() {
-                                return 'Custom_File_Name_' + new Date().toISOString().slice(0,10);
-                            }
-                        },
-                        {
-                            extend: 'pdf', 
-                            title: 'Custom Title', 
-                            filename: function() {
-                                return 'Custom_File_Name_' + new Date().toISOString().slice(0,10);
-                            },
-                        },
-                        {
-                            text: 'Button Text', 
-                            action: function(e, dt, node, config ){
-                                //do something
-                                return; 
-                            }
-                        }
-                    ]
-                }
-            },
-            createdRow: function(row, data, dataIndex){
-                //Change Table Row Attributes 
             }
 
-        });
 
-        table.on('select', function (e, dt, type, indexes){
-            if (type === 'row') {
-                row = dt.row(indexes[0]).node(); 
-                modal = $('#content-modal'); 
-                modal.modal('show'); 
-                selectedRow = $(dt.row(indexes).node()); 
-                //data = { 'id' : $(row).data('id') };
-                //url = `base_url()`;
+            if( count === 3)
+            {   
+                str = ''; 
                 
-                //$.post(url, data, function(response){
-                    //do something with data.
-                    //  if(response.success)
-                    //  {
-                    //     Swal.fire({
-                    //         title: `${response.title}`,
-                    //         text: `${response.message}`,
-                    //         icon: 'success',
-                    //         confirmButtonText: 'OK'
-                    //     });
-                    //  }else{
-                    //     Swal.fire({
-                    //         title: `${response.title}`,
-                    //         text: `${response.message}`,
-                    //         icon: 'warning',
-                    //         confirmButtonText: 'OK'
-                    //     });
-                    //  }
-                //})
+                dims = []; 
+                for(i = 1; i <= count; i++)
+                {
+                    field = $(`#field-${i}`, collapse).val(); 
+                    if( i === 1)
+                    {
+                        str += `${field} `; 
+                    }else{
+                        if( field != '')
+                        {
+                            dims.push( `${field}`); 
+                        }
+                    }
+                }
             }
-        });
 
-        table.on('deselect', function (e, dt, type, indexes) {
-            if (type === 'row') {
-                var data = table.rows(indexes).data().toArray();
-                //console.log('Deselected rows:', data);
+
+            if( count === 4)
+            {   
+                str = ''; 
+                
+                dims = []; 
+                for(i = 1; i <= count; i++)
+                {
+                    field = $(`#field-${i}`, collapse).val(); 
+                    if( i === 1)
+                    {
+                        str += `${field} `; 
+                    }else{
+                        if( field != '')
+                        {
+                            dims.push( `${field}`); 
+                        }
+                    }
+                }
             }
-        });
 
-        $('.edit-btn').on('click', function(){
-            modal = $('#content-modal'); 
-            modal.modal('show'); 
-        });
-
-        $('#content-modal').on('hidden.bs.modal', function(){
-            if(selectedRow) {
-                row = table.row(selectedRow);
-                row.deselect(); 
-                selectedRow = null;
+            if( count === 5 && form === 'CHN')
+            {   
+                str = ''; 
+                
+                dims = []; 
+                for(i = 1; i <= count; i++)
+                {
+                    field = $(`#field-${i}`, collapse).val(); 
+                    if( i === 1)
+                    {
+                        str += `${field}`; 
+                    }else if( i === 2 ){
+                        if( field != '')
+                        {
+                            str += ` ${field}-ISW `;
+                        }
+                    }else{
+                        if( field != '')
+                        {
+                            dims.push( `${field}`); 
+                        }
+                    }
+                }
             }
-        });
+
+            if( count === 5 && form === 'BEM')
+            {   
+                str = ''; 
+                
+                dims = []; 
+                for(i = 1; i <= count; i++)
+                {
+                    field = $(`#field-${i}`, collapse).val(); 
+                    if( i === 1)
+                    {
+                        str += `${field}-FLG`; 
+                    }else if( i === 2 ){
+                        if( field != '')
+                        {
+                            str += ` ${field}-WEB `;
+                        }
+                    }else{
+                        if( field != '')
+                        {
+                            dims.push( `${field}`); 
+                        }
+                    }
+                }
+            }
 
 
+
+            dim_length = dims.length;
+
+            if( dim_length > 0 )
+            {
+                str += dims.join('X');
+            }
+
+            description = `${str} ${material}-${form}`;
+
+            if(property != undefined && property_value != undefined)
+            {
+                description += ` ${property} ${property_value}`;
+            }
+
+            if( standard != undefined  && standard_value != undefined )
+            {
+                description += ` ${standard} ${standard_value}`
+            }
+
+            $('#part-id').val( part ); 
+            $('#description').val(description.toUpperCase().trim()); 
+            $('#unit').val(um);
+
+        }
+
+
+
+
+
+        container = new bootstrap.Collapse('#sheet'); 
+        collapse = '#sheet'; 
+
+        $('#material-form').on('change', function(){
+            option = $(this).find(':selected'); 
+            img = option.data('img'); 
+            img_holder = $('.figure-img'); 
+            src = img_holder.attr('src', img);
+            collapse = option.data('target'); 
+            container = bootstrap.Collapse.getInstance(collapse); 
+            if(!container)
+            {
+                container = new bootstrap.Collapse(collapse);
+            }else{
+                container.show(); 
+            }
+        })
+
+        $('input, select').on('change', function(){
+            getPartNumber(); 
+        })
 
     })
 </script>

@@ -72,6 +72,14 @@ class Index extends BaseController
                 'icon' => 'components/icon/safety-icon',
                 'color' => 'text-dark', 
             ],
+            [
+                'name' => "Part Number Generator", 
+                'description' =>  'Generate Material Part Numbers and Descriptions',
+                'url' => 'purchasing/part/name/generator', 
+                'btn_text' => 'Open', 
+                'icon' => 'components/icon/tag-icon',
+                'color' => 'text-dark', 
+            ],
         ]; 
 
         $documents = [

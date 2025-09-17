@@ -55,7 +55,7 @@
                 },
                 {
                     data: 'order_date', //3 10%
-                    title: 'Order Date'
+                    title: 'Order'
                 },
                 {
                     data: 'qty_to_order', //4 5%
@@ -74,48 +74,53 @@
                     title: 'Description',
                 },
                 {
-                    data: 'qty_on_hand', //7 5% 5%
-                    title: 'QOH', 
+                    data: 'certificates',  //7 5%
+                    title: 'Certs', 
                 },
                 {
-                    data : 'qty_on_order',  //8 5%
-                    title: 'QOO', 
+                    data : 'dpas_rating',  //8 5%
+                    title: 'DPAS', 
                 },
                 {
-                    data: 'safety_stock', //9 5%
-                    title: 'SS', 
+                    data: 'contract_no', //9 5%
+                    title: 'Contract', 
                 },
                 {
-                    data: 'qty_in_demand',  //10 5%
-                    title: 'DMD', 
-                },
-                {
-                    data: 'planner_id', //11 5%
+                    data: 'planner_id', 
                     title: 'Type', 
-                    //visible: false,
+                    visible: false,
+                },
+                {
+                    data: 'truck',
+                    title: 'Is Truck', 
+                    visible : false, 
                 }
 
             ],
             columnDefs:[
                 {
-                    targets:[0,1,3,4,7,8,9,10,11],
+                    targets:[0,1,3,4,7,8,9],
                     className: 'dt-center', 
                 },
                 {
-                    targets:[0,4,7,8,9,10,11],
+                    orderable: false,
+                    targets:[4,7,8,9]
+                },
+                {
+                    targets:[0,4],
                     width: '5%'
                 },
                 {
-                    targets:[1,3],
+                    targets:[3],
                     width: '8%'
                 },
                 {
-                    targets:[5],
-                    width: '17%'
+                    targets:[7,8,9],
+                    width: '10%'
                 },
                 {
                     targets:[5,6],
-                    width: '25%'
+                    width: '20%'
                 }
             ],
             layout:{
@@ -131,7 +136,7 @@
                                     text: 'Hardware',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(11).search('^$', true, false).draw(); 
+                                        dt.column(10).search('^$', true, false).draw(); 
                                         $('#label').html('Showing Hardware Work Orders')
                                     }
                                 },
@@ -139,7 +144,7 @@
                                     text: 'Wire',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(11).search('W', true, false).draw(); 
+                                        dt.column(10).search('W', true, false).draw(); 
                                        $('#label').html('Showing Wire Work Orders')
                                     }
                                 },
@@ -147,7 +152,7 @@
                                     text: 'Chemical',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(11).search('C', true, false).draw(); 
+                                        dt.column(10).search('C', true, false).draw(); 
                                         $('#label').html('Showing Chemical Work Orders')
                                     }
                                 },
@@ -155,7 +160,7 @@
                                     text: 'Paint',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(11).search('P', true, false).draw(); 
+                                        dt.column(10).search('P', true, false).draw(); 
                                         $('#label').html('Showing Paint Work Orders')
                                     }
                                 },
@@ -163,7 +168,7 @@
                                     text: 'Material',
                                     action: function(e, dt, node, config)
                                     {
-                                         dt.column(11).search('M', true, false).draw(); 
+                                         dt.column(10).search('M', true, false).draw(); 
                                          $('#label').html('Showing Material Work Orders')
                                     }
                                 },
@@ -171,15 +176,23 @@
                                     text: 'Fabricated',
                                     action: function(e, dt, node, config)
                                     {
-                                         dt.column(11).search('D', true, false).draw(); 
+                                         dt.column(10).search('D', true, false).draw(); 
                                          $('#label').html('Showing Fabricated Work Orders')
+                                    }
+                                },
+                                {
+                                    text: 'Trucks', 
+                                    action: function(e, dt, node, config)
+                                    {
+                                        dt.column(11).search('1', true, false).draw(); 
+                                        $('#label').html('Showing 5K, 7K, DHC Trucks');
                                     }
                                 },
                                 {
                                     text: 'All',
                                     action: function(e, dt, node, config)
                                     {
-                                        dt.column(11).search('', true, false).draw();
+                                        dt.column(10).search('', true, false).draw();
                                         $('#label').html('Showing All Work Orders')
                                     }
                                 }
@@ -207,7 +220,9 @@
         });
 
         table.on('init', function(){
-            table.column(11).search('(^$|null)', true, false).draw();
+            table.column(10).search('(^$|null)', true, false);
+            table.column(11).search('0',true, false);
+            table.draw(); 
         });
 
         table.on('draw.dt', function(){

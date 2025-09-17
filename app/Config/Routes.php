@@ -193,6 +193,14 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->post('restore', 'Purchasing\WorkRequest\Index::restore_request'); 
         });
 
+        $routes->group('part', static function($routes){
+            $routes->group('name', static function($routes){
+                $routes->group('generator', static function($routes){
+                    $routes->get('', 'Purchasing\Part\Name\Generator\Index::index');
+                });
+            });
+        });
+
 
     });
 

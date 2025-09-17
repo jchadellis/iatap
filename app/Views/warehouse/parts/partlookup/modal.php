@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td colspan="8">
-                <div class="p-2 m-0 rounded-2" style="background-color: #e6faffff;">
+                <div class="p-2 m-0 rounded-2 overflow-scroll" style="background-color: #e6faffff;">
                     <?php 
 
                         $bits = $data->bits['bits'] ?? ''; 
@@ -393,7 +393,7 @@
                     <td class="text-center"><?= $row['customer_id'] ?></td>
                     <td class="text-center"><?= $row['workorder_id'] ?></td>
                     <td class="text-center"><?= $row['qty'] ?></td>
-                    <td class="text-center"><?= $row['total']  ?></td>
+                    <td class="text-center">$<?= number_format($row['total'], 2)  ?></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php else: ?>
