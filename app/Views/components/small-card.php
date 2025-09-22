@@ -1,40 +1,30 @@
+<style>
+    .tool-card:hover{
+        background-color : #d5ebfbff !important; 
+    }
+</style>
+
 <?php if(isset($data)) : ?>
 <?php foreach($data as $card ) : ?>
 
-<div class="row m-1 mb-4">
-    <div class="col mx-auto p-2 border ">
-        <div class="row p-2">
-            <div class="col-2 d-none d-xxl-block" >
-                <div class="d-flex justify-content-center align-items-center h-100 <?= $card['color'] ?? '' ?>">
-                    <div style="width:55px">
+<div class="d-flex flex-wrap gap-2 ">
+    <div class="card rounded-0 mb-2 w-100 " >
+        <a href="<?= (base_url($card['url'])) ?? '' ?>" class="text-decoration-none text-dark">
+            <div class="card-body tool-card">
+                <div class="d-flex flex-row">
+                    <div class="d-flex justify-content-center align-items-center me-2" style="width:55px">
                         <?= ( $card['icon'] !== '') ? view($card['icon']) : '' ?>
                     </div>
-                </div>
-            </div>
-            <div class="col-xxl-8 col-xl-10">
-                <div class="row">
-                    <div class="col-12 text-start mb-2">
-                        <h6 class="h6 pb-0 m-0"><?= $card['name'] ?? ''?></h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-8">
-                        <?= $card['description'] ?? '' ?>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xxl-2">
-                    <div class="d-flex align-items-center justify-content-center h-100">
-                        <div class="d-grid">
-                            <?php if( isset($card['btn-data'] )) : ?>
-                                <a href='<?= (base_url($card['url'])) ?? '' ?>' <?= $card['btn-data'] ?? '' ?> class="btn btn-outline-primary" type="button"><?= $card['btn_text'] ?? '' ?></a>
-                            <?php else: ?>
-                                <a href='<?= base_url($card['url']) ?? '' ?>' class="btn btn-outline-primary" type="button"><?= $card['btn_text'] ?? '' ?></a>
-                            <?php endif; ?>
+                    <div class="d-flex flex-column ms-2 ps-3">
+                        <h6 class="h5 "><?= $card['name'] ?? ''?></h5>
+                        <hr class="p-1 m-0">
+                        <div>
+                             <?= $card['description'] ?? '' ?>
                         </div>
                     </div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 <?php endforeach; ?>

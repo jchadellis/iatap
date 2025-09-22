@@ -38,7 +38,7 @@ class Index extends BaseController
             'description' =>  'Lookup Parts and view Sale, Purchase and Quote History',
             'url' => 'warehouse/parts/part-lookup', 
             'btn_text' => 'View', 
-            'icon' => 'components/icon/table-icon',
+            'icon' => 'components/icon/magnifying-glass',
             'color' => 'text-dark', 
             'permission' => 'edereport.view', 
         ],

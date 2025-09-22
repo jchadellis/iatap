@@ -3,25 +3,9 @@
     $(document).ready(function(){
 
         const table = new DataTable('#table', {
-            
-            ajax: function(data, callback, settings){ 
-                const id = 'loadModal';
-                const loadingModal = showLoadingModal(id, 'Loading Safety Stock', `Please wait...`);
-                const loadModal = document.getElementById(id);
-
-                $.ajax({
-                    url: '<?= base_url('purchasing/safety-stock/data') ?>',
-                    data: data,
-                    dataType: 'json', 
-                    success: function(response){
-                        loadingModal.hide(); 
-                        callback(response); 
-                    },
-                    error: function(xhr, status, error){
-                        console.log(status); 
-
-                    }
-                })
+            ajax:{
+                url: '<?= base_url('purchasing/safety-stock/data') ?>',
+                dataSrc: 'data', 
             },
             processing: false, 
             pageLength: 100,

@@ -148,16 +148,33 @@ $routes->group('sadmin', ['filter' => 'group:super'], static function($routes) {
 // =============================================================================
 $routes->group('', ['filter' => 'session'], static function($routes) {
 
+    $routes->get('it/group-access-request/(:any)', 'IT\Index::access_request/$1'); 
+
     // Purchasing Routes
     $routes->group('purchasing', static function($routes) {
         $routes->get('/', 'Purchasing\Index::index');
-        $routes->get('fabrication-report', 'Purchasing\Fabrication\Index::index');
-        $routes->get('fabrication-report/data', 'Purchasing\Fabrication\Index::get_data');
-        $routes->get('paint-report', 'Purchasing\Paint\Index::index');
-        $routes->get('paint-report/data', 'Purchasing\Paint\Index::get_data');
-        $routes->get('safety-stock', 'Purchasing\Stock\Index::index');
-        $routes->get('safety-stock/data', 'Purchasing\Stock\Index::get_data');
+        // $routes->get('fabrication-report', 'Purchasing\Fabrication\Index::index');
+        // $routes->get('fabrication-report/data', 'Purchasing\Fabrication\Index::get_data');
+        // $routes->get('paint-report', 'Purchasing\Paint\Index::index');
+        // $routes->get('paint-report/data', 'Purchasing\Paint\Index::get_data');
+        // $routes->get('safety-stock', 'Purchasing\Stock\Index::index');
+        // $routes->get('safety-stock/data', 'Purchasing\Stock\Index::get_data');
         
+        $routes->group('fabrication-report', static function($routes){
+            $routes->get('', 'Purchasing\Fabrication\Index::index'); 
+            $routes->get('data', 'Purchasing\Fabrication\Index::get_data'); 
+        }); 
+
+        $routes->group('paint-report', static function($routes){
+            $routes->get('', 'Purchasing\Paint\Index::index');
+            $routes->get('data', 'Purchasing\Paint\Index::get_data');
+        });
+
+        $routes->group('safety-stock', static function($routes){
+            $routes->get('', 'Purchasing\Stock\Index::index');
+            $routes->get('data', 'Purchasing\Stock\Index::get_data');
+        });
+
         $routes->group('tools', static function($routes) {
             $routes->get('/', 'Purchasing\Tools\Index::index');
             $routes->get('data', 'Purchasing\Tools\Index::get_data');
@@ -182,7 +199,6 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('data', 'Purchasing\Orders\Index::get_data');
         });
 
-
         $routes->group('work-request', static function($routes){
             $routes->get('/', 'Purchasing\WorkRequest\Index::index'); 
             $routes->get('data', 'Purchasing\WorkRequest\Index::get_data'); 
@@ -201,9 +217,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             });
         });
 
-
     });
-
 
     // Production Routes
     $routes->group('production', static function($routes) {

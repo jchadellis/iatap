@@ -36,4 +36,29 @@ class Index extends BaseController
 
         return view('template/index', $data);
     }
+
+    public function access_request($group)
+    {
+        $user = auth()->user();
+
+        $email = service('email');
+
+        $email->setMailType('html');
+        $email->setFrom($user->email); 
+        $email->setTo('jeremy.ellis@atap.com'); 
+        $email->setSubject('iATAP Group Access');
+
+        $message = view('admin/email-templates/group-access-request', ['user' => $user, 'group' => $group]); 
+
+        $email->setMessage($message); 
+
+        if( $email->send() )
+        {
+            return redirect()->back()->with('message', 'Email was sent successfully. Your request will be reviewed'); 
+        }
+
+
+        return redirect()->back()->with('errors', 'Email failed to send. Please try again.'); 
+ 
+    }
 }

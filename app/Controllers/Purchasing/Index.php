@@ -7,14 +7,9 @@ use App\Controllers\BaseController;
 
 class Index extends BaseController
 {
-    public function index($id = null): string
-    {
-        $breadcrumbs = [
-            ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
-            ['name' => 'Purchasing', 'is_active' => true, 'url' => '#'],
-        ];
+    private $groups = ['purchasing'];
 
-        $tool_cards = [
+    private $tool_cards = [
             [
                 'name' => "Work Orders Purchase Report", 
                 'description' =>  'View work orders with purchase requirements, for parts, paint, material, chemical, fabricated and wire',
@@ -72,6 +67,9 @@ class Index extends BaseController
                 'icon' => 'components/icon/safety-icon',
                 'color' => 'text-dark', 
             ],
+    ]; 
+
+    private $secured_cards = [
             [
                 'name' => "Part Number Generator", 
                 'description' =>  'Generate Material Part Numbers and Descriptions',
@@ -82,32 +80,51 @@ class Index extends BaseController
             ],
         ]; 
 
-        $documents = [
-            [
-                'name' => 'DoD Export Control Form', 
-                'url' => 'assets/documents/purchasing/ecda.pdf',
-                'btn_text' => 'Download', 
-                'icon' => 'components/icon/pdf-icon',
-                'color' => 'text-dark',  
-                
-            ],
-            [
-                'name' => 'Product Reture Form', 
-                'url' => 'assets/documents/purchasing/return-form.pdf',
-                'btn_text' => 'Download', 
-                'icon' => 'components/icon/pdf-icon',
-                'color' => 'text-dark',  
-            ],
-            [
-                'name' => 'Product Return Process', 
-                'url' => 'assets/documents/purchasing/return-process.pdf',
-                'btn_text' => 'Download', 
-                'icon' => 'components/icon/pdf-icon',
-                'color' => 'text-dark',  
-            ], 
+    private   $documents = [
+        [
+            'name' => 'DoD Export Control Form', 
+            'url' => 'assets/documents/purchasing/ecda.pdf',
+            'btn_text' => 'Download', 
+            'icon' => 'components/icon/pdf-icon',
+            'color' => 'text-dark',  
+            
+        ],
+        [
+            'name' => 'Product Return Form', 
+            'url' => 'assets/documents/purchasing/return-form.pdf',
+            'btn_text' => 'Download', 
+            'icon' => 'components/icon/pdf-icon',
+            'color' => 'text-dark',  
+        ],
+        [
+            'name' => 'Product Return Process', 
+            'url' => 'assets/documents/purchasing/return-process.pdf',
+            'btn_text' => 'Download', 
+            'icon' => 'components/icon/pdf-icon',
+            'color' => 'text-dark',  
+        ], 
+    ];
+
+    public function index($id = null): string
+    {
+        $breadcrumbs = [
+            ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
+            ['name' => 'Purchasing', 'is_active' => true, 'url' => '#'],
         ];
 
-        $this->data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => 'Purchasing', 'content' => view('purchase/index', ['tool_cards' => $tool_cards, 'documents' => $documents ]) ];
+        $this->data = [
+            'site_name' => 'iATAP', 
+            'breadcrumbs' => $breadcrumbs, 
+            'title' => 'Purchasing', 
+            'js' => view('purchasing/index.js.php'),
+            'content' => view('purchasing/index', [
+                'tool_cards' => $this->tool_cards, 
+                'documents' => $this->documents,
+                'secured_cards' => $this->secured_cards,
+                'groups' => $this->groups, 
+                'user' => auth()->user(),
+            ])
+        ];
         return view('template/index', $this->data);
     }
 

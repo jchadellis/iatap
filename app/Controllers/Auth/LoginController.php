@@ -40,8 +40,8 @@ class LoginController extends ShieldLogin
         /** @var \CodeIgniter\Shield\Authentication\Authenticators\Session $authenticator */
         $authenticator = auth('session')->getAuthenticator();
 
-        if ($authenticator->remember($remember)->attempt($credentials)) {
-            return redirect()->to(setting('Auth.redirects')['login']);
+        if ($authenticator->remember($remember)->attempt($credentials)->isOK()) {
+            return redirect()->to(setting('Auth.redirects')['landing']);
         }
 
         return redirect()->route('login')->withInput()->with('error', lang('Auth.badAttempt'));

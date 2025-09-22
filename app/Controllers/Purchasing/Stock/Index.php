@@ -26,6 +26,7 @@ class Index extends BaseController
     public function get_data()
     {
         $this->remote_model = new SqlbaseModel(); 
+
         $this->data = $this->remote_model->getData('http://vatap/mvc/public/api/getsafetystock'); 
         return $this->response->setJSON(['data' => $this->data]); 
     }

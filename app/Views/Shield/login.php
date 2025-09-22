@@ -11,9 +11,9 @@
                 <!-- <h5 class="card-title text-center m-3"><?= lang('Auth.login') ?></h5> -->
 
                 <?php if (session('error') !== null) : ?>
-                    <div class="alert alert-danger" role="alert"><?= session('error') ?></div>
+                    <div class="alert alert-danger mt-2" role="alert"><?= session('error') ?></div>
                 <?php elseif (session('errors') !== null) : ?>
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger mt-2" role="alert">
                         <?php if (is_array(session('errors'))) : ?>
                             <?php foreach (session('errors') as $error) : ?>
                                 <?= $error ?>
@@ -26,7 +26,7 @@
                 <?php endif ?>
 
                 <?php if (session('message') !== null) : ?>
-                <div class="alert alert-success" role="alert"><?= session('message') ?></div>
+                <div class="alert alert-success mt-2" role="alert"><?= session('message') ?></div>
                 <?php endif ?>
 
                 <form action="<?= url_to('login') ?>" method="post">

@@ -3,6 +3,17 @@
         Tools
     </h5>
 </div>
+
+<div class="row">
+    <div class="col-8">
+        <?php $user = auth()->user() ?>
+        <?php if( $user->inGroup(...$groups)) : ?>
+        <?= view('components/small-card', ['data' => $secure_cards]) ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-8">
         <?= view('components/small-card', ['data' => $cards]) ?>

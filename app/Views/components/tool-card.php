@@ -1,36 +1,30 @@
 
+<style>
+    .tool-card:hover{
+        background-color : #d5ebfbff !important; 
+    }
+</style>
+<hr>
+<div class="d-flex flex-wrap gap-1">
 <?php foreach($data as $card ) : ?>
-<div class="row m-1 mb-4">
-    <div class="col mx-auto p-2 border ">
-        <div class="row p-2">
-            <div class="col-1 d-none d-xxl-block" >
-                <div class="d-flex justify-content-center align-items-center h-100 <?= $card['color'] ?>">
-                    <div style="width:55px">
-                        <?= view($card['icon']) ?>
+    <div class="card rounded-0 w-100">
+        <a href="<?= base_url($card['url']) ?>" class="text-decoration-none text-dark">
+            <div class="card-body">
+                <div class="d-flex flex-row">
+                    <div class="d-flex justify-content-center align-items-center me-2" style="width:75px">
+                        <?= view($card['icon']) ?>        
                     </div>
-                </div>
-
-            </div>
-            <div class="col-xxl-11 col-xl-12">
-                <div class="row">
-                    <div class="col-12 text-start mb-2">
+                    <div class="d-flex flex-column ms-2 ps-3">
                         <h6 class="h6 pb-0 m-0"><?= $card['name'] ?></h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-8">
-                        <?= $card['description'] ?>
-                    </div>
-                    <div class="col-4">
-                        <div class="d-grid">
-                            <div class="d-grid">
-                                <a href='<?= base_url($card['url']) ?>' class="btn btn-outline-primary" type="button"><?= $card['btn_text'] ?></a>
-                            </div>
+                        <hr>
+                        <div class="">
+                            <?= $card['description'] ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
-</div>
 <?php endforeach; ?>
+</div>
+

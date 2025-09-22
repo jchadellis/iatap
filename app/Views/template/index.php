@@ -50,6 +50,8 @@
 
                     <?= view_cell('App\Cells\Template\BreadCrumbsCell', ['breadcrumbs' => (isset($breadcrumbs)) ? $breadcrumbs : '' ]) ?>
 
+                    <?= view_cell('App\Cells\Alerts\ErrorCell'); ?>
+                    <?= view_cell('App\Cells\Alerts\MessageCell'); ?>
                 <!-- Show only on XXL and up -->
                     <div class="row">
 
@@ -97,7 +99,18 @@
         }
         updateDateTime(); 
         setInterval(updateDateTime, 1000);
-    })
+
+        setTimeout(function() {
+            var alertElement = $('#errors-alert, #message-alert');
+            console.log(alertElement);
+            if (alertElement) {
+                bootstrap.Alert.getOrCreateInstance(alertElement).close();
+            }
+        }, 3000); 
+
+    });
+
+
 </script>
 
 

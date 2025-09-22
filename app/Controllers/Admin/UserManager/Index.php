@@ -215,9 +215,11 @@ class Index extends RegisterController
         $this->syncUserAuth($user, $groups, $permissions); 
 
         $host = $post['host_id'];
+
         $this->syncHost($user, $host);
 
         $password = $post['password'] ?? '';
+
         $pw_changed = $this->syncPassword($user, $password); 
 
         if( $pw_changed )
