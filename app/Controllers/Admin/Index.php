@@ -37,7 +37,7 @@ class Index extends BaseController
             'description' => 'Used to manage logins. Add, Edit and Delete Logins', 
             'url' => 'sadmin/login-manager', 
             'btn_text' => 'Open Manager', 
-            'icon' => 'components/icon/cloud-arrow-up-icon',
+            'icon' => 'components/icon/key',
             'color' => 'text-dark', 
         ],
         [
@@ -45,7 +45,7 @@ class Index extends BaseController
             'description' => 'Used to manage Network Assets switches, workstations, printers, etc...', 
             'url' => 'sadmin/assets-manager', 
             'btn_text' => 'Open Manager', 
-            'icon' => 'components/icon/computer-icon',
+            'icon' => 'components/icon/desktop-tower',
             'color' => 'text-dark', 
         ],
         [
@@ -54,6 +54,14 @@ class Index extends BaseController
             'url' => 'sadmin/page-logs', 
             'btn_text' => 'Open Manager', 
             'icon' => 'components/icon/page-icon',
+            'color' => 'text-dark', 
+        ],
+        [
+            'name' => 'Backup Manager', 
+            'description' => 'Download, Delete database backups and site files', 
+            'url' => 'sadmin/backup-manager', 
+            'btn_text' => 'Open Manager', 
+            'icon' => 'components/icon/save-floppy-disk',
             'color' => 'text-dark', 
         ],
 

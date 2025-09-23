@@ -10,8 +10,8 @@
     <meta name="author" content="">
 
     <title><?= (isset($title)) ? $title : ''  ?></title>
-    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url(ASSETSPATH.'img/iatap.png') ?>">
-    
+    <!-- <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url(ASSETSPATH.'img/iatap.png') ?>"> -->
+    <link rel="icon" type="image/x-icon" href="<?= base_url(ASSETSPATH.'img/favicon.ico') ?>">
     <!-- Bootstrap CSS -->
     <link href="<?= base_url(ASSETSPATH.'css/custom-bootstrap.css')?>" rel="stylesheet" >
      
@@ -37,5 +37,9 @@
     <style>
         .text-bg-lite-blue{
             background-color: #dbedfe;
+        }
+
+        .tool-card:hover{
+            background-color : #d5ebfbff !important; 
         }
     </style>

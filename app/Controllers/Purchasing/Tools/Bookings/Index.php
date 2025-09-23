@@ -72,9 +72,13 @@ class Index extends BaseController
             case 'all':
                 $model->orderBy('desired_recv_date', 'asc');
                 break;
-                
+            case 'late': 
+                $model->where('true_promise <=', $today)
+                    ->whereIn('percentage_complete', [90, 100]);
+                break;                 
             case '-30':
                 $model
+                    ->where('true_promise >', $today)
                     ->where('true_promise <', $thirtyDays)
                     ->whereIn('percentage_complete', [90, 100]);
                 break;
@@ -104,7 +108,11 @@ class Index extends BaseController
         }
         
         $data = $model->findAll();
-        
+        foreach($data as $row)
+        {
+            $row->formatted_date = $row->true_promise->format('Y-m-d');
+        }
+       
         if($data) {
             return $this->response->setJSON([
                 'data' => $data,

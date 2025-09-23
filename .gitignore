@@ -9,6 +9,8 @@ public/assets/node_modules
 
 public/assets/video
 
+public/assets/scripts
+
 
 # Ignore macOS metadata files (these files, starting with ._, are generated automatically)
 ._*

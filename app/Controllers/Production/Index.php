@@ -21,7 +21,7 @@ class Index extends BaseController
                 'description' => 'Review All Currently Open Work Orders, Categorized According to the Department Responsible for Their Completion', 
                 'url' => 'workorders/36', 
                 'btn_text' => 'View Workorders', 
-                'icon' => 'components/icon/cloud-icon',
+                'icon' => 'components/icon/briefcase',
                 'color' => 'text-dark', 
             ],
             [
@@ -45,7 +45,7 @@ class Index extends BaseController
                 'description' => 'View Production Schedule, by department and / or launch shop view.', 
                 'url' => 'production/schedule', 
                 'btn_text' => 'View Schedule', 
-                'icon' => 'components/icon/clipboard-document-icon',
+                'icon' => 'components/icon/calendar-dots',
                 'color' => 'text-dark', 
             ],
             [

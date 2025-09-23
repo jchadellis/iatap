@@ -120,9 +120,14 @@ class RefreshPurchaseOrders extends BaseCommand
                 return $a <=> $b; 
             });
 
+
             
             $row->next_vendor_update_at = (isset($futureDates[0])) ? $futureDates[0]->format('Y-m-d h:i:s') : null; 
-            //CLI::write( ($row->next_vendor_update_at) ?? 'NULL', 'blue') ;
+            // if( $row->id === '252713')
+            // {
+            //     CLI::write( ($row->id . ': ' . $row->last_vendor_update_at) ?? 'NULL', 'blue') ;
+            // }
+            
             $row->created_at = (new \DateTime())->format('Y-m-d h:i:s'); 
      
             $builder->insert($row); 

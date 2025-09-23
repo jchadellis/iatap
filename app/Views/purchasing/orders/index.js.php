@@ -22,7 +22,7 @@
         }
 
         const table = new DataTable('.table', {
-            select: true, 
+            //select: true, 
             lengthMenu: [25, 50, 100, 200, { label: 'All', value: -1 }],
             ajax:{
                 url: '<?= base_url('purchasing/orders/data') ?>', 

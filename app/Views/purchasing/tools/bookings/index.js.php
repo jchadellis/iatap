@@ -17,7 +17,7 @@ $(document).ready(() => {
     const table = new DataTable('.table', {
 
         ajax: {
-            url : "<?= base_url('purchasing/tools/bookings/data/-30') ?>",
+            url : "<?= base_url('purchasing/tools/bookings/data/late') ?>",
             dataSrc: 'data', 
         },
         columns:[
@@ -26,23 +26,20 @@ $(document).ready(() => {
                 title: 'PO NO.', 
                 width: '5%'
             },
+            // {
+            //     data: 'true_promise.date',
+            //     visible: false // HIDDEN column for sorting
+            // },
             {
-                data: 'true_promise.date',
-                visible: false // HIDDEN column for sorting
-            },
-            {
-                data: 'true_promise',  
-                title:'Promise Date',
-                render: function(data, type, row){
-                    tpDate = new Date(data.date); 
-                    return tpDate.toLocaleDateString(); 
-                },
+                data: 'formatted_date',  
+                title:'Desired Recv.',
+
                 width: '5%',
             },
             {
                 data: 'last_vendor_update_at',  
-                title:'Last Vendor Update Req.',
-                width: '5%',
+                title:'Last PO Update',
+                width: '8%',
             },
             {
                 data: 'linear_progress', 
@@ -109,7 +106,7 @@ $(document).ready(() => {
         },
         ordering: true,
         autoWidth: false,
-        select: true,
+        //select: true,
         pageLength: 200,
 
         lengthMenu: [
@@ -143,8 +140,20 @@ $(document).ready(() => {
             topStart: {
                 buttons: [
                     {
-                        text: "< 30 Days or Late",
+                        text: "Due Today or Late",
                         className: 'btn-outline-danger filter-btn active',
+                        action: function () {
+                            // get new date based on filter button
+                            table.ajax.url('<?= base_url('purchasing/tools/bookings/data/late')?>').load();
+                            
+                            // Update active button
+                            $('.filter-btn').removeClass('active');
+                            $(this[0].node).addClass('active');
+                        }
+                    }, 
+                    {
+                        text: "Less than 30 Days",
+                        className: 'btn-outline-orange filter-btn',
                         action: function () {
                             // get new date based on filter button
                             table.ajax.url('<?= base_url('purchasing/tools/bookings/data/-30')?>').load();
@@ -155,8 +164,8 @@ $(document).ready(() => {
                         }
                     },
                     {
-                        text: "30 - 75 Days",
-                        className: 'btn-outline-orange filter-btn',
+                        text: "30 - 75 Days Out",
+                        className: 'btn-outline-warning filter-btn',
                         action: function () {
                             // get new date based on filter button
                             table.ajax.url('<?= base_url('purchasing/tools/bookings/data/30-75')?>').load();
@@ -167,7 +176,7 @@ $(document).ready(() => {
                         }
                     },
                     {
-                        text: "75 - 120 Days",
+                        text: "75 - 120 Days Out",
                         className: 'btn-outline-primary filter-btn',
                         action: function () {
                             // get new date based on filter button
@@ -179,7 +188,7 @@ $(document).ready(() => {
                         }
                     },
                     {
-                        text: "120 + Days",
+                        text: "120 + Days Out",
                         className: 'btn-outline-success filter-btn',
                         action: function () {
                             // get new date based on filter button
@@ -230,9 +239,9 @@ $(document).ready(() => {
         },
 
         columnDefs: [
-            { targets: [2, 3, 4,5, 7 ], orderable: false },
+            { targets: [ 3, 4,5, 7 ], orderable: false },
             { targets: 1, type: 'date-eu' },
-            { targets: [0, 1, 2, 3, 4, 6,  8, 9], className: 'align-middle text-center'},
+            { targets: [0, 1, 2, 3, 4, 6,  8], className: 'align-middle text-center'},
             { target : [7], className: 'align-middle text-start text-truncate'}
             //{ targets: 9, visible: false } // Assuming percentage is column 9
         ],
@@ -264,9 +273,9 @@ $(document).ready(() => {
     $('#buyer-select').on('change', function(){
         buyer = $(this).val(); 
         if( buyer === 'all' ){
-            table.column(7).search('').draw();
+            table.column(6).search('').draw();
         } else{
-            table.column(7).search(buyer).draw(); 
+            table.column(6).search(buyer).draw(); 
         } 
     })
 

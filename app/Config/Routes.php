@@ -140,6 +140,15 @@ $routes->group('sadmin', ['filter' => 'group:super'], static function($routes) {
     });
 
     $routes->get('page-logs', 'Admin\PageStats::index');
+
+    $routes->group('backup-manager', static function($routes){
+        $routes->get('', 'Admin\BackupManager\Index::index'); 
+        $routes->get('download-file/(:any)', 'Admin\BackupManager\Index::download/$1/$2');  
+        $routes->get('backup-site', 'Admin\BackupManager\Index::backup_site'); 
+        $routes->get('backup-visual', 'Admin\BackupManager\Index::backup_visual'); 
+        $routes->get('site-files-backup', 'Admin\BackupManager\Index::site_files_backup'); 
+        $routes->get('download-site-files/(:any)', 'Admin\BackupManager\Index::download_site/$1');
+    });
 });
 
 

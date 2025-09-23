@@ -24,7 +24,7 @@ class Index extends BaseController
                 'description' =>  'Fabrication Purchasing Report: Part Needs, Associated Work Orders',
                 'url' => 'purchasing/fabrication-report', 
                 'btn_text' => 'View Report', 
-                'icon' => 'components/icon/dollar-icon',
+                'icon' => 'components/icon/wallet',
                 'color' => 'text-dark', 
             ],
             [
@@ -32,7 +32,7 @@ class Index extends BaseController
                 'description' =>  'Paint Purchasing Report: Need Dates, Work Orders, Vendors, Order Amounts, and Inventory Levels',
                 'url' => 'purchasing/paint-report', 
                 'btn_text' => 'View Report', 
-                'icon' => 'components/icon/dollar-icon',
+                'icon' => 'components/icon/wallet',
                 'color' => 'text-dark', 
             ],
             [
@@ -56,7 +56,7 @@ class Index extends BaseController
                 'description' =>  'View PO Bookings, Comformations, Count',
                 'url' => 'purchasing/tools', 
                 'btn_text' => 'Open Tools', 
-                'icon' => 'components/icon/tool-icon',
+                'icon' => 'components/icon/toolbox',
                 'color' => 'text-dark', 
             ],
             [
@@ -64,7 +64,7 @@ class Index extends BaseController
                 'description' =>  'Inventory Safety Stock Overview',
                 'url' => 'purchasing/safety-stock', 
                 'btn_text' => 'View Report', 
-                'icon' => 'components/icon/safety-icon',
+                'icon' => 'components/icon/warning-octagon',
                 'color' => 'text-dark', 
             ],
     ]; 
