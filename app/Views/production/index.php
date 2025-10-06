@@ -8,7 +8,7 @@
 </div>
 <div class="col-8">
     <?php if( auth()->user()->inGroup(...$groups) ) : ?>
-    <?= view('components/tool-card', ['data' => $secure_tool_cards]) ?>
+    <?= view('components/tool-card', ['data' => $secure_cards]) ?>
     <?php else: ?>
     <div class="alert alert-info" role="alert">
         <i class="fas fa-info-circle me-2"></i>

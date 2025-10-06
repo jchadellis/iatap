@@ -35,6 +35,8 @@ $routes->group('directory', static function($routes) {
     $routes->get('weather', 'Directory::weather');
 });
 
+$routes->get('legacy', 'Legacy\Index::index'); 
+
 // File Management Routes
 $routes->group('', static function($routes) {
     $routes->get('download/(:any)', 'Filemanager\FileController::download/$1');
@@ -78,6 +80,7 @@ $routes->post('login', '\App\Controllers\Auth\LoginController::loginAction');
 $routes->group('user', static function($routes) {
     $routes->get('profile', 'User\Index::index');
     $routes->get('profile/(:num)', 'User\Index::index/$1');
+    $routes->post('get-pto', 'User\Index::get_pto');
 });
 
 // =============================================================================
@@ -191,6 +194,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->group('bookings', static function($routes) {
                 $routes->get('/', 'Purchasing\Tools\Bookings\Index::index');
                 $routes->get('data/(:any)', 'Purchasing\Tools\Bookings\Index::get_data/$1');
+                $routes->get('test-data/(:any)', 'Purchasing\Tools\Bookings\Index::get_data_test/$1'); 
                 $routes->post('review', 'Purchasing\Tools\Bookings\Index::review_email');
                 $routes->post('send-email', 'Purchasing\Tools\Bookings\Index::send_email');
             });
@@ -199,6 +203,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
                 $routes->get('/', 'Purchasing\Tools\Confirmations\Index::index');
                 $routes->post('review', 'Purchasing\Tools\Confirmations\Index::review_email');
                 $routes->post('send-email', 'Purchasing\Tools\Confirmations\Index::send_email');
+                $routes->get('data', 'Purchasing\Tools\Confirmations\Index::get_data'); 
             });
         });
 
@@ -231,7 +236,22 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     // Production Routes
     $routes->group('production', static function($routes) {
         $routes->get('/', 'Production\Index::index');
-        $routes->get('workorders', 'Production\Workorders::index');
+
+        $routes->group('', ['filter' => 'secured_group:production'], static function($routes){
+            $routes->group('schedule', static function($routes) {
+                $routes->get('/', 'Production\Schedule\Index::index');
+                $routes->get('data', 'Production\Schedule\Index::get_data');
+                $routes->get('data/(:segment)', 'Production\Schedule\Index::get_data/$1');
+                $routes->post('mark-complete', 'Production\Schedule\Index::set_operation_complete');
+                $routes->get('shop-view', 'Production\Schedule\Index::shop_view');
+                $routes->get('shop-view/(:segment)', 'Production\Schedule\Index::shop_view/$1');
+            });
+
+            $routes->group('workorders', static function($routes){
+                $routes->get('', 'Production\Workorders::index');
+            });
+        });
+        
         $routes->get('workorder/(:num)/(:num)', 'Production\Workorders::get_workorder/$1/$2');
         $routes->get('print', 'Production\Workorders::print_list');
         $routes->post('print', 'Production\Workorders::print_list');
@@ -244,25 +264,41 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('paint/data', 'Production\Requirements\Paint\Index::get_data'); 
         });
         
-        $routes->group('schedule', static function($routes) {
-            $routes->get('/', 'Production\Schedule\Index::index');
-            $routes->get('data', 'Production\Schedule\Index::get_data');
-            $routes->get('data/(:segment)', 'Production\Schedule\Index::get_data/$1');
-            $routes->post('mark-complete', 'Production\Schedule\Index::set_operation_complete');
-            $routes->get('shop-view', 'Production\Schedule\Index::shop_view');
-            $routes->get('shop-view/(:segment)', 'Production\Schedule\Index::shop_view/$1');
-        });
+        // $routes->group('schedule', static function($routes) {
+        //     $routes->get('/', 'Production\Schedule\Index::index');
+        //     $routes->get('data', 'Production\Schedule\Index::get_data');
+        //     $routes->get('data/(:segment)', 'Production\Schedule\Index::get_data/$1');
+        //     $routes->post('mark-complete', 'Production\Schedule\Index::set_operation_complete');
+        //     $routes->get('shop-view', 'Production\Schedule\Index::shop_view');
+        //     $routes->get('shop-view/(:segment)', 'Production\Schedule\Index::shop_view/$1');
+        // });
     });
-
-
 
     // Sales Routes
     $routes->group('sales', static function($routes) {
-        $routes->get('/', 'Sales\Index::index');
-        $routes->get('customers', 'Sales\Customers\Index::index');
-        $routes->get('customers/get', 'Sales\Customers\Index::get_data');
-        $routes->get('customer/orders/(:num)', 'Sales\Customer\Orders\Index::index/$1');
-        $routes->get('customer/(:segment)', 'Sales\Customer\Index::index/$1');
+        $routes->get('', 'Sales\Index::index');
+
+        //secured routes 
+        $routes->group('', ['filter' => 'secured_group:sales'], static function($routes) {
+            $routes->group('customers', static function($routes){
+                $routes->get('', 'Sales\Customers\Index::index');
+                $routes->get('get', 'Sales\Customers\Index::get_data');
+
+                $routes->group('orders', static function($routes){
+                    $routes->group('open', static function ($routes){
+                        $routes->get('', 'Sales\Customers\Orders\Open\Index::index'); 
+                        $routes->get('data', 'Sales\Customers\Orders\Open\Index::get_data'); 
+                    });
+                });
+            }); 
+
+            $routes->group('customer', static function($routes){
+                $routes->get('(:segment)', 'Sales\Customer\Index::index/$1');
+            });
+        });
+
+       
+        
 
         $routes->group('', ['filter' => 'edereport'], function($routes){
             $routes->group('ede', static function($routes) {
@@ -271,6 +307,8 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
                $routes->get('report/spreadsheet', 'Sales\EDE\Report\Index::get_spreadsheet');
             });
         });
+
+
 
     });
 
@@ -310,7 +348,6 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         });
     });
 
-
     // Work Orders Routes
     $routes->group('workorders', static function($routes) {
         $routes->get('/', 'Workorders\Index::index');
@@ -329,6 +366,9 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->get('/', 'Maintenance\Index::index');
         $routes->get('stats', 'Maintenance\Index::getPerformance');
         $routes->get('total-tickets', 'Maintenance\Index::getTotalTickets');
+        $routes->group('', ['filter' => 'group:maintenance'], static function($routes) {
+
+        });
     });
 
     // IT Routes
@@ -337,12 +377,12 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     });
 
     // Service Tickets Routes
-    $routes->group('service-tickets', static function($routes) {
-        $routes->get('(:segment)', 'ServiceTicket\Index::index/$1');
-        $routes->post('(:segment)/save', 'ServiceTicket\Index::save_data');
-        $routes->get('data/(:segment)/(:segment)', 'ServiceTicket\Index::get_data/$1/$2');
-        $routes->post('(:segment)/delete', 'ServiceTicket\Index::delete');
-    });
+    // $routes->group('service-tickets', static function($routes) {
+    //     $routes->get('(:segment)', 'ServiceTicket\Index::index/$1');
+    //     $routes->post('(:segment)/save', 'ServiceTicket\Index::save_data');
+    //     $routes->get('data/(:segment)/(:segment)', 'ServiceTicket\Index::get_data/$1/$2');
+    //     $routes->post('(:segment)/delete', 'ServiceTicket\Index::delete');
+    // });
 
     // Engineering Routes
     $routes->group('engineering', static function($routes) {
@@ -361,5 +401,22 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     });
 
     // Error Routes
-    $routes->get('access/denied', 'Errors::denied');
+    $routes->get('access/denied', 'Errors\Index::index');
+});
+
+$routes->group('service', static function($routes) {
+    $routes->get('', 'ServiceTicket\Index::index');
+    $routes->group('tickets', static function($routes){
+
+        $routes->get('data/(:segment)', 'ServiceTicket\Tickets\Index::get_data/$1');
+        $routes->get('process', 'ServiceTicket\Tickets\Index::get_old'); 
+        $routes->get('process/(:segment)', 'ServiceTicket\Tickets\Index::get_old/$1'); 
+        $routes->get('(:segment)', 'ServiceTicket\Tickets\Index::index/$1');
+        
+        $routes->post('new', 'ServiceTicket\Tickets\Index::new_ticket');
+        $routes->post('save', 'ServiceTicket\Tickets\Index::save_ticket'); 
+        $routes->post('close', 'ServiceTicket\Tickets\Index::delete');
+        $routes->post('get', 'ServiceTicket\Tickets\Index::get_ticket'); 
+        
+    });
 });

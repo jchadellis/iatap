@@ -26,7 +26,7 @@
                 <span class="text-accent2">Work Email: </span> <?= $details->work_email ?>
             </div>
             <div class="col-6">
-                <span class="text-accent2">Work Email: </span> <?= $details->personal_email ?>
+                <span class="text-accent2">Personal Email: </span> <?= $details->personal_email ?>
             </div>
         </div>
         <div class="row mt-3">
@@ -42,7 +42,8 @@
             <div class="col"><?= $details->city ?> <?= $details->state ?> <?= $details->zipcode ?></div>
         </div>
         <div class="row mt-3">
-            <h6 class="h6 border-bottom border-primary p-2">Emergency Contact Information - Primary <span class="float-end"><button class="btn btn-primary">Update</button></span></h6>
+            <h6 class="h6 border-bottom border-primary p-2">Emergency Contact Information - Primary </h6>
+            <!-- <h6 class="h6 border-bottom border-primary p-2">Emergency Contact Information - Primary <span class="float-end"><button class="btn btn-primary">Update</button></span></h6> -->
             <div class="col-6"><span class="text-accent2">Contact: </span><?= $details->contact_2 ?></div>
             <div class="col"><span class="text-accent2">Relationship: </span><?= $details->contact_2_relationship ?></div>
         </div>
@@ -62,10 +63,9 @@
             <div class="col"><span class="text-accent2">Home Number:  </span><?= $details->contact_3_alternate ?></div>
         </div>
         <div class="row mt-3">
-            <h6 class="h6 border-bottom border-primary p-2">PTO Available <span class="float-end"><button class="btn btn-primary">Show</button></span></h6>
-            <div class="col-6"><span class="text-accent2">Free Days Left: </span> <?= $details->free_days ?> </div>
-            <div class="col"><span class="text-accent2">Vacation Days Left: </span> <?= $details->vac_days ?> </div>
+            <h6 class="h6 border-bottom border-primary p-2">PTO Available <span class="float-end"><button class="btn btn-primary" id="show-pto" data-user="<?= $user->id ?>">Show</button></span></h6>
+            <!-- <div class="col-6"><span class="text-accent2">Free Days Left: </span> </div>
+            <div class="col"><span class="text-accent2">Vacation Days Left: </span> </div> -->
         </div>
-
     </div>
 </div>

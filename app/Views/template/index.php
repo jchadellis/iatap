@@ -100,14 +100,14 @@
         updateDateTime(); 
         setInterval(updateDateTime, 1000);
 
+        const alertElement = $('#errors-alert, #message-alert');
+
         setTimeout(function() {
-            var alertElement = $('#errors-alert, #message-alert');
-            console.log(alertElement);
-            if (alertElement) {
+            if (alertElement.lenth) {
                 bootstrap.Alert.getOrCreateInstance(alertElement).close();
             }
         }, 3000); 
-
+    
     });
 
 

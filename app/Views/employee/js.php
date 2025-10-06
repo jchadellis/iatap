@@ -2,8 +2,10 @@
     $(document).ready(function(){
         function showAlert(message, type = 'warning', target = '#alert.container') {
             const alert = $(`<div class="alert alert-${type} m-0 py-2 px-4 show" role="alert" id="message-alert">${message}</div>`);
-            if($('#alert-container').children().length == 0){
+            if($(target).children().length == 0){
                  $(target).append(alert);
+            }else{
+                $(target).html().append(alert); 
             }
            
         }

@@ -7,7 +7,7 @@
                         <h6 class="h6 border-bottom border-primary p-2">Name / Addess</h6>
                         <div class="row m-1">
                             <div class="col-6">
-                                <span class="text-accent2">Name: </span> <?= ucwords(strtolower($customer->name)) ?>
+                                <span class="text-accent2">Name: </span> <?= strtoupper($customer->name) ?>
                             </div>
                             <div class="col-6">
                                 <span class="text-accent2">Customer Since:</span> <?= ( new \DateTime($customer->open_date ))->format('M d, Y') ?>

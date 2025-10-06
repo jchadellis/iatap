@@ -36,32 +36,17 @@ class PurchaseOrderEntity extends Entity
         return $value; 
     }
 
-    public function getNextVendorUpdateAt()
-    {
-
-        $value = ( !empty($this->attributes['next_vendor_update_at']) ) ? (new \DateTime($this->attributes['next_vendor_update_at']))->format('m-d-Y') : '' ;
-        return $value; 
-    }
-
-    // public function getLastVendorUpdateAt()
+    // public function getNextVendorUpdateAt()
     // {
 
-    //     $promise = (new \DateTime($this->attributes['true_promise']))->format('Y-m-d'); 
-    //     $today = (new \DateTime())->format('Y-m-d'); 
+    //     $value = ( !empty($this->attributes['next_vendor_update_at']) ) ? (new \DateTime($this->attributes['next_vendor_update_at'])) : null ;
+    //     return $value; 
+    // }
 
-    //     if( $promise == $today )
-    //     {
-    //         return ''; 
-    //     }elseif($promise <  $today )
-    //     {
-    //         return ''; 
-    //     }elseif( !$this->attributes['last_vendor_update_at'] )
-    //     {
-    //         return ''; 
-    //     }
-        
-    //     $value = new \DateTime( $this->attributes['last_vendor_update_at'] );
-    //     return $value->format('m-d-Y'); 
+    // public function getLastVendorUpdateAt()
+    // {       
+    //     $value = ( !empty($this->attributes['last_vendor_update_at']) ) ? (new \DateTime($this->attributes['last_vendor_update_at'])) : null ;
+    //     return $value; 
     // }
     
 

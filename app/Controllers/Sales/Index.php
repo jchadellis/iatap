@@ -7,22 +7,24 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Index extends BaseController
 {
-    private $cards = [
+    private $tool_cards = [
         [
             'name' => "Customer List", 
             'description' =>  'Exportable list of current customers',
             'url' => 'sales/customers', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/table-icon',
-            'color' => 'text-dark', 
+            'color' => 'text-dark',
+            'enabled' => true, 
         ],
         [
             'name' => "Customer Order Bookings", 
             'description' =>  'List of Customer Orders',
-            'url' => 'sales/customers/bookings', 
+            'url' => '#', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/table-icon',
-            'color' => 'text-dark', 
+            'color' => 'text-dark',
+            'enabled' => false, 
         ],
         [
             'name' => "EDE Items Report", 
@@ -30,7 +32,8 @@ class Index extends BaseController
             'url' => 'sales/ede/report/', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/table-icon',
-            'color' => 'text-dark', 
+            'color' => 'text-dark',
+            'enabled' => true, 
             'permission' => 'edereport.view', 
         ],
         [
@@ -39,12 +42,19 @@ class Index extends BaseController
             'url' => 'warehouse/parts/part-lookup', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/magnifying-glass',
-            'color' => 'text-dark', 
+            'color' => 'text-dark',
+            'enabled' => true, 
             'permission' => 'edereport.view', 
         ],
     ];
+
+    private $groups = ['sales'];
+
+    private $secured_cards = [];
+    
     public function index()
     {
+
         $data = [
             'site_name' => 'iATAP', 
             'breadcrumbs' => [
@@ -52,7 +62,13 @@ class Index extends BaseController
 				['name' => 'Sales', 'is_active' => true, 'url' => '#']
             ],
             'title' => 'Sales', 
-            'content' => view('sales/index', ['cards' => $this->cards]),
+            'content' => view('template/dept-index', [
+                'tool_cards' => $this->tool_cards,
+                'secured_cards' => $this->secured_cards, 
+                'groups' => $this->groups, 
+                'user' => auth()->user() ?? null, 
+                'title' => 'Sales Dept.'
+            ]),
             'js' => view('sales/index.js.php'), 
         ];
 

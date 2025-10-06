@@ -18,6 +18,7 @@ class Index extends BaseController
                 'btn_text' => 'View', 
                 'icon' => 'components/icon/clipboard-document-icon',
                 'color' => 'text-dark', 
+                'enabled' => true,
             ],
             [
                 'name' => "Purchase Order Confirmations", 
@@ -26,6 +27,7 @@ class Index extends BaseController
                 'btn_text' => 'View', 
                 'icon' => 'components/icon/clipboard-document-icon',
                 'color' => 'text-dark', 
+                'enabled' => true,
             ],
             [
                 'name' => "Purchase Counts", 
@@ -34,6 +36,7 @@ class Index extends BaseController
                 'btn_text' => 'View', 
                 'icon' => 'components/icon/clipboard-document-icon',
                 'color' => 'text-dark', 
+                'enabled' => false,
                 'btn-data' => 'data-bs-toggle="modal" data-bs-target="#po_count_modal"',
             ],
         ];

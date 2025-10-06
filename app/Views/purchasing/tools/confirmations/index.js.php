@@ -95,6 +95,17 @@ $(document).ready(()=>{
         // Row selection behavior
         table.on('select', function (e, dt, type, indexes) {
             $('#review-vendor').attr('disabled', false); 
+            if (type === 'row' && indexes.length > 0) {
+                const rowData = table.row(indexes[0]).data();
+                const value = rowData[0];
+                // Create a temporary input
+                const tempInput = document.createElement('input');
+                tempInput.value = value;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+            }
         });
 
         table.on('deselect', function(e,dt,type, indexes){

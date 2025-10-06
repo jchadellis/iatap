@@ -6,7 +6,7 @@
 
 <?php if(isset($data)) : ?>
 <?php foreach($data as $card ) : ?>
-
+<?php if( isset($card['enabled']) && $card['enabled']) : ?>
 <div class="d-flex flex-wrap gap-2 ">
     <div class="card rounded-0 mb-2 w-100 " >
         <a href="<?= (base_url($card['url'])) ?? '' ?>" class="text-decoration-none text-dark">
@@ -27,5 +27,6 @@
         </a>
     </div>
 </div>
+<?php endif; ?>
 <?php endforeach; ?>
 <?php endif; ?>

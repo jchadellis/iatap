@@ -35,6 +35,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'group'         => \Codeigniter\Shield\Filters\GroupFilter::class,
+        'secured_group' => \App\Filters\GroupFilter::class,
         'permission'    => \Codeigniter\Shield\Filters\PermissionFilter::class, 
         'edereport'     => \App\Filters\EDEReportPermissionFilter::class,
     ];

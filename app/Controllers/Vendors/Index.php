@@ -15,7 +15,8 @@ class Index extends BaseController
             'url' => 'vendors/list', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/list-bullet',
-            'color' => 'text-dark', 
+            'color' => 'text-dark',
+            'enabled' => true,  
         ],
         [
             'name' => "Performance", 
@@ -23,7 +24,8 @@ class Index extends BaseController
             'url' => 'vendors/performance', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/chart-bar',
-            'color' => 'text-dark', 
+            'color' => 'text-dark',
+            'enabled' => true,  
         ],
         [
             'name' => "JCP Experation Report", 
@@ -31,7 +33,8 @@ class Index extends BaseController
             'url' => 'vendors/jcp-report', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/document-chart',
-            'color' => 'text-dark', 
+            'color' => 'text-dark',
+            'enabled' => true,  
         ],
     ];
 

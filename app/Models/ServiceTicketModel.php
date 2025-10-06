@@ -12,7 +12,25 @@ class ServiceTicketModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_id', 'type', 'title', 'description', 'need_date', 'priority', 'status', 'work_performed', 'comments', 'resolution',  'created_by', 'assigned_to', 'created_at', 'updated_at', 'deleted_at'];
+    protected $allowedFields    = [
+        'user_id', 
+        'type', 
+        'title', 
+        'description', 
+        'need_date', 
+        'priority', 
+        //'status',
+        'reference_id',
+        'num_of_updates',  
+        'work_performed', 
+        'first_name', 
+        'last_name',
+        'email', 
+        'created_by', 
+        'assigned_to', 
+        'created_at', 
+        'updated_at', 
+        'deleted_at'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

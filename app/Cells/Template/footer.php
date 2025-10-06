@@ -46,6 +46,7 @@
     <script src="<?= base_url(MANAGEDASSETS.'sweetalert2/dist/sweetalert2.min.js')?>"></script>
 
     <script src="<?= base_url(MANAGEDASSETS.'trumbowyg/dist/trumbowyg.min.js')?>"></script>
+
     <script src="<?= base_url(MANAGEDASSETS.'trumbowyg/dist/plugins/lineheight/trumbowyg.lineheight.min.js')?>"></script>
 </body>
 

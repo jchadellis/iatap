@@ -9,8 +9,8 @@
 
     <form class="d-flex justify-content-start" role="search">
         <div class="input-group">
-            <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="border-bottom-color: rgb(222, 226, 230)" disabled>
-            <button class="btn btn-outline-accent1" type="submit" disabled>Search</button>
+            <!-- <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="border-bottom-color: rgb(222, 226, 230)" disabled>
+            <button class="btn btn-outline-accent1" type="submit" disabled>Search</button> -->
         </div>
     </form>
 

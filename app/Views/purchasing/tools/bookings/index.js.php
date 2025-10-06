@@ -42,6 +42,11 @@ $(document).ready(() => {
                 width: '8%',
             },
             {
+                data: 'next_vendor_update_at',  
+                title:'Next PO Update',
+                width: '8%',
+            },
+            {
                 data: 'linear_progress', 
                 visible: false, 
             },
@@ -79,7 +84,15 @@ $(document).ready(() => {
             { 
                 title: 'Vendor', 
                 render: function(data, type, row){
-                  return  `<b> ${row.vendor_id} </b> - ${row.name}`; 
+                    alert = '';
+                    console.log(row);
+                    if( row.recently_emailed )
+                    {
+                        alert = `<span class="badge rounded-pill bg-success"><i class="bi bi-check-circle"></i><span class="visually-hidden">Emailed Recently</span></span>`;
+                         alert = `<i class="bi bi-check-circle text-success"></i>`;
+                    }
+
+                  return  `<span>${alert}&nbsp; <b> ${row.vendor_id} </b> - ${row.name}</span>`; 
                 },
                 width: '25%'
             },
@@ -87,14 +100,6 @@ $(document).ready(() => {
                 data: 'buyer', 
                 title: 'Buyer', 
                 width: '5%'
-            },
-            {
-                data: 'contact_first_name', 
-                visible: false,
-            },
-            {
-                data: 'phone', 
-                visible: false,
             },
         ],
         createdRow: function( row, data, dataIndex ){
@@ -106,7 +111,7 @@ $(document).ready(() => {
         },
         ordering: true,
         autoWidth: false,
-        //select: true,
+        select: true,
         pageLength: 200,
 
         lengthMenu: [
@@ -133,8 +138,11 @@ $(document).ready(() => {
                         filename: "po_booking_<?=date('Ymd')?>",
                         sheetName: "Purchase Order Bookings",
                         className: "btn-primary"
-                    }
-                ]
+                    },
+                ],
+                div:{
+                    html: '<span class="float-end"><i class="bi bi-check-circle text-success"></i>&nbsp; Indicates vendor emailed in the last <?= $last_email_days ?> days</span>'
+                }
             },
             top2End: 'search',
             topStart: {
@@ -239,11 +247,10 @@ $(document).ready(() => {
         },
 
         columnDefs: [
-            { targets: [ 3, 4,5, 7 ], orderable: false },
+            { targets: [ 3, 4,5,7], orderable: false },
             { targets: 1, type: 'date-eu' },
-            { targets: [0, 1, 2, 3, 4, 6,  8], className: 'align-middle text-center'},
+            { targets: [0, 1, 2, 3, 4, 6], className: 'align-middle text-center'},
             { target : [7], className: 'align-middle text-start text-truncate'}
-            //{ targets: 9, visible: false } // Assuming percentage is column 9
         ],
 
         order: [[1, 'asc'], [5, 'desc']]
@@ -273,15 +280,25 @@ $(document).ready(() => {
     $('#buyer-select').on('change', function(){
         buyer = $(this).val(); 
         if( buyer === 'all' ){
-            table.column(6).search('').draw();
+            table.column(7).search('').draw();
         } else{
-            table.column(6).search(buyer).draw(); 
+            table.column(7).search(buyer).draw(); 
         } 
     })
 
     // Row selection behavior
     table.on('select', function (e, dt, type, indexes) {
         $('#review-vendor').attr('disabled', false); 
+        if (type === 'row' && indexes.length > 0) {
+            const rowData = table.row(indexes[0]).data();
+            const value = rowData.id;
+            const tempInput = document.createElement('input');
+            tempInput.value = value;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
     });
 
     table.on('deselect', function(e,dt,type, indexes){

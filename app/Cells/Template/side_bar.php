@@ -38,4 +38,8 @@
     <?php endforeach; ?>
 <?php endforeach; ?>
 
+  <li class="nav-item">
+        <a class="nav-link px-2" href="<?= base_url('legacy') ?>" target="_blank"><i class="bi bi-bank2 me-3"></i>Legacy <span class="fw-bold">VATAP</span></a>
+  </li>
+
 </ul>

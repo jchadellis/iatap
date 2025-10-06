@@ -8,6 +8,20 @@ use App\Models\ServiceTicketModel;
 
 class Index extends BaseController
 {
+    private $secured_cards = []; 
+
+    private  $tool_cards = [
+        [
+            'name' => 'IT Support Request', 
+            'description' => 'Submit a IT Support Request Tickets', 
+            'btn_text' => 'Create Ticket', 
+            'icon' => 'components/icon/ticket-icon',
+            'url'   => 'service/tickets/it',
+            'color' => 'text-dark',  
+        ],
+    ];
+
+    private $groups = ['it'];
     public function index()
     {
         $model = new ServiceTicketModel(); 
@@ -17,21 +31,18 @@ class Index extends BaseController
             ['name' => 'IT Dept', 'is_active' => true, 'url' => '#'],
         ];
 
-        $tool_cards = [
-            [
-                'name' => 'IT Support Request', 
-                'description' => 'Submit a IT Support Request Tickets', 
-                'btn_text' => 'Create Ticket', 
-                'icon' => 'components/icon/ticket-icon',
-                'url'   => 'service-tickets/it',
-                'color' => 'text-dark',  
-            ],
-        ];
-
-        $data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => 'it Dept.', 'content' => view('it/index', [
-            'performanceData' => $model->getPerformance('it'), 
-            'ticketData' => $model->getTotalTickets('it'),
-            'tool_cards' => $tool_cards,  
+        $data = [
+            'site_name' => 'iATAP', 
+            'breadcrumbs' => $breadcrumbs, 
+            'title' => 'it Dept.', 
+            'content' => view('template/dept-index', [
+                'performanceData' => $model->getPerformance('it'), 
+                'ticketData' => $model->getTotalTickets('it'),
+                'groups' => $this->groups, 
+                'title' => 'IT Dept', 
+                'user' => auth()->user() ?? null, 
+                'tool_cards' => $this->tool_cards,  
+                'secured_cards' => $this->secured_cards, 
         ]), 'js' => view('it/index.js.php')];
 
         return view('template/index', $data);

@@ -39,7 +39,7 @@
         </div>
         <h6 class="h6">Opening Message: </h6>
         <div id="start-message">
-            <h4 style="color: #004085;">ATAP, Inc –  Purchase Order Confirmation Request</h4>
+            <h4 style="color: #004085;">ATAP, Inc –  Purchase Order : <?= $purchase_order ?> Confirmation Request</h4>
 
             <p>Greetings,</p>
 

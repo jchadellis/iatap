@@ -59,6 +59,14 @@ class Index extends BaseController
         return view('template/index-full', $data); 
     }
 
+    public function get_data()
+    {
+        $confirmations =  $data = $this->remote->getData("http://vatap/mvc/public/api/getpurchaseorderconfirmations/");
+
+        print_array($confirmations); 
+    }
+
+
     public function review_email()
     {
         $postData = $this->request->getPost();
@@ -80,7 +88,7 @@ class Index extends BaseController
             );
     }
 
-    public function send_email()
+    public function send_email_back()
     {
         $postData = $this->request->getPost();
 
@@ -137,7 +145,7 @@ class Index extends BaseController
             $data[] = $this->remote->getData("http://vatap/mvc/public/api/getvendorpurchaseorders/$vendor/$po"); 
         }
 
-        $subject = 'ATAP, Inc. - Purchase Order Confirmation Update Request';
+        $subject = "ATAP, Inc. - Purchase Order:{$po} Confirmation Update Request";
 
         $email->setTo($email_to);
         $email->setCC('jeremy.ellis@atap.com');
@@ -159,4 +167,94 @@ class Index extends BaseController
         );
 
     }
+
+    public function send_email()
+    {
+        $postData = $this->request->getPost();
+
+        $email_from = trim($postData['from'] ?? '');
+        $email_to_raw = trim($postData['to'] ?? '');
+
+        // Normalize separators and split addresses
+        $email_to_raw = str_replace(';', ',', $email_to_raw);
+        $email_to_list = array_filter(array_map('trim', explode(',', $email_to_raw)));
+
+        // Validate 'from' address
+        if (empty($email_from) || !filter_var($email_from, FILTER_VALIDATE_EMAIL)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'title' => 'Error',
+                'message' => 'The from email address is required and must be valid.'
+            ]);
+        }
+
+        // Validate each 'to' address
+        $invalid_emails = [];
+        foreach ($email_to_list as $address) {
+            if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                $invalid_emails[] = $address;
+            }
+        }
+        if (empty($email_to_list)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'title' => 'Error',
+                'message' => 'The recipient email address is required.'
+            ]);
+        }
+        if (!empty($invalid_emails)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'title' => 'Error',
+                'message' => 'Invalid recipient email address(es): ' . implode(', ', $invalid_emails)
+            ]);
+        }
+
+        $email = \Config\Services::email();
+        $email->setFrom($email_from);
+        $email->setTo($email_to_list);
+        $email->setCC(['jeremy.ellis@atap.com', $email_from]);
+
+        $data = [];
+        foreach ($postData['items'] as $value) {
+            $vendor = $value['vendor_id'];
+            $po = $value['po_id'];
+            $data[] = $this->remote->getData("http://vatap/mvc/public/api/getvendorpurchaseorders/$vendor/$po");
+        }
+
+        $subject = "ATAP, Inc. - Purchase Order: {$po} Confirmation Update Request";
+        $email->setSubject($subject);
+        $email->setMessage(view('purchasing/tools/bookings/email-body-send', [
+            'data' => $data,
+            'start_message' => $postData['start-message'],
+            'end_message' => $postData['end-message']
+        ]));
+
+        $email->setMailType('html');
+
+        if (!$email->send()) {
+            log_message('error', 'Email Failed: ' . $email->printDebugger(['headers']));
+            return $this->response->setJSON([
+                'success' => false,
+                'title' => 'Error',
+                'message' => 'There was an error sending the email message. Please refresh the page and try again.'
+            ]);
+        }
+
+        $today = new \DateTime(); 
+        $array = [
+            'id' => $po, 
+            'last_emailed_on' => $today->format('Y-m-d h:i:s'),
+        ];
+
+        $this->model->save($array); 
+
+        return $this->response->setJSON([
+            'success' => true,
+            'title' => 'Success',
+            'message' => 'Email has been successfully sent to the recipient.'
+        ]);
+    }
+
+
 }

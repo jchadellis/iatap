@@ -22,7 +22,6 @@ use App\Models\PageAccessLogs;
  */
 abstract class BaseController extends Controller
 {
-    
     /**
      * Instance of the main Request object.
      *

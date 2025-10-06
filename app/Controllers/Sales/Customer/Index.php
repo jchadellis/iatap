@@ -10,12 +10,12 @@ class Index extends BaseController
 {
     public function __construct()
     {
-        $this->remote_model = new SqlbaseModel(); 
+        $this->remote = new SqlbaseModel(); 
     }
 
     public function index($id)
     {
-        $customer = $this->remote_model->getData('http://vatap/mvc/public/api/getcustomer/'.$id)[0];
+        $customer = $this->remote->getData('http://vatap/mvc/public/api/getcustomer/'.$id)[0];
 
         $cards = [
             [
@@ -28,7 +28,7 @@ class Index extends BaseController
             ],
         ];
 
-        $customer_name = ucwords(strtolower($customer->name)); 
+        $customer_name = strtoupper(strtolower($customer->name)); 
         $data = [
             'site_name' => 'iATAP', 
             'breadcrumbs' => [
@@ -43,5 +43,19 @@ class Index extends BaseController
         ];
 
         return view('template/index', $data); 
+    }
+
+
+    public function get_customer($customer_id)
+    {
+        $customer = $this->remote->getData('http://vatap/mvc/public/api/getcustomer/'.$customer_id);
+
+        return $customer[0]; 
+    }
+
+    private function get_orders($customer_id)
+    {
+        $orders = $this->remote->getData('http://vatap/mvc/public/api/getcustomerorders/'.$customer_id);
+        return $orders; 
     }
 }

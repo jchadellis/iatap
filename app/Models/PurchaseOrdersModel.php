@@ -46,6 +46,7 @@ class PurchaseOrdersModel extends Model
         'percentage_complete',
         'completed', 
         'past_due',
+        'last_emailed_on',
     ];
 
     protected $useTimestamps = true; 

@@ -9,6 +9,7 @@ use App\Models\PurchaseOrdersModel;
 
 class Index extends BaseController
 {
+    private $last_email_days = 7; 
 
     public function __construct()
     {
@@ -51,12 +52,11 @@ class Index extends BaseController
             ],
             'title' => 'PO - Bookings', 
             'content' => view('purchasing/tools/bookings/index'),
-            'js' => view('purchasing/tools/bookings/index.js.php', ['buyers' => $buyers ]), 
+            'js' => view('purchasing/tools/bookings/index.js.php', ['buyers' => $buyers , 'last_email_days' => $this->last_email_days]), 
         ];
 
         return view('template/index-full', $data); 
     }
-
 
     public function get_data($percentage = 'all')
     {
@@ -71,10 +71,20 @@ class Index extends BaseController
         switch($percentage) {
             case 'all':
                 $model->orderBy('desired_recv_date', 'asc');
-                break;
+                $data = $model->findAll();
+
+                foreach($data as $row)
+                {
+                    $row->formatted_date = $row->true_promise->format('Y-m-d');
+                }
+                return $this->response->setJSON([
+                    'data' => $data,
+                    'message' => 'Data fetched successfully',
+                    'success' => true,
+                ]);
+                break; 
             case 'late': 
-                $model->where('true_promise <=', $today)
-                    ->whereIn('percentage_complete', [90, 100]);
+                $model->where('true_promise <=', $today);
                 break;                 
             case '-30':
                 $model
@@ -108,23 +118,74 @@ class Index extends BaseController
         }
         
         $data = $model->findAll();
-        foreach($data as $row)
+        $view_data = [];
+
+        $today = new \DateTime();
+        $today->setTime(0, 0, 0); // normalize to midnight
+
+        foreach ($data as $row) 
         {
             $row->formatted_date = $row->true_promise->format('Y-m-d');
+
+            $next_update = !empty($row->next_vendor_update_at) 
+                ? new \DateTime($row->next_vendor_update_at) 
+                : null; 
+
+            $last_update = new \DateTime($row->last_vendor_update_at);
+            $last_email = !empty($row->last_emailed_on)
+                ? new \DateTime($row->last_email_on)
+                : null; 
+
+            $row->last_vendor_update_at = $last_update->format('Y-m-d');
+            $row->next_vendor_update_at = $next_update ? $next_update->format('Y-m-d') : null;
+
+            $skip = false;
+            $thirty_days_future = (clone $last_update)->modify('+30 days'); 
+            // --- Vendor update rules ---
+            if ($next_update) {
+                // Case 1: next update scheduled → skip if within 30 days
+                $diff = $last_update->diff($next_update)->days;
+                if ($last_update < $next_update && $diff <= 30) {
+                    $skip = true;
+                }
+            } else {
+                // Case 2: no next update → skip if last update was within 30 days of today
+                $thirty_days_ago = (clone $today)->modify('-30 days');
+                if ($last_update >= $thirty_days_ago) {
+                    $skip = true;
+                }
+            }
+
+            if($last_email)
+            {
+               $days_since = $last_email->diff($today);
+               if( $days_since->days <= $this->last_email_days )
+               {
+                    $row->recently_emailed = true; 
+               }
+            }
+
+            // --- Promise due rules ---
+            $due_or_late = $row->true_promise <= $today;
+
+            // --- Final inclusion ---
+            if ($due_or_late || !$skip) {
+                $view_data[] = $row;
+            }
         }
-       
-        if($data) {
+
+        // print_array($view_data); 
+        // return;
+
+        if($view_data) {
             return $this->response->setJSON([
-                'data' => $data,
+                'data' => $view_data,
                 'message' => 'Data fetched successfully',
                 'success' => true,
             ]);
         }
     }
 
-    /**
-     * Add vendor update conditions to the model
-     */
     private function addVendorUpdateConditions($model, $today, $thirtyDays)
     {
         $model->groupStart()
@@ -159,78 +220,88 @@ class Index extends BaseController
     {
         $postData = $this->request->getPost();
 
-        $email_from = $postData['from']; 
+        $email_from = trim($postData['from'] ?? '');
+        $email_to_raw = trim($postData['to'] ?? '');
 
-        $email = \Config\Services::email();
-        $email->setFrom($email_from);
+        // Normalize separators and split addresses
+        $email_to_raw = str_replace(';', ',', $email_to_raw);
+        $email_to_list = array_filter(array_map('trim', explode(',', $email_to_raw)));
 
-        $email_to = $postData['to'] ?? '';
-        //$email_address = 'jeremy.ellis@atap.com'; // override for now
-
-        // Validate email
-        $rules = [
-            'to_email' => [
-                'rules' => 'required|valid_email',
-                'errors' => [
-                    'required' => 'The recipient email address is required.',
-                    'valid_email' => 'The recipient email address must be valid.'
-                ]
-            ],
-            'from_email' => [
-                'rules' => 'required|valid_email', 
-                'errors' => [
-                    'required' => 'The from email address is required.',
-                    'valid_email' => 'The from email address must be valid.'
-                ]
-            ]
-        ];
-        if (! $this->validation->setRules($rules)->run(['to_email' => $email_to, 'from_email' => $email_from ])) {
-
-            $errors = $this->validation->getErrors() ; 
-            $message = ''; 
-
-            foreach($errors as $field => $error )
-            {
-                $message .= "{$error}</br>";
-            }
-
+        // Validate 'from' address
+        if (empty($email_from) || !filter_var($email_from, FILTER_VALIDATE_EMAIL)) {
             return $this->response->setJSON([
                 'success' => false,
-                'title' => 'Error', 
-                'message' => $message,
-                //'errors'  => $this->validation->getErrors()
+                'title' => 'Error',
+                'message' => 'The from email address is required and must be valid.'
             ]);
         }
 
-        $data = []; 
-        foreach( $postData['items'] as $key => $value )
-        {
-            $vendor = $value['vendor_id'];
-            $po = $value['po_id'];
-            $data[] = $this->remote->getData("http://vatap/mvc/public/api/getvendorpurchaseorders/$vendor/$po"); 
+        // Validate each 'to' address
+        $invalid_emails = [];
+        foreach ($email_to_list as $address) {
+            if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                $invalid_emails[] = $address;
+            }
+        }
+        if (empty($email_to_list)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'title' => 'Error',
+                'message' => 'The recipient email address is required.'
+            ]);
+        }
+        if (!empty($invalid_emails)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'title' => 'Error',
+                'message' => 'Invalid recipient email address(es): ' . implode(', ', $invalid_emails)
+            ]);
         }
 
-        $subject = 'ATAP, Inc. - Purchase Order Confirmation Update Request';
+        $email = \Config\Services::email();
+        $email->setFrom($email_from);
+        $email->setTo($email_to_list);
+        $email->setCC(['jeremy.ellis@atap.com', $email_from]);
 
-        $email->setTo($email_to);
-        $email->setCC('jeremy.ellis@atap.com');
+        $data = [];
+        foreach ($postData['items'] as $value) {
+            $vendor = $value['vendor_id'];
+            $po = $value['po_id'];
+            $data[] = $this->remote->getData("http://vatap/mvc/public/api/getvendorpurchaseorders/$vendor/$po");
+        }
+
+        $subject = "ATAP, Inc. - Purchase Order: {$po} Confirmation Update Request";
         $email->setSubject($subject);
-        $email->setMessage(view('purchasing/tools/bookings/email-body-send', ['data' => $data, 'start_message' => $postData['start-message'], 'end_message' => $postData['end-message']]));
+        $email->setMessage(view('purchasing/tools/bookings/email-body-send', [
+            'data' => $data,
+            'start_message' => $postData['start-message'],
+            'end_message' => $postData['end-message']
+        ]));
+
         $email->setMailType('html');
 
         if (!$email->send()) {
             log_message('error', 'Email Failed: ' . $email->printDebugger(['headers']));
-            return $this->response->setJSON(['success' => false, 'title' => 'Error', 'message' => 'There was an error with send the email message. Please refresh the page and try again']);
+            return $this->response->setJSON([
+                'success' => false,
+                'title' => 'Error',
+                'message' => 'There was an error sending the email message. Please refresh the page and try again.'
+            ]);
         }
 
-        return $this->response->setJSON(
-            [
-                'success' => true, 
-                'title' => 'Success',
-                'message' => 'Email has been successfully sent to the recipient.'
-            ]
-        );
+        $today = new \DateTime(); 
+        $array = [
+            'id' => $po, 
+            'last_emailed_on' => $today->format('Y-m-d h:i:s'),
+        ];
 
+        $this->model->save($array); 
+
+        return $this->response->setJSON([
+            'success' => true,
+            'title' => 'Success',
+            'message' => 'Email has been successfully sent to the recipient.'
+        ]);
     }
 
 

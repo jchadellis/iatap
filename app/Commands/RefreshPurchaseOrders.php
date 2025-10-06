@@ -113,7 +113,7 @@ class RefreshPurchaseOrders extends BaseCommand
 
             //Filter dates only want the ones before today
             $futureDates = array_filter($milestones, function($date) use($today){
-                return $date > $today; 
+                return $date >= $today; 
             });
             
             usort($futureDates, function($a, $b){

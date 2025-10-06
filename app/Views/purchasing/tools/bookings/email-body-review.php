@@ -63,6 +63,7 @@
             </thead>
             <tbody>
                 <?php foreach($po[0]->lines as $line ): ?>
+                
                 <tr>
                     <td><?= $line['line_no'] ?></td>
                     <td><?= $line['part_id'] ?></td>

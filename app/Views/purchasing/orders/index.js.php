@@ -127,6 +127,22 @@
                 topStart:{
                     buttons:[
                          'pageLength', 
+
+                        {
+                            extend: 'excelHtml5',   
+                            text: '<i class="bi bi-file-earmark-excel"></i>&nbsp;Export to Excel', 
+                            filename: 'WorkOrders_PurchaseReport_<?= date('Ymdhis') ?>',   // File name without extension
+                            title: 'Work Orders Purchase Report',      // Sheet title
+                            exportOptions: {
+                                columns: ':visible', 
+                                modifier: {
+                                    page: 'all',       
+                                    search: 'applied' 
+                                },
+
+                            },
+                        },
+
                          {
                             extend: 'collection',
                             text: 'Type',

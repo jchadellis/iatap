@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Index extends BaseController
 {
 
-    private $secure_cards = [
+    private $secured_cards = [
         [
             'name' => "Employee Emergency Contact Manager", 
             'description' =>  'Update Employee Emergency Contact Info',
@@ -19,18 +19,13 @@ class Index extends BaseController
         ],
     ];
 
-    private $cards = [
+    private $tool_cards = [
 
     ];
 
     private $groups = [
-        'hr', 'super'
+        'hr'
     ];
-
-    public function __construct()
-    {
-        // initialize default models and parameters
-    }
 
     public function index()
     {
@@ -41,7 +36,13 @@ class Index extends BaseController
 				['name' => 'Human Resources', 'is_active' => true, 'url' => '#']
             ],
             'title' => 'Human Resources', 
-            'content' => view('hr/index', ['cards' => $this->cards, 'secure_cards' => $this->secure_cards , 'groups' => $this->groups]),
+            'content' => view('template/dept-index', [
+                'tool_cards' => $this->tool_cards, 
+                'secured_cards' => $this->secured_cards , 
+                'groups' => $this->groups,
+                'title' => 'Human Resources', 
+                'user' => auth()->user() ?? null, 
+            ]),
             'js' => view('hr/index.js.php'), 
         ];
 

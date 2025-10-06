@@ -7,7 +7,8 @@
     <div class="container d-flex justify-content-center p-5">
         <div class="card col-12 col-md-5 shadow-sm">
             <div class="card-body">
-                <img src="<?= base_url('assets/img/iatap_logo.svg')?>" alt="">
+
+                <a href="<?= base_url() ?>" class="text-decoration-none"><img src="<?= base_url('assets/img/iatap_logo.svg')?>" alt=""></a>
                 <!-- <h5 class="card-title text-center m-3"><?= lang('Auth.login') ?></h5> -->
 
                 <?php if (session('error') !== null) : ?>
@@ -34,7 +35,7 @@
 
                     <!-- Email or Username -->
                     <div class="form-floating mb-3 mt-3">
-                        <input type="text" class="form-control" id="floatingEmailInput" name="login" autocomplete="email" placeholder="<?= lang('Auth.login') ?>" value="<?= old('email') ?>" required>
+                        <input type="text" class="form-control" id="floatingEmailInput" name="login" autocomplete="email" placeholder="<?= lang('Auth.login') ?>" value="<?= old('login') ?>" required>
                         <label for="floatingEmailInput"><?= lang('Auth.login') ?></label>
                     </div>
 

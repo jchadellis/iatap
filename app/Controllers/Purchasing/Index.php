@@ -117,12 +117,13 @@ class Index extends BaseController
             'breadcrumbs' => $breadcrumbs, 
             'title' => 'Purchasing', 
             'js' => view('purchasing/index.js.php'),
-            'content' => view('purchasing/index', [
+            'content' => view('template/dept-index', [
                 'tool_cards' => $this->tool_cards, 
                 'documents' => $this->documents,
                 'secured_cards' => $this->secured_cards,
                 'groups' => $this->groups, 
                 'user' => auth()->user(),
+                'title' => 'Purchasing Dept.', 
             ])
         ];
         return view('template/index', $this->data);

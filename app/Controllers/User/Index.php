@@ -22,21 +22,20 @@ class Index extends BaseController
             $user = auth()->user();
             $details = $employee->where('employee_id', $user->employee_id )->first(); 
             $data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => $user->first_name . ' ' . $user
-            ->last_name .' - Profile', 'content' => view('user/index', ['user' => $user , 'details' => $details ] ) , 'js' => ''];
+            ->last_name .' - Profile', 'content' => view('user/index', ['user' => $user , 'details' => $details ] ) , 'js' => view('user/index.js.php')];
             return view('template/index', $data);
         }
 
         $model = new UserModel(); 
         $user = $model->find($id); 
-        $details = $$employee->where('employee_id', $user->employee_id )->first();
+        $details = $employee->where('employee_id', $user->employee_id )->first();
 
         if( $user )
         {
             $breadcrumbs = [
                 ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard'],
                 ['name' => 'Control Panel', 'is_active' => false, 'url' => '/sadmin/control-panel'],
-                ['name' => 'Users', 'is_active' => false, 'url' => '/sadmin/user-management'],
-                ['name' => 'Edit', 'is_active' => false, 'url' => '/sadmin/user/edit/'.$user->id],
+                ['name' => 'Users', 'is_active' => false, 'url' => '/sadmin/user-manager'],
                 ['name' => $user->first_name . ' ' . $user->last_name , 'is_active' => true, 'url' => '#'],
             ];
 
@@ -45,13 +44,43 @@ class Index extends BaseController
                 'breadcrumbs' => $breadcrumbs, 
                 'title' =>$user->first_name . ' ' . $user->last_name.' - Profile', 
                 'content' => view('user/index', ['user' => $user, 'details' => $details]),
-                'js' => '', 
+                'js' => view('user/index.js.php'), 
             ];
 
 
             return view('template/index', $data);
 
         }
+
+    }
+
+
+    public function get_pto()
+    {
+        $employee = new EmployeeModel(); 
+        $post = $this->request->getPost(); 
+
+        if($post['password'])
+        {
+            $user = auth()->user(); 
+            $hashed_pwd = $user->password_hash;
+            $submitted_pwd = $post['password']; 
+            if(password_verify($submitted_pwd, $hashed_pwd))
+            {
+
+                $user = auth()->user();
+                $user->details = $employee->where('employee_id', $user->employee_id )->first(); 
+                return $this->response->setJSON([
+                    'success' => true, 
+                    'data' => $user,
+                ]);
+            }
+        }
+
+        return $this->response->setJSON([
+            'success' => false, 
+            'message' => 'Submitted password did not match', 
+        ]);
 
     }
 
