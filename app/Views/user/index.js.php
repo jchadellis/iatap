@@ -32,4 +32,20 @@
             }
         })
     })
+
+    $(document).ready(function(){
+        $('#email_signature').trumbowyg({
+            btns: [ 
+                ['viewHTML'],
+                ['undo', 'redo'], 
+                ['formatting'],
+                ['strong', 'em', 'del'],
+                ['link'],
+                ['lineheight']
+            ],
+            height: 50,
+            autogrow: true,
+        });
+    })
+
 </script>

@@ -5,6 +5,7 @@ use App\Controllers\BaseController;
 use App\Models\UserModel; 
 use App\Models\EmployeeModel; 
 
+
 class Index extends BaseController
 {
     public function index($id = null): string
@@ -81,7 +82,24 @@ class Index extends BaseController
             'success' => false, 
             'message' => 'Submitted password did not match', 
         ]);
+    }
 
+    public function save_signature()
+    {
+        $data = $this->request->getPost(); 
+        $userModel = new UserModel(); 
+        $user_id = auth()->user()->id;
+
+        $array = [
+            'id' => $user_id, 
+            'email_signature' => $data['email_signature'],
+        ];
+
+
+        if( $userModel->save($array) )
+        {
+            return redirect()->back(); 
+        }
     }
 
 }

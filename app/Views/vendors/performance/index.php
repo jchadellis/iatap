@@ -3,10 +3,21 @@
 </table>
 
 
-<div class="modal" id="content_modal">
-    <div class="modal-dialog">
+<div class="modal fade" id="main-modal">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            
+            <form  id="vendor-email-form">
+                <div class="modal-header">
+                    <h5 class"h5">Vendor Performance</h5>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="vendor-email-btn">Email Vendor</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -43,6 +43,10 @@
                     </div>
                 </div>
             </div>
+            <!-- 
+                Email input and Assign To Select 
+                Email defaults to the signed in user. If no user then, the user will need to enter First Last Name
+            -->
             <div class="row mb-3">
                 <div class="col-6">
                     <div class="form-floating">
@@ -65,7 +69,8 @@
                     </div>
                 <?php endif; ?>
             </div>
-            <div class="row mb-3">
+            <!-- removing hint box. -->
+            <!-- <div class="row mb-3">
                 <div class="col">
                     <div class="card text-bg-lite-blue ">
                         <div class="card-header">Priority Level</div>
@@ -79,9 +84,26 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
+            <!-- 
+                Department Select 
+                Priority Select 
+            -->
             <div class="row mb-3">
-                <div class="col-4">
+                <div class="col-6">
+                    <div class="form-floating">
+                        <select name="dept_id" id="" class="form-select">
+                            <option value="">Select Requesting Dept.</option>
+                            <?php if($depts) : ?>
+                                <?php foreach($depts as $option) : ?>
+                                    <option value="<?= $option->id ?>"><?= $option->name ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                        <label for="dept_id">Deparment</label>
+                    </div>
+                </div>
+                <div class="col-6">
                     <div class="form-floating">
                         <?php $options = [
                             'none' => 'No Action Needed', 
@@ -98,14 +120,21 @@
                         <label for="priority">Priority Level</label>
                     </div>
                 </div>
-
-                <div class="col-8">
+            </div>
+            <!-- 
+                Title Input 
+            -->
+            <div class="row mb-3">
+                <div class="col-6">
                     <div class="form-floating">
-                        <input class="form-control" type="text" name="title" id="" placeholder="">
+                        <input class="form-control" type="text" name="title" id="" placeholder="" value="">
                         <label for="title">Title</label>
                     </div>
                 </div>
             </div>
+            <!--
+                Description Textarea
+            -->
             <div class="row">
                 <div class="col-12">
                     <div class="form-floating">

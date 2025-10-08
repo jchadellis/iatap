@@ -29,9 +29,7 @@
         function handleGetTicket(table)
         {
             row = table.row('.selected').node();
-            console.log(row);
             id = $(row).data('id');  
-            console.log(id); 
             type = $(row).data('type');
             status = $(row).data('status'); 
 
@@ -48,7 +46,6 @@
             data = {'id' : id, 'type' : type};
             handlePost(url, data)
                 .then(result => {
-                    //showAlert({title: result.title, message: result.message, icon: result.icon});
                     serviceTicketModal.show();
                     content.html(result.data); 
                 })
@@ -70,9 +67,6 @@
                     serviceTicketModal.hide();
                     selectedRow.data(result.data);
                 })
-                .catch(error => {
-                    showWarning('Unable to update the service ticket.');
-                });
         }
 
         function handleCloseTicket()
@@ -205,6 +199,17 @@
                         return data.first_name + ' ' + data.last_name;
                     }
                 },
+                {
+                    data: 'assigned_to',
+                    title: 'Assigned To', 
+                    render: function(data, type, row){
+                        if( row.assigned_to_user.first_name )
+                        {
+                            return row.assigned_to_user.first_name + ' ' + row.assigned_to_user.last_name; 
+                        }
+                        return data; 
+                    }
+                },
 
                 {
                     data: 'title', 
@@ -212,7 +217,8 @@
                 },
                 {
                     data: 'description', 
-                    title: 'Description', 
+                    title: 'Description',
+                    visible: true,
                 },
 
                 {
@@ -222,9 +228,9 @@
             ],
             columnDefs:[
                 { targets: [1,2,3], orderable: false, },
-                { targets: [0, 1, 2, 5], className: 'text-center'},
-                { targets: [1,5], width: '10%'},
-                { targets: [0,2,3], width: '16%'},
+                { targets: [0, 1, 2, 3, 6], className: 'text-center'},
+                { targets: [1,2,3,6], width: '10%'},
+                { targets: [0,4], width: '12%'},
 
                 // { targets: [2], className: 'text-truncate'}
             ],
@@ -239,6 +245,7 @@
             layout:{
                 topStart:{
                     buttons:[
+                        'pageLength',
                         {
                             text: '<i class="bi bi-plus-square"></i> New Request  Ticket', 
                             action: function(){
@@ -276,16 +283,16 @@
         $('.checkbox').on('change', function(){
             if($(this).is(':checked')) {
                 // hide closed tickets
-                table.column(5).search('^(?!Closed$).*$', true, false).draw();
+                table.column(6).search('^(?!Closed$).*$', true, false).draw();
                 
             } else {
                 // Show closed tickets
-                table.column(5).search('').draw();
+                table.column(6).search('').draw();
             }
         });
 
         table.on('init', function(){
-            table.column(5).search('^(?!Closed$).*$', true, false).draw();
+            table.column(6).search('^(?!Closed$).*$', true, false).draw();
         })
 
         var vatap = '<?= $urls['previous'] ?? '' ?>'

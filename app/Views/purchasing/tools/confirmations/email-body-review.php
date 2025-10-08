@@ -10,7 +10,20 @@
     $today = new \DateTime(); 
     $purchase_order = $data[0][0]->purchase_order;
     $promise_date = $data[0][0]->effective_promise;
+    $order_date = $data[0][0]->order_date ?? ''; 
+    $order_dates = [];
+    $purchase_orders = []; 
 ?>
+
+<?php foreach($data as $index => $po )
+{
+    $order_dates[] = (new \DateTime($po[0]->order['order_date']))->format('m-d-Y') ?? ''; 
+    $purchase_orders[] =    $po[0]->purchase_order ?? '';
+    $promise_dates[] = $po[0]->effective_promise; 
+}
+
+?>
+
 
 <div class="modal-header">
     <h5><?= $vendor_id ?> : <?= $vendor_name ?> </h5>
@@ -39,15 +52,17 @@
         </div>
         <h6 class="h6">Opening Message: </h6>
         <div id="start-message">
-            <h4 style="color: #004085;">ATAP, Inc –  Purchase Order : <?= $purchase_order ?> Confirmation Request</h4>
+            <h4 style="color: #004085;">ATAP, Inc –  Purchase Order(s) : <?=  !empty($purchase_orders) ? implode(', ', $purchase_orders) : $purchase_order ?> Confirmation Request</h4>
 
             <p>Greetings,</p>
 
-            <p>Our records indicate that the following purchase order includes one or more line items that remain unconfirmed:</p>
+            <p>Our records indicate that the following purchase order(s) includes one or more line items that remain unconfirmed:</p>
 
-            <p><b>Purchase Order:</b> <?= $purchase_order ?> </p>
+            <p><b>Purchase Order(s):</b> <?= !empty($purchase_orders) ? implode(', ', $purchase_orders) : $purchase_order ?> </p>
 
-            <p><b>Promised Delivery date:</b> <?= $promise_date ?></p>
+            <p><b>Order Date(s):</b> <?= !empty($order_dates) ? implode(', ', $order_dates) : $order_date ?></p>
+
+            <p><b>Promised Delivery Date(s):</b> <?=!empty($promise_dates) ? implode(', ', $promise_dates) : $order_date ?></p>
         </div>
         <?php if( isset($data) ) : ?>
 

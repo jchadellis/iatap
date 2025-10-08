@@ -63,9 +63,27 @@
             <div class="col"><span class="text-accent2">Home Number:  </span><?= $details->contact_3_alternate ?></div>
         </div>
         <div class="row mt-3">
-            <h6 class="h6 border-bottom border-primary p-2">PTO Available <span class="float-end"><button class="btn btn-primary" id="show-pto" data-user="<?= $user->id ?>">Show</button></span></h6>
+            <h6 class="h6 border-bottom border-primary p-2">PTO Available <span class="float-end"><button class="btn btn-warning" id="show-pto" data-user="<?= $user->id ?>"><i class="bi bi-eye"></i>&nbsp;Show PTO</button></span></h6>
             <!-- <div class="col-6"><span class="text-accent2">Free Days Left: </span> </div>
             <div class="col"><span class="text-accent2">Vacation Days Left: </span> </div> -->
         </div>
+        <form action="<?= base_url('user/save-signature') ?>" method="post">
+            <div class="row mt-3">
+                <div class="col-8">
+                    <h6>Email Signature</h6>
+                </div>
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary float-end"><i class="bi bi-floppy"></i>&nbsp;Save Signature</button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div id="email_signature">
+                        <?= $user->email_signature ?>
+                    </div>
+                </div>
+            </div>
+        </form>
+
     </div>
 </div>

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Purchase Order Delivery Request</title>
+  <title></title>
 </head>
 <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; padding: 20px;">
 

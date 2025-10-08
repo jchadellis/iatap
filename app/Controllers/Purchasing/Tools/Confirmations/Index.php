@@ -213,7 +213,7 @@ class Index extends BaseController
         $email = \Config\Services::email();
         $email->setFrom($email_from);
         $email->setTo($email_to_list);
-        $email->setCC(['jeremy.ellis@atap.com', $email_from]);
+        $email->setCC($email_from);
 
         $data = [];
         foreach ($postData['items'] as $value) {

@@ -21,7 +21,7 @@
             },  
             pageLength: -1,    
             responsive: true,
-            order:[[2, 'asc']],
+            order:[[0, 'asc'], [3, 'asc']],
             language:{
                 buttons:{
                     colvis: `<i class="bi bi-eye-slash"></i>&nbsp;Show/Hide Columns`, 

@@ -81,6 +81,7 @@ $routes->group('user', static function($routes) {
     $routes->get('profile', 'User\Index::index');
     $routes->get('profile/(:num)', 'User\Index::index/$1');
     $routes->post('get-pto', 'User\Index::get_pto');
+    $routes->post('save-signature', 'User\Index::save_signature'); 
 });
 
 // =============================================================================
@@ -197,6 +198,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
                 $routes->get('test-data/(:any)', 'Purchasing\Tools\Bookings\Index::get_data_test/$1'); 
                 $routes->post('review', 'Purchasing\Tools\Bookings\Index::review_email');
                 $routes->post('send-email', 'Purchasing\Tools\Bookings\Index::send_email');
+                $routes->get('send-test-email', 'Purchasing\Tools\Bookings\Index::send_email_test'); 
             });
             
             $routes->group('confirmations', static function($routes) {
@@ -322,8 +324,15 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
 
     $routes->group('vendors', static function($routes) {
         $routes->get('tools', 'Vendors\Index::index');
-        $routes->get('performance', 'Vendors\Performance\Index::index'); 
-        $routes->get('performance/data', 'Vendors\Performance\Index::get_data'); 
+
+        $routes->group('performance', static function($routes){
+            $routes->get('', 'Vendors\Performance\Index::index'); 
+            $routes->get('data', 'Vendors\Performance\Index::get_data'); 
+            $routes->post('vendor', 'Vendors\Performance\Index::get_vendor'); 
+            $routes->post('email-vendor', 'Vendors\Performance\Index::send_email');
+        }); 
+        
+        
         $routes->get('jcp-report', 'Vendors\JCPReport\Index::index');
         $routes->get('jcp-report/data', 'Vendors\JCPReport\Index::get_data'); 
         $routes->get('list', 'Vendors\List\Index::index'); 

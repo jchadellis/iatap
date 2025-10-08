@@ -24,32 +24,28 @@
         </div>
     </div>
     <div class="col-6">
-        <?php if($ticket->type === 'engineering') : ?>
         <div class="form-floating">
             <input type="text" name="assigned_to" id="" class="form-control" disabled value="<?= $user->first_name ?? '' ?> <?= $user->last_name ?? '' ?>">
-            <label for="">Assigned TO</label>
+            <label for="">Assigned To</label>
         </div>
-        <?php endif; ?>
     </div>
 </div>
 
 <div class="row mb-3">
-    <div class="col">
-        <div class="card text-bg-lite-blue ">
-            <div class="card-header">Priority Level</div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-bg-lite-blue"><span class="fw-bold">No Action Needed:</span> Informational only or don't require follow-up</li>
-                    <li class="list-group-item text-bg-lite-blue"><span class="fw-bold">Routine</span> Standard requests with no urgency</li>
-                    <li class="list-group-item text-bg-lite-blue"><span class="fw-bold">Important</span> Needs attention soon</li>
-                    <li class="list-group-item text-bg-lite-blue"><span class="fw-bold">Urgent</span> High impact issues like outages, security breaches, or widespread disruption</li>
-                </ul>
-            </div>
+    <div class="col-6">
+        <div class="form-floating">
+            <select name="dept_id" id="" class="form-select">
+                <option value="">Select Requesting Dept.</option>
+                <?php if($depts) : ?>
+                    <?php foreach($depts as $option) : ?>
+                        <option value="<?= $option->id ?>" <?= $ticket->dept_id == $option->id ? 'selected' : '' ?>><?= $option->name ?></option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+            <label for="dept_id">Deparment</label>
         </div>
     </div>
-</div>
-<div class="row mb-3">
-    <div class="col-4">
+    <div class="col-6">
         <div class="form-floating">
             <?php $options = [
                 'none' => 'No Action Needed', 
@@ -66,8 +62,9 @@
             <label for="priority">Priority Level</label>
         </div>
     </div>
-
-    <div class="col-8">
+</div>
+<div class="row mb-3">
+    <div class="col-6">
         <div class="form-floating">
             <input class="form-control" type="text" name="title" id="" placeholder="" value="<?= $ticket->title ?>">
             <label for="title">Title</label>
@@ -77,7 +74,7 @@
 <div class="row mb-3">
     <div class="col-12">
         <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" name="description" style="height: 200px" value="<?= $ticket->description ?>"><?= $ticket->description ?></textarea>
+            <textarea class="form-control" placeholder="Leave a comment here" name="description" style="height: 100px" value="<?= $ticket->description ?>"><?= $ticket->description ?></textarea>
             <label for="floatingTextarea2">Description</label>
         </div>
     </div>

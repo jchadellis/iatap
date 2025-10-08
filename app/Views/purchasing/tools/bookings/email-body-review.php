@@ -7,8 +7,11 @@
     $color = $data[0][0]->po_status_color; 
     $vendor_email = $data[0][0]->contact_email ? $data[0][0]->contact_email : ''; 
     $today = new \DateTime(); 
-
+    $is_late = $data[0][0]->is_late;
 ?>
+
+
+
 
 <div class="modal-header">
     <h5><?= $vendor_id ?> : <?= $vendor_name ?> </h5>
@@ -37,11 +40,18 @@
         </div>
         <h6 class="h6">Opening Message: </h6>
         <div id="start-message">
-            <h4 style="color: #004085;">ATAP, Inc – Delivery Status Request</h4>
+            <?php if( $is_late) : ?>
+            <h4 style="color: #d38900ff;">ATAP, Inc – Past Due Delivery Status Request</h4>
+            <?php else: ?>
+            <h4 style="color: #004085;">ATAP, Inc – Delivery Status Request</h4>   
+            <?php endif; ?>
             <p>Greetings,</p>
 
-        <p>We are requesting a delivery update regarding a recent purchase order(s). Our records indicate that one or more line items are approaching their scheduled delivery date(s), and we would appreciate your confirmation of their current status.</p>
-
+        <?php if( $is_late ) : ?>
+        <p>We are requesting a status update regarding a late purchase order(s). Our records indicate that one or more line items are past their scheduled update, and we would appreciate your confirmation of their current status.</p>
+        <?php else: ?>
+        <p>We are requesting a status update regarding a recent purchase order(s). Our records indicate that one or more line items are approaching their scheduled update, and we would appreciate your confirmation of their current status.</p>
+        <?php endif; ?>
         </div>
 
         <?php if( isset($data) ) : ?>

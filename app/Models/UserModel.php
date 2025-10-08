@@ -41,6 +41,7 @@ class UserModel extends ShieldUserModel
             'host_id', 
             'dept_id', 
             'bldg_id',  
+            'email_signature',
         ];
     }
 

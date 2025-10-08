@@ -5,6 +5,7 @@ namespace App\Controllers\ServiceTicket\Tickets;
 use App\Controllers\BaseController;
 use App\Models\ServiceTicketModel;
 use App\Models\UserModel; 
+use App\Models\DeptModel; 
 
 class Index extends BaseController
 {
@@ -23,7 +24,7 @@ class Index extends BaseController
             'dept' => '0',
             'title' => 'Maintenace Request', 
             'route' => 'maintenance', 
-            'email_to' => 'maintenace@atap.com',
+            'email_to' => 'maintenance@atap.com',
             'new_subject' => 'New Maintenance Request', 
             'update_subject' => 'Maintenance Request Updated', 
             'new_message' => 'A new maintenance request has been created. Please check the ticket and take appropriate action.',
@@ -53,7 +54,6 @@ class Index extends BaseController
 
     private $type; 
 
-
     private function setServiceConfig($type)
     {
         if (!array_key_exists($type, $this->serviceTypes)) {
@@ -71,12 +71,12 @@ class Index extends BaseController
 
     public function index($type = 'it')
     {
-        $userModel = new UserModel(); 
-
-
+        $user_model = new UserModel(); 
+        $dept_model = new DeptModel(); 
         $this->setServiceConfig($type); 
 
-        $dept_users = $userModel->where('dept_id', $this->serviceConfig['dept'])->findAll(); 
+        $dept_users = $user_model->where('dept_id', $this->serviceConfig['dept'])->findAll(); 
+        $depts = $dept_model->findAll(); 
 
         
         $breadcrumbs = [
@@ -108,7 +108,8 @@ class Index extends BaseController
             'type'          => $type,
             'title'         => $this->serviceConfig['title'], 
             'urls'          => $urls,
-            'dept_users' => $dept_users,
+            'dept_users'    => $dept_users,
+            'depts'         => $depts,
         ]);
       
         $js = view("service/tickets/index.js.php", ['urls' => $urls]);
@@ -152,7 +153,7 @@ class Index extends BaseController
     {
         $data = $this->request->getPost(); 
         $model = new ServiceTicketModel();
-        $userModel = new UserModel(); 
+        $user_model = new UserModel(); 
         
         $inGroup = $this->inGroup($data['type']); 
 
@@ -162,16 +163,17 @@ class Index extends BaseController
 
         // Only one ticket, so optimize prep_data for single
         $ticket = $this->prep_data($ticketData);
-        $user = $userModel->find($ticketData[0]->assigned_to); 
+        $user = $user_model->find($ticketData[0]->assigned_to); 
         if(!$ticket)
         {
             return $this->response->setJSON([
                 'success' => false, 
             ]);
         }
-
+        $dept_model = new DeptModel(); 
+        $depts = $dept_model->findAll(); 
         return $this->response->setJSON([
-            'data' => view('service/tickets/modal', ['ticket' => $ticket[0], 'user' => $user ]), 
+            'data' => view('service/tickets/modal', ['ticket' => $ticket[0], 'user' => $user , 'depts' => $depts ]), 
             'success' => true, 
             'message' => 'Retreived Service Ticket Modal', 
         ]);
@@ -188,6 +190,7 @@ class Index extends BaseController
             ],
             'email' => 'required|valid_email', 
             'title' => 'required', 
+            //'dept_id' => 'permit_empty', 
             'description' => 'required', 
         ];
 
@@ -210,7 +213,6 @@ class Index extends BaseController
             ]);
         }
 
-
         $model = new ServiceTicketModel();
 
         $data = $this->request->getPost();
@@ -220,11 +222,11 @@ class Index extends BaseController
         if( $data['user_id'] == 0 )
         {
             $name = explode(' ', $data['user'] );
-            $data['first_name'] = $name[0];
-            $data['last_name'] = $name[1];
+            $data['first_name'] = ucfirst(strtolower($name[0]));
+            $data['last_name'] =  ucfirst(strtolower($name[1]));
         }
 
-        //$user = (object) ['first_name' => $data['first_name'], 'last_name' => $data['last_name']];
+        $data['title'] = ucwords(strtolower($data['title']));
 
         $success = $model->save($data);
         $id = $model->getInsertId(); 
@@ -267,22 +269,22 @@ class Index extends BaseController
         $data = $this->request->getPost(); 
 
         $data['num_of_updates']++;
+        $data["updated_by"] = auth()->user()->id ?? 0; 
 
         $model = new ServiceTicketModel();     
 
-        if($model->save($data)){
+        if($model->save($data))
+        {
 
-            $fallBackUser = [
-                'first_name' => $data['first_name'] ?? '', 
-                'last_name' => $data['last_name'] ?? '',
-                'email' => false, 
-            ];
+            // $fallBackUser = [
+            //     'first_name' => $data['first_name'] ?? '', 
+            //     'last_name' => $data['last_name'] ?? '',
+            //     'email' => false, 
+            // ];
 
-            $user = auth()->user() ?? (object) $fallBackUser; 
+            // $user = auth()->user() ?? (object) $fallBackUser; 
 
             $inGroup = $this->inGroup($data['type']); 
-
-
 
             $data = ($inGroup) 
                 ? $model->where('id', $data['id'])->withDeleted()->findAll()
@@ -290,7 +292,7 @@ class Index extends BaseController
 
             $data = $this->prep_data($data); 
 
-            $this->send_email($data[0], $user, 'update_subject', 'update_message' ); 
+           //$this->send_email($data[0], $user, 'update_subject', 'update_message' ); 
 
             return $this->response->setJSON([
                 'success' => true, 
@@ -309,7 +311,8 @@ class Index extends BaseController
 
         $data = [
             'id' => $post['id'], 
-            'work_performed' => $post['work_performed']
+            'work_performed' => $post['work_performed'],
+            'updated_by' => auth()->user()->id ?? 0,
         ];
 
         $service_ticket = $model->find($post['id']); 
@@ -332,6 +335,7 @@ class Index extends BaseController
     private function prep_data($data, $id = null )
     {
         $model = new ServiceTicketModel();
+        $dept_model = new DeptModel(); 
         $user_model = new UserModel(); 
 
         if(empty($data)){
@@ -341,8 +345,9 @@ class Index extends BaseController
         // Optimization: If only one ticket, fetch user directly
         if (count($data) === 1) {
             $service_ticket = $data[0];
-            $user_model = new UserModel();
+            //$user_model = new UserModel();
             $user = $user_model->find($service_ticket->user_id) ?? (object)[];
+            $assigned_user = $user_model->find($service_ticket->assigned_to) ?? (object)[];
             $service_ticket->user = $user;
             if ($service_ticket->user_id == 0 || $service_ticket->user_id == 5) {
                 $user->first_name = $service_ticket->first_name;
@@ -405,16 +410,29 @@ class Index extends BaseController
 
         // Collect all user_ids from tickets
         $user_ids = [];
+        $assigned_user_ids = []; 
         foreach ($data as $ticket) {
             $user_ids[] = $ticket->user_id;
+            if( !is_null($ticket->assigned_to)){
+                $assigned_user_ids[] = $ticket->assigned_to; 
+            }
         }
         $user_ids = array_unique($user_ids);
+        $assigned_user_ids = array_unique($assigned_user_ids); 
 
         // Bulk fetch users
         $users = [];
+        $assigned_users = []; 
+
         if (!empty($user_ids)) {
             foreach ($user_model->whereIn('id', $user_ids)->findAll() as $user) {
                 $users[$user->id] = $user;
+            }
+        }
+
+        if (!empty($assigned_user_ids)) {
+            foreach ($user_model->whereIn('id', $assigned_user_ids)->findAll() as $user) {
+                $assigned_users[$user->id] = $user;
             }
         }
 
@@ -433,7 +451,9 @@ class Index extends BaseController
 
             // Use bulk-fetched user or fallback
             $user = $users[$service_ticket->user_id] ?? (object)[];
+            $assigned_user = $assigned_users[$service_ticket->assigned_to] ?? (object)[]; 
             $service_ticket->user = $user; 
+            $service_ticket->assigned_to_user = $assigned_user; 
 
             if( $service_ticket->user_id == 0 || $service_ticket->user_id == 5 )
             {
@@ -491,9 +511,10 @@ class Index extends BaseController
 
     public function send_email($ticket, $user, $subject = 'new_subject', $message = 'new_message' )
     {
-        $userModel = new UserModel(); 
+        $user_model = new UserModel(); 
+        $dept_model = new DeptModel(); 
 
-        $assigned_to_user = $userModel->find($ticket->assigned_to) ?? null ; 
+        $assigned_to_user = $user_model->find($ticket->assigned_to) ?? null ; 
 
         $this->setServiceConfig($ticket->type);
         $config = $this->serviceConfig; 
@@ -508,6 +529,9 @@ class Index extends BaseController
             $email->setTo($config['email_to']);
         }
 
+        $email->setCC($ticket->email); 
+
+        $ticket->dept = $dept_model->find($ticket->dept_id);
 
         $subject = $config[$subject];
         $email->setSubject($subject);
