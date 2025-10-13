@@ -55,10 +55,10 @@
                 <!-- Show only on XXL and up -->
                     <div class="row">
 
-                        <div class="col-xxl-9 col-xl-8 d-none d-lg-block">
+                        <div class="col-xxl-10 col-xl-9 d-none d-lg-block">
                             <?= $content ??= '' ?>
                         </div>
-                        <div class="col-xxl-3 col-xl-4 d-none d-lg-block">
+                        <div class="col-xxl-2 col-xl-3 d-none d-lg-block">
                             <?= view_cell('App\Cells\SideCards\SideCardsCell') ?>
                         </div>
 

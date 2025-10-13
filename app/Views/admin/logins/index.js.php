@@ -1,5 +1,65 @@
 <script>
     $(document).ready(function(){
+        const showPwdBtns = document.querySelectorAll('.show-pwd'); 
+
+        function handleShowPwd(button)
+        {
+
+            row = button.closest('tr');
+            id = row.dataset.id; 
+            currentHTML = button.innerHTML; 
+            
+            fetch(`<?= base_url('sadmin/login-manager/decrypt/') ?>${id}`)
+                .then(response=>response.json())
+                .then(data=>{
+                    Swal.fire({
+                        title: data.title, 
+                        text: data.text, 
+                        icon: data.icon, 
+                        html: `<div id="copyTarget">${data.text}</div> 
+                        <button id="copyBtn" class="swal2-confirm swal2-styled" style="margin-top:10px;">Copy</button>`,
+                        showConfirmButton: false, 
+                        didOpen:()=>{
+                        const btn = document.getElementById('copyBtn');
+                            btn.addEventListener('click', () => {
+                            const text = document.getElementById('copyTarget').innerText;
+                            
+                            // Fallback copy method
+                            const textarea = document.createElement('textarea');
+                            textarea.value = text;
+                            document.body.appendChild(textarea);
+                            textarea.select();
+                            try {
+                                document.execCommand('copy');
+                                Swal.fire({
+                                icon: 'successs',
+                                title: 'Copied!',
+                                text: 'Text copied to clipboard',
+                                timer: 1200,
+                                showConfirmButton: false
+                                });
+                            } catch (err) {
+                                Swal.fire('Oops!', 'Unable to copy text', 'error');
+                            }
+                            document.body.removeChild(textarea);
+                            });
+                        }
+
+                    }).then((result)=>{
+                        
+                    })
+                })
+
+
+
+        }
+
+        showPwdBtns.forEach(button => {
+            button.addEventListener('click', ()=>{
+                handleShowPwd(button); 
+            })
+        });
+
         table = $('.table').DataTable({
             //select:true, 
             layout:{
@@ -39,11 +99,13 @@
                 }
             },
             columnDefs:[
-                {width:'10%', targets:[3,4,5]}
+                {width:'10%', targets:[2,3]}
             ]
         });
 
         $('.show-pwd').on('click', function(){
+
+            return;
             btns = $('.show-pwd');
 
             btns.each(function(){

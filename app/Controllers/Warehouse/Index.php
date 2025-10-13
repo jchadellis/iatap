@@ -10,6 +10,14 @@ class Index extends BaseController
 
     private  $tool_cards = [
         [
+            'name' => 'Inventory Location Counts', 
+            'description' => 'View inventory counts by location', 
+            'url' => 'warehouse/cycle-counts', 
+            'btn_text' => 'Open', 
+            'icon' => 'components/icon/list-icon',
+            'color' => 'text-dark', 
+        ],        
+        [
             'name' => 'Inventory Pick List', 
             'description' => 'View Inventory Transactions and Print Pick List', 
             'url' => 'warehouse/transactions', 
@@ -24,6 +32,7 @@ class Index extends BaseController
             'btn_text' => 'View List', 
             'icon' => 'components/icon/list-icon',
             'color' => 'text-dark', 
+            'enable' => false, 
         ],
     ];
 

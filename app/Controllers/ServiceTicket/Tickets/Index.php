@@ -14,41 +14,67 @@ class Index extends BaseController
             'dept' => '0',
             'title' => 'IT Support', 
             'route' => 'it', 
-            'email_to' => 'patrick.porteous@atap.com,stuart.meek@atap.com,jeremy.ellis@atap.com',
-            'new_subject' => 'New IT Support Request', 
-            'update_subject' => 'IT Support Request Updated', 
-            'new_message' => 'A new IT support ticket has been submitted. Please review the details and respond as needed.',
-            'update_message' => 'An update to a IT support ticket has been submitted.',
+            'view' => 'service/tickets/index', 
+            'email_to' => 'jeremy.ellis@atap.com', 
+            //'email_to' => 'patrick.porteous@atap.com,stuart.meek@atap.com,jeremy.ellis@atap.com',
+            'new_subject' => 'IT Support Ticket # %s - NEW', 
+            'new_message' => 'A new IT Support Ticket # %s has been submitted on %s at %s. Please review the details and respond as needed.',
+
+            'update_subject' => 'IT Support Ticket # %s - UPDATED', 
+            'update_message' => 'There has been an update to a IT Support Ticket # %s at %s.',
+
+            'closed_subject' => 'IT Support Ticket # %s - CLOSED', 
+            'closed_message' => 'The IT Support Ticket # %s was closed on %s at %s', 
         ],
         'maintenance' => [
             'dept' => '0',
             'title' => 'Maintenace Request', 
             'route' => 'maintenance', 
-            'email_to' => 'maintenance@atap.com',
-            'new_subject' => 'New Maintenance Request', 
-            'update_subject' => 'Maintenance Request Updated', 
-            'new_message' => 'A new maintenance request has been created. Please check the ticket and take appropriate action.',
-            'update_message' => 'An update to a maintenance request ticket has been submitted.',
+            'view'  => 'service/tickets/index-maintenance', 
+            'email_to' => 'notifications+atap@onupkeep.com',
+
+            'new_subject' => 'Maintenance Ticket # %s - NEW',
+            'new_message' => 'A new Maintenance Ticket has been created on %s at %s. Please check the ticket and take appropriate action.',
+            
+            'update_subject' => 'Maintenance Ticket # %s - UPDATED', 
+            'update_message' => 'An update to a Maintenace Ticket # %s has been made on %s at %s.',
+
+            'closed_subject' => 'Maintenance Ticket # %s - CLOSED', 
+            'closed_message' => 'The Maintenance Ticket # %s has been closed on %s at %s.',
+
         ],
         'woodshop' => [
             'dept' => '0',
             'title' => 'Woodshop Request', 
             'route' => 'maintenance', 
+            'view' => 'service/tickets/index', 
             'email_to' => 'building4@atap.com',
-            'new_subject' => 'New Wood Shop Work Request', 
-            'update_subject' => 'Wood Shop Work Request Updated', 
-            'new_message' => 'A new woodshop work request has been submitted. Please review the ticket and follow up as necessary.',
-            'new_message' => 'An update to a woodshop request ticket has been submitted.',
+
+            'new_subject' => 'Woodshop Ticket # %s - NEW', 
+            'new_message' => 'A new Woodshop Ticket # %s has been submitted on %s at %s. Please review the ticket and follow up as necessary.',
+
+            'update_subject' => 'Woodshop Ticket # %s - UPDATED', 
+            'update_message' => 'An update to a Woodshop Ticket # %s has been made on %s at %s.',
+
+            'closed_subject' => 'Woodshop Ticket # %s - CLOSED', 
+            'closed_message' => 'The Woodshop Ticket # %s has been closed on %s at %s.',
+
         ],
         'engineering' => [
             'dept' => '9',
             'title' => 'Engineering Request', 
             'route' => 'engineering', 
+            'view' => 'service/tickets/index', 
             'email_to' => 'chad.campbell@atap.com',
-            'new_subject' => 'New Engineering Request', 
-            'update_subject' => 'Engineering Request Updated', 
-            'new_message' => 'A new engineering request has been received. Please review the ticket and provide support as needed.',
-            'update_message' => 'An update to Engineering request has been submitted.',
+
+            'new_subject' => 'Engineering Ticket # %s - NEW' , 
+            'new_message' => 'A new Engineering Ticket # %s has been submitted on %s at %s. Please review the ticket and respond as needed.',
+
+            'update_subject' => 'Engineering Ticket %s - UPDATED', 
+            'update_message' => 'An update to Engineering Ticket # %s has been submitted on %s at %s.',
+
+            'closed_subject' => 'Engineering Ticket # %s - CLOSED', 
+            'closed_message' => 'The Engineering Ticket # %s has been closed at %s', 
         ]
     ];
 
@@ -63,10 +89,10 @@ class Index extends BaseController
     }
 
     private $badges = [
-        'none' => ['color' => 'text-bg-info'], 
-        'low' => [ 'color' => 'text-bg-secondary'], 
-        'medium' => ['color' => 'text-bg-primary'], 
-        'high' => ['color' => 'text-bg-warning'],
+        'none' => ['color' => 'text-dark', 'bg_color' => 'bg-info'], 
+        'low' => [ 'color' => 'text-white', 'bg_color' => 'bg-success'], 
+        'medium' => ['color' => 'text-white', 'bg_color' => 'bg-warning'], 
+        'high' => ['color' => 'text-dark', 'bg_color' => 'bg-danger'],
     ];
 
     public function index($type = 'it')
@@ -96,7 +122,7 @@ class Index extends BaseController
             'previous' => $this->request->getUserAgent()->getReferrer(),
         ];
 
-        $content = view("service/tickets/index", [
+        $content = view($this->serviceConfig['view'], [
             'user'          => $user, 
             'inGroup'       => $inGroup,
             'userCanClose'  => $user ? $user->can("{$type}.close") : false,
@@ -184,14 +210,39 @@ class Index extends BaseController
         $rules = [
             'user' => [
                 'rules'  => 'required|regex_match[/^[A-Za-z]+ [A-Za-z]+$/]',
+                'label' => 'Your Name', 
                 'errors' => [
                     'regex_match' => 'Please enter your first and last name (e.g. John Doe).'
                 ]
             ],
-            'email' => 'required|valid_email', 
-            'title' => 'required', 
-            //'dept_id' => 'permit_empty', 
-            'description' => 'required', 
+            'email' => [
+                'rules' => 'required|valid_email', 
+                'label' => 'Email Address', 
+                'errors' => [
+                    'required' => ' is required.', 
+                    'valid_email' => ' must be a valid address.',
+                ],
+            ],
+            'title' => [
+                'rules' => 'required', 
+                'label' => 'Ticket Name', 
+                'errors' => ['required' => ' is required.']
+            ],
+            'dept_id' => [
+                'rules' => 'required', 
+                'label' => 'Department', 
+                'errors' => ['required' => ' enter the Department you are in.'],
+            ], 
+            'description' => [
+                'rules' => 'required', 
+                'label' => 'Description', 
+                'errors' => ['rquired' => ' is required for the ticket.']
+            ],
+            'need_date' => [
+                'rules' => 'required', 
+                'label' => 'Need By Date',
+                'errors' => ['required' => ' is required.'], 
+            ],
         ];
 
         if(!$this->validate($rules))
@@ -200,7 +251,9 @@ class Index extends BaseController
 
             $messages = [];
             foreach ($errors as $field => $error) {
-                $messages[] = "<b>" . ucfirst($field) . "</b>: " . $error;
+                $rule = $rules[$field];    
+                $label = $rule['label'];       
+                $messages[] = "<b>" . $label . "</b>: " . $error;
             }
 
             $message = implode('<br>', $messages);
@@ -276,13 +329,13 @@ class Index extends BaseController
         if($model->save($data))
         {
 
-            // $fallBackUser = [
-            //     'first_name' => $data['first_name'] ?? '', 
-            //     'last_name' => $data['last_name'] ?? '',
-            //     'email' => false, 
-            // ];
+            $fallBackUser = [
+                'first_name' => $data['first_name'] ?? '', 
+                'last_name' => $data['last_name'] ?? '',
+                'email' => false, 
+            ];
 
-            // $user = auth()->user() ?? (object) $fallBackUser; 
+            $user = auth()->user() ?? (object) $fallBackUser; 
 
             $inGroup = $this->inGroup($data['type']); 
 
@@ -290,14 +343,14 @@ class Index extends BaseController
                 ? $model->where('id', $data['id'])->withDeleted()->findAll()
                 : $model->where('id', $data['id'])->findAll();
 
-            $data = $this->prep_data($data); 
+            $ticket = $this->prep_data($data); 
 
-           //$this->send_email($data[0], $user, 'update_subject', 'update_message' ); 
+            $this->send_email($ticket[0], $user, 'update_subject', 'update_message' ); 
 
             return $this->response->setJSON([
                 'success' => true, 
-                'message' => "Ticket {$data[0]->title} was updated!",  
-                'data' => $data[0], 
+                'message' => "Ticket {$ticket[0]->title} was updated!",  
+                'data' => $ticket[0], 
                 'icon' => 'success', 
                 'title' => 'Ticket Updated', 
             ]);
@@ -322,14 +375,29 @@ class Index extends BaseController
         $model->delete($post['id']); 
 
         $ticket = $this->prep_data($model->withDeleted()->where('id' , $post['id'])->findAll()); 
+        $user = auth()->user() ?? null; 
 
-        return $this->response->setJSON([
-            'success' => true, 
-            'message' => "Ticket was successfully closed!",  
-            'data' => $ticket[0], 
-            'icon' => 'success', 
-            'title' => 'Ticket Closed', 
-        ]);
+
+        if( $this->send_email($ticket[0], $user, 'closed_subject', 'closed_message' ) )
+        {
+            return $this->response->setJSON([
+                'success' => true, 
+                'message' => "Ticket was successfully closed!",  
+                'data' => $ticket[0], 
+                'icon' => 'success', 
+                'title' => 'Ticket Closed', 
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false, 
+                'message' => "Ticket Closed! Error sending email",  
+                'data' => $ticket[0], 
+                'icon' => 'warning', 
+                'title' => 'Ticket Closed', 
+            ]);
+        }
+
+
     }
 
     private function prep_data($data, $id = null )
@@ -343,13 +411,16 @@ class Index extends BaseController
         }
 
         // Optimization: If only one ticket, fetch user directly
-        if (count($data) === 1) {
+        if (count($data) === 1) 
+        {
             $service_ticket = $data[0];
             //$user_model = new UserModel();
             $user = $user_model->find($service_ticket->user_id) ?? (object)[];
             $assigned_user = $user_model->find($service_ticket->assigned_to) ?? (object)[];
             $service_ticket->user = $user;
-            if ($service_ticket->user_id == 0 || $service_ticket->user_id == 5) {
+            $service_ticket->assigned_to_user = $assigned_user; 
+            if ($service_ticket->user_id == 0 || $service_ticket->user_id == 5) 
+            {
                 $user->first_name = $service_ticket->first_name;
                 $user->last_name = $service_ticket->last_name;
             }
@@ -365,7 +436,8 @@ class Index extends BaseController
             $status_color = ''; 
             $row_color = ''; 
 
-            $service_ticket->badge_color = $this->badges[$service_ticket->priority]['color'];
+            $service_ticket->badge_color = $this->badges[$service_ticket->priority]['bg_color'];
+            $service_ticket->cell_font_color = $this->badges[$service_ticket->priority]['color'];
             //DETERMINE THE TICKET STATUS
             if( $need_date->format('Y-m-d') === $today->format('Y-m-d')){
                 $status = 'Due Today'; 
@@ -390,7 +462,8 @@ class Index extends BaseController
             $service_ticket->btn_color = 'btn-primary';
             $service_ticket->btn_icon = true;
 
-            if ($service_ticket->deleted_at) {
+            if ($service_ticket->deleted_at) 
+            {
                 $status = 'Closed';
                 $status_color = 'text-bg-primary';
                 $row_color = '';
@@ -404,6 +477,7 @@ class Index extends BaseController
             $service_ticket->status_color = $status_color;
             $service_ticket->editBtn = '';
             $service_ticket->need_date = $need_date->format('Y-m-d');
+            $service_ticket->reference_id = ($service_ticket->reference_id) ? $service_ticket->reference_id :  $service_ticket->id; 
             // Return as array for consistency
             return [$service_ticket];
         }
@@ -411,9 +485,11 @@ class Index extends BaseController
         // Collect all user_ids from tickets
         $user_ids = [];
         $assigned_user_ids = []; 
-        foreach ($data as $ticket) {
+        foreach ($data as $ticket) 
+        {
             $user_ids[] = $ticket->user_id;
-            if( !is_null($ticket->assigned_to)){
+            if( !is_null($ticket->assigned_to))
+            {
                 $assigned_user_ids[] = $ticket->assigned_to; 
             }
         }
@@ -425,13 +501,15 @@ class Index extends BaseController
         $assigned_users = []; 
 
         if (!empty($user_ids)) {
-            foreach ($user_model->whereIn('id', $user_ids)->findAll() as $user) {
+            foreach ($user_model->whereIn('id', $user_ids)->findAll() as $user) 
+            {
                 $users[$user->id] = $user;
             }
         }
 
         if (!empty($assigned_user_ids)) {
-            foreach ($user_model->whereIn('id', $assigned_user_ids)->findAll() as $user) {
+            foreach ($user_model->whereIn('id', $assigned_user_ids)->findAll() as $user) 
+            {
                 $assigned_users[$user->id] = $user;
             }
         }
@@ -465,7 +543,8 @@ class Index extends BaseController
             $status = ''; 
             $status_color = ''; 
 
-            $service_ticket->badge_color = $this->badges[$service_ticket->priority]['color'];
+            $service_ticket->badge_color = $this->badges[$service_ticket->priority]['bg_color'];
+            $service_ticket->cell_font_color = $this->badges[$service_ticket->priority]['color'];
             //DETERMINE THE TICKET STATUS
             if( $need_date->format('Y-m-d') === $today->format('Y-m-d')){
                 $status = 'Due Today'; 
@@ -504,6 +583,7 @@ class Index extends BaseController
             $service_ticket->status_color = $status_color;
             $service_ticket->editBtn = '';
             $service_ticket->need_date = $need_date->format('Y-m-d');
+            $service_ticket->reference_id = ($service_ticket->reference_id) ? $service_ticket->reference_id :  $service_ticket->id; 
             $tickets[]  = $service_ticket; 
         }
         return $tickets; 
@@ -533,10 +613,10 @@ class Index extends BaseController
 
         $ticket->dept = $dept_model->find($ticket->dept_id);
 
-        $subject = $config[$subject];
+        $subject = sprintf($config[$subject], $ticket->id);
         $email->setSubject($subject);
         $email->setMessage(view('service/tickets/email-body', [
-            'message' => $config[$message], 
+            'message' => sprintf($config[$message], $ticket->id, date('m-d-Y'), date('h:i:s')), 
             'user' => $user, 
             'route' => 'service/tickets/'.$config['route'],
             'ticket' => $ticket,
@@ -609,5 +689,7 @@ class Index extends BaseController
 
         print_array($tickets); 
     }
+
+    
 
 }

@@ -198,22 +198,6 @@
         function showAlert(data)
         {
 
-            // let message = '<ul class="list-group">'; 
-
-            // for (const field in data.message) {
-            //     const item = data.message[field];
-
-            //     if (typeof item === 'object') {
-            //         for (const subfield in item) {
-            //             message += `<li class="list-group-item">${item[subfield]}</li>`;
-            //         }
-            //     } else {
-            //         message += `<li class="list-group-item">${item}</li>`;
-            //     }
-            // }
-
-            // message += '</ul>';      
-
             Swal.fire({
                 title: data.title, 
                 html: data.message, 
@@ -221,32 +205,6 @@
                 sanitize: false,
             })
         }
-
-        // function showWarning(data)
-        // {
-
-        //     let message = '<ul class="list-group">'; 
-
-        //     for (const field in data.message) {
-        //         const item = data.message[field];
-
-        //         if (typeof item === 'object') {
-        //             for (const subfield in item) {
-        //                 message += `<li class="list-group-item">${item[subfield]}</li>`;
-        //             }
-        //         } else {
-        //             message += `<li class="list-group-item">${item}</li>`;
-        //         }
-        //     }
-
-        //     message += '</ul>';
-
-        //     Swal.fire({
-        //         title: data.title, 
-        //         icon: message, 
-        //         text: data.message,
-        //     })
-        // }
 
         vendorEmailForm.addEventListener('submit', async function(event) {
             event.preventDefault(); 
@@ -290,6 +248,20 @@
                     showAlert( error );
                 });
         });
+
+        if(vatap == 'http://vatap/')
+        {
+            Swal.fire({
+                icon: 'info',
+                title: 'Welcome',
+                html: `
+                    <p>It looks like you came from <b>vatap</b>.</p>
+                    <p>This is our new service and request ticket entry system. Everything has been moved here for a smoother experience.</p>
+                `,
+                confirmButtonText: 'Continue',
+                confirmButtonColor: '#3085d6'
+            });
+        }
 
 
     })

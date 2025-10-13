@@ -342,11 +342,21 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     // Warehouse Routes
     $routes->group('warehouse', static function($routes) {
         $routes->get('/', 'Warehouse\Index::index');
-        $routes->get('transactions', 'Warehouse\InventoryTransactions::index');
-        $routes->post('print-pick-list', 'Warehouse\InventoryTransactions::print');
-        $routes->post('get-transactions', 'Warehouse\InventoryTransactions::get_data');
-        $routes->get('receipts', 'Warehouse\Receiver::index');
-        $routes->get('po/getpo/(:num)', 'Warehouse\Receiver::get_purchase_order/$1');
+
+        $routes->group('transactions', static function($routes){
+            $routes->get('', 'Warehouse\Transactions\Index::index');
+            $routes->post('print-pick-list', 'Warehouse\Transactions\Index::print');
+            $routes->post('get-transactions', 'Warehouse\Transactions\Index::get_data');
+            $routes->get('printed', 'Warehouse\Transactions\Index::get_printed_transactions');
+        });
+        
+        $routes->group('', ['filter' => 'group:beta'], static function($routes){
+            $routes->group('receipts', static function($routes){
+                $routes->get('', 'Warehouse\Receiver\Index::index');
+                $routes->get('po/getpo/(:num)', 'Warehouse\Receiver\Index::get_purchase_order/$1');
+            });
+        });
+
         $routes->group('parts', static function($routes){
             $routes->get('', 'Warehouse\Parts\Index::index'); 
             $routes->get('part-lookup', 'Warehouse\Parts\PartLookup\Index::index'); 
@@ -354,6 +364,11 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->post('part-lookup/data', 'Warehouse\Parts\PartLookup\Index::get_data'); 
             $routes->post('part-lookup/details', 'Warehouse\Parts\PartLookup\Index::get_details'); 
             $routes->get('part-lookup/details/(:any)', 'Warehouse\Parts\PartLookup\Index::get_details/$1'); 
+        });
+
+        $routes->group('cycle-counts', static function($routes){
+            $routes->get('', 'Warehouse\CycleCounts\Index::index');
+            $routes->post('data', 'Warehouse\CycleCounts\Index::get_data');
         });
     });
 
@@ -384,14 +399,6 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     $routes->group('it', static function($routes) {
         $routes->get('/', 'IT\Index::index');
     });
-
-    // Service Tickets Routes
-    // $routes->group('service-tickets', static function($routes) {
-    //     $routes->get('(:segment)', 'ServiceTicket\Index::index/$1');
-    //     $routes->post('(:segment)/save', 'ServiceTicket\Index::save_data');
-    //     $routes->get('data/(:segment)/(:segment)', 'ServiceTicket\Index::get_data/$1/$2');
-    //     $routes->post('(:segment)/delete', 'ServiceTicket\Index::delete');
-    // });
 
     // Engineering Routes
     $routes->group('engineering', static function($routes) {

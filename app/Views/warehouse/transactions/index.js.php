@@ -2,7 +2,7 @@
     $(document).ready(function(){
        var table =  new DataTable('.table', {
             ajax:{
-                url: '<?= base_url('warehouse/get-transactions')?>',
+                url: '<?= base_url('warehouse/transactions/get-transactions')?>',
                 type: 'POST',
                 dataSrc: "" ,
                 data: function(d){
@@ -36,7 +36,7 @@
                     }
                 }
             ],
-            order:[[0, 'desc']],
+            order:[[0, 'asc']],
             select:{
                 style: 'multi'
             },
@@ -97,7 +97,7 @@
 
         const form = $('<form>', {
             method: 'POST',
-            action: 'print-pick-list', 
+            action: '<?= base_url('warehouse/transactions/print-pick-list') ?>', 
             target: 'pdfTab'
         });
 

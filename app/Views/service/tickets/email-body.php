@@ -16,8 +16,8 @@
           <!-- Header -->
           <tr>
             <td style="padding:20px 24px;background: #3b82f6 ;color:#fff;">
-              <h1 style="margin:0;font-size:20px;font-weight:600;">New Ticket: <?= $ticket->title ?? ''  ?></h1>
-              <p style="margin:6px 0 0;font-size:13px;opacity:0.95;">A ticket was submitted — details below.</p>
+              <h1 style="margin:0;font-size:20px;font-weight:600;"><?= $ticket->title ?? ''  ?></h1>
+              <p style="margin:6px 0 0;font-size:13px;opacity:0.95;">For ticket information see details below.</p>
             </td>
           </tr>
 
@@ -29,7 +29,7 @@
                 <tr>
                   <td style="vertical-align:top;padding-right:12px;">
                     <strong style="display:block;font-size:13px;color:#334155;margin-bottom:6px;">Priority</strong>
-                    <div style="display:inline-block;padding:6px 10px;border-radius:6px;background:#f1f5f9;font-size:13px;color:#0f172a;"><?= $ticket->priority ?? '' ?></div>
+                    <div style="display:inline-block;padding:6px 10px;border-radius:6px;background:#f1f5f9;font-size:13px;color:#0f172a;"><?= strtoupper($ticket->priority) ?? '' ?></div>
                   </td>
                   <td style="vertical-align:top;">
                     <strong style="display:block;font-size:13px;color:#334155;margin-bottom:6px;">Submitted by</strong>
@@ -54,6 +54,14 @@
                 <strong style="display:block;font-size:13px;color:#334155;margin-bottom:8px;">Message</strong>
                 <div style="font-size:14px;line-height:1.6;color:#0f172a;padding:12px;border-radius:6px;background:#ffffff;border:1px solid #f1f5f9;"><?= $message ?? '' ?></div>
               </section>
+
+              <?php if($ticket->work_performed) : ?>
+              <!-- Work Performed -->
+              <section style="margin-bottom:18px;">
+                <strong style="display:block;font-size:13px;color:#334155;margin-bottom:8px;">Work Performed</strong>
+                <div style="font-size:14px;line-height:1.6;color:#0f172a;padding:12px;border-radius:6px;background:#ffffff;border:1px solid #f1f5f9;"><?= $ticket->work_performed ?? '' ?></div>
+              </section>
+              <?php endif; ?>
 
               <!-- CTA -->
               <div style="text-align:left;margin-top:6px;">

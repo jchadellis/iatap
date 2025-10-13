@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controllers\Warehouse;
+namespace App\Controllers\Warehouse\Receiver;
 use App\Controllers\BaseController; 
 use App\Models\SqlbaseModel; 
 
-class Receiver extends BaseController
+class Index extends BaseController
 {
     protected $remoteModel;
 
@@ -21,8 +21,8 @@ class Receiver extends BaseController
             ['name' => 'Recieved Receipts', 'is_active' => true, 'url' => '']
         ];
 
-        $this->data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => 'Received Receipts', 'content' => view('warehouse/receipts')];
-        $this->data['js'] = view('warehouse/receipts.js.php'); 
+        $this->data = ['site_name' => 'iATAP', 'breadcrumbs' => $breadcrumbs, 'title' => 'Received Receipts', 'content' => view('warehouse/receiver/index')];
+        $this->data['js'] = view('warehouse/receiver/index.js.php'); 
         return view('template/index', $this->data);
     }
 
@@ -32,6 +32,6 @@ class Receiver extends BaseController
         $url = "http://vatap/mvc/public/api/getpurchaseorder/$po_number";
         $data['data'] = $this->remote_model->getData($url); 
         return print_array($data); 
-        return view('warehouse/purchase_order', $data); 
+        return view('warehouse/receiver/purchase_order', $data); 
     }
 }

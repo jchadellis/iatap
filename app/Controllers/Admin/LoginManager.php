@@ -89,7 +89,9 @@ class LoginManager extends BaseController
         $pwd = $this->model->find($id); 
         return $this->response->setJSON([
             'success' => true, 
-            'data' => $this->model->decryptPassword($pwd->password),
+            'icon' => 'info', 
+            'title' => $pwd->login, 
+            'text' => $this->model->decryptPassword($pwd->password),
         ]);
     }
 

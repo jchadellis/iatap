@@ -7,6 +7,7 @@
         const closeTicketBtn = document.getElementById('close-ticket-btn');
         const updateTicketBtn = document.getElementById('update-ticket-btn'); 
         const newTicketBtn = document.getElementById('new-ticket-btn'); 
+        const openNewTicketBtn = document.getElementById('open-new-ticket-btn'); 
 
         function showAlert(data)
         {
@@ -99,6 +100,7 @@
             form = $('form', '.modal.show'); 
             data = form.serialize(); 
             url = "<?= $urls['new'] ?>"
+            
 
             currentData = table.rows().data().toArray(); 
 
@@ -109,8 +111,18 @@
                     showAlert({title: result.title, message: result.message, icon: result.icon });
                     currentData.splice(0, 0, result.data); 
                     table.clear().rows.add(currentData).draw(); 
-                    newTicketModal.hide();  
+                    if(result.success)
+                    {
+                        form.trigger('reset');
+                        newTicketModal.hide();  
+                    }
+                     
                 })
+        }
+
+        function handleOpenNewTicket()
+        {
+            newTicketModal.show();
         }
 
         function updateTableRow(){
@@ -168,28 +180,47 @@
             handleNewTicket(); 
         })
 
+        if(openNewTicketBtn){
+            openNewTicketBtn.addEventListener('click', ()=>{
+                handleOpenNewTicket();
+            })
+        }
+
+
         const table = new DataTable('#table',{
             ajax: {
                 url: '<?= $urls['all'] ?>', 
                 dataSrc: 'data',
             },
             select: true,
-            order: [0, 'desc'],
+            order: [1, 'desc'],
             columns:[
+                {
+                    data: null, 
+                    render: function(data, type, row)
+                    {
+                        return ''; 
+                    },
+                    createdCell: function(td, cellData, rowData, row, col){
+                        $(td).addClass(rowData.badge_color).addClass(rowData.cell_font_color); 
+                    }
+                },
                 {
                     data: 'need_date', 
                     title: 'Need Date',
                     render: function(data, type, row)
                     {
-                        return  `${data}&nbsp;<span class="badge ${row.badge_color}">${row.priority}</span>`;
-                    }
+                        //return  `${data}&nbsp;<span class="badge ${row.badge_color}">${row.priority}</span>`;
+                        return data; 
+                    },
                 },
                 {
                     data: 'reference_id', 
                     title: 'Request ID', 
                     render: function(data, type, row)
                     {
-                        return data ? data : row.id;
+                        console.log(row);
+                        return data;
                     }
                 },
                 {
@@ -227,10 +258,10 @@
                 }
             ],
             columnDefs:[
-                { targets: [1,2,3], orderable: false, },
-                { targets: [0, 1, 2, 3, 6], className: 'text-center'},
-                { targets: [1,2,3,6], width: '10%'},
-                { targets: [0,4], width: '12%'},
+                { targets: [1,2,3], orderable: false, },                
+                { targets: [0], width: '2%',orderable: false,},
+                { targets: [1,2,3,4,5], width: '10%', className: 'text-center'},
+                { targets: [7], className:'text-center'}
 
                 // { targets: [2], className: 'text-truncate'}
             ],
@@ -259,9 +290,9 @@
                             <input class="checkbox" type="checkbox" data-toggle="toggle" data-off="Hide Closed" data-on="Show Closed" checked>&nbsp;
                             Priority Levels : 
                             <span class="badge text-bg-info">&nbsp<span class="fw-bold">None</span></span>&nbsp
-                            <span class="badge text-bg-secondary">&nbsp<span class="fw-bold">Low</span></span>&nbsp
-                            <span class="badge text-bg-primary">&nbsp<span class="fw-bold">Medium</span></span>&nbsp
-                            <span class="badge text-bg-warning">&nbsp<span class="fw-bold">High</span></span>&nbsp 
+                            <span class="badge text-bg-success">&nbsp<span class="fw-bold">Low</span></span>&nbsp
+                            <span class="badge text-bg-warning">&nbsp<span class="fw-bold">Medium</span></span>&nbsp
+                            <span class="badge text-bg-danger">&nbsp<span class="fw-bold">High</span></span>&nbsp 
                             
                             `,
 
@@ -283,16 +314,16 @@
         $('.checkbox').on('change', function(){
             if($(this).is(':checked')) {
                 // hide closed tickets
-                table.column(6).search('^(?!Closed$).*$', true, false).draw();
+                table.column(7).search('^(?!Closed$).*$', true, false).draw();
                 
             } else {
                 // Show closed tickets
-                table.column(6).search('').draw();
+                table.column(7).search('').draw();
             }
         });
 
         table.on('init', function(){
-            table.column(6).search('^(?!Closed$).*$', true, false).draw();
+            table.column(7).search('^(?!Closed$).*$', true, false).draw();
         })
 
         var vatap = '<?= $urls['previous'] ?? '' ?>'

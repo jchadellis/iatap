@@ -17,6 +17,10 @@ class Index extends BaseController
             'name' => "PO Confirmations", 
             'url' => 'http://vatap/purchasing/po-confirmation.php', 
         ],
+        [
+            'name' => 'Vendor Performance Summary', 
+            'url' =>  "http://vatap/as9100/vendor-perf-summary.php", 
+        ]
     ];
 
     private $maintenance_links = [

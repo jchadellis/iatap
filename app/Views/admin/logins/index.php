@@ -3,10 +3,9 @@
         <tr>
             <th class="text-center">Login name</th>
             <th class="text-center">Type</th>
-            <th class="text-center">Password</th>
+            <!-- <th class="text-center">Password</th> -->
             <th class="text-center"></th>
             <th class="text-center"></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -14,9 +13,9 @@
         <tr class="align-middle  text-center" data-id="<?= $row->id ?>">
             <td><?= $row->login ?? '' ?></td>
             <td><?= $row->type ?></td>
-            <td class="pwd-field" sytle="font-family: monospace; letter-spacing:2px">*********</td>
+            <!-- <td class="pwd-field" sytle="font-family: monospace; letter-spacing:2px">*********</td> -->
             <td><div class="d-grid"><button type="button" class="btn btn-warning show-pwd"><i class="bi bi-eye"></i> Show</button></div></td>
-            <td><div class="d-grid"><button type="button" class="btn btn-secondary copy-pwd" disabled><i class="bi bi-copy"></i> Copy</button></div></td>
+            <!-- <td><div class="d-grid"><button type="button" class="btn btn-secondary copy-pwd" disabled><i class="bi bi-copy"></i> Copy</button></div></td> -->
             <td><div class="d-grid"><button type="button" class="btn btn-primary edit-pwd" data-id="<?= $row->id ?>" data-bs-target="#edit_modal" data-bs-toggle="modal"><i class="bi bi-pencil-fill"></i> Edit</button></div></td>
         </tr>
         <?php endforeach; ?>

@@ -30,27 +30,27 @@
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
   --bs-light: #f8f7f7;
-  --bs-dark: #2e4866;
+  --bs-dark: #343a40;
   --bs-primary: #42699b;
-  --bs-secondary: #5688ae;
-  --bs-info: #9ba0a3;
+  --bs-secondary: #247ab9;
+  --bs-info: #87e1f7;
   --bs-accent1: #daafae;
   --bs-accent2: #c77b65;
   --bs-accent3: #e6dbd3;
-  --bs-success: #3dbf76;
+  --bs-success: #abce5b;
   --bs-warning: #ebd236;
-  --bs-danger: #fa2926;
+  --bs-danger: #fd7e14;
   --bs-light-rgb: 248, 247, 247;
   --bs-dark-rgb: 46, 72, 102;
   --bs-primary-rgb: 66, 105, 155;
-  --bs-secondary-rgb: 86, 136, 174;
-  --bs-info-rgb: 155, 160, 163;
+  --bs-secondary-rgb: 36,122,185;
+  --bs-info-rgb: 135, 225, 247;
   --bs-accent1-rgb: 218, 175, 174;
   --bs-accent2-rgb: 199, 123, 101;
   --bs-accent3-rgb: 230, 219, 211;
-  --bs-success-rgb: 61, 191, 118;
-  --bs-warning-rgb: 235, 210, 54;
-  --bs-danger-rgb: 250, 41, 38;
+  --bs-success-rgb: 171,206,91;
+  --bs-warning-rgb: 255,193,7;
+  --bs-danger-rgb: 253,126,20;
   --bs-primary-text-emphasis: rgb(5.2, 44, 101.2);
   --bs-secondary-text-emphasis: rgb(43.2, 46.8, 50);
   --bs-success-text-emphasis: rgb(10, 54, 33.6);
@@ -525,6 +525,7 @@ button,
 [type="reset"],
 [type="submit"] {
   -webkit-appearance: button;
+  appearance:button;
 }
 button:not(:disabled),
 [type="button"]:not(:disabled),
@@ -582,6 +583,7 @@ legend + * {
 
 [type="search"] {
   -webkit-appearance: textfield;
+  appearance: textfield;
   outline-offset: -2px;
 }
 
@@ -604,6 +606,7 @@ legend + * {
 ::file-selector-button {
   font: inherit;
   -webkit-appearance: button;
+  appearance:button; 
 }
 
 output {

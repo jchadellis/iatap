@@ -1,5 +1,5 @@
 <a href="/" class="d-flex align-items-center mb-1 mx-auto text-white text-decoration-none text-middle">
-  <img src="<?= base_url(ASSETSPATH.'/img/iatap_logo.svg')?>" alt="" style="height: 75px;" >
+  <img src="<?= base_url(ASSETSPATH.'/img/iatap_V2-dark.svg')?>" alt="" style="height: 75px;" >
 </a>
 <hr>
 
