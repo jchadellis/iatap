@@ -49,7 +49,17 @@ class Index extends BaseController
         $db = db_connect('visual_cache'); 
         $builder = $db->table('vendor_cache'); 
 
-        $vendor = $builder->where("id", $data['id'] )->get()->getResult();
+        if( !isset($data['id']))
+        {
+            return $this->response->setJSON([
+                'success' => false, 
+                'title' => 'Error', 
+                'message' => 'Vendor ID missing', 
+                'icon' => 'warning',
+            ]);
+        }
+
+        $vendor = $builder->where("vendor_id", $data['id'] )->get()->getResult();
 
         $vendor = $vendor[0]; 
 
@@ -190,5 +200,33 @@ class Index extends BaseController
             'message' => 'There was an error sending the email!', 
         ]);
         
+    }
+
+    public function get_new_data()
+    {
+
+        $post = $this->request->getPost(); 
+
+        $remote = new SqlbaseModel(); 
+        $url = "http://vatap/mvc/public/api/getvendors/{$post['start_date']}/{$post['end_date']}";
+        $data = $remote->getData($url); 
+
+
+        if($data)
+        {
+            return $this->response->setJSON([
+                'success' => true, 
+                'data' => $data, 
+                'icon' => 'success', 
+                'title' => 'Updated', 
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'success' => false, 
+            'icon' => 'warning', 
+            'title' => 'Error', 
+            'text' => 'There was a problem getting the vendor list', 
+        ]);
     }
 }

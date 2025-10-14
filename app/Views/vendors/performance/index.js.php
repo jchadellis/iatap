@@ -5,7 +5,6 @@
         const vendorModalUrl = "<?= base_url('vendors/performance/vendor') ?>"; 
         const vendorEmailBtn = document.getElementById('vendor-email-btn');
         const vendorEmailForm = document.getElementById('vendor-email-form'); 
-
         
         $.extend(true, $.fn.dataTable.Buttons.defaults, {
             dom: {
@@ -28,7 +27,7 @@
                     }
                 })
             },
-            order: [16, 'desc'],
+            order: [0, 'asc'],
             processing: false, 
             pageLength: 100,
             columns:[
@@ -46,6 +45,22 @@
                             </div>`;
                     }
                 },
+                {
+                    data: 'late_percentage', 
+                    title : 'On Late %',
+                    render: function(data, type, row){
+                        return `
+                            <div class="progress w-100" role="progressbar" aria-label="Basic example" aria-valuenow="${data}" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar ${row.bg_color}" role="progressbar" style="width: ${data}%;">
+                                  ${data}%  
+                                </div>
+                            </div>`;
+                    }
+                },
+                {data: "total_lines", title: "Lines"},
+                {data: "total_on_time", title: "On Time"},
+                {data: "total_late", title: "Late"},
+
                 {data: 'street_1', title: 'Street 1'},
                 {data: "street_2", title: "Street 2", render:function(data, type, row){ return data ? data : '&nbsp;'}},
                 {data: "city", title: "City"},
@@ -53,9 +68,7 @@
                 {data: "zip", title: "Zip"},
                 {data: "phone", title: "Phone", render:function(data, type, row){ return data ? data : '&nbsp;'}},
                 {data: "email", title: "Email", render:function(data, type, row){ return data ? data : '&nbsp;'}},
-                {data: "total_lines", title: "Total Lines"},
-                {data: "total_on_time", title: "Total On Time"},
-                {data: "total_late", title: "Total Late"},
+
                 {data: "ncp", title: "NCP"},
                 {data: "start_date", title: "Start Date"},
                 {data: "end_date", title: "End Date"},
@@ -142,18 +155,72 @@
                                     }
 
                             ]                 
-                        }
-                    ]
+                        },
+                    ],
+                    div: {
+                        html:`
+                            <form id="date-range-form">
+                                <div class="row">
+                                    <div class="col-10"> 
+                                        <div class="input-group"> 
+                                            <span class="input-group-text" >Start Date</span>
+                                            <input type="text" name="start_date" class="form-control form-control-sm  datepicker">
+                                            <span class="input-group-text">-</span>
+                                            <span class="input-group-text">End Date</span>
+                                            <input type="text" name="end_date" class="form-control form-control-sm  datepicker">
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </div>
+                                    </div>
+                                </div>`,
+                    }
                 },
             },
             columnDefs:[
                 {targets:[0,16], width: '10%'},
-                {targets:[0,1], orderable: false},
-                {targets:[0,1,2,16], className : 'text-center'},
-                {targets:[3,4,5,6,7,8,9,10,11,12,13,14,15],  visible: false }
+                {targets:[0,2,3,4,5], orderable: false},
+                {targets:[0,1,16], className : 'text-center'},
+                {targets:[2,3,4,5,6], className: 'text-end'},
+                {targets:[7,8,9,10,11,12,13,14,15,16,17],  visible: false }
             ],
             createdRow: function( row, data, dataIndex ){
                 $(row).attr('data-target', data.id );
+                $(row).attr('data-vendor_id', data.vendor_id); 
+            },
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api();
+
+
+
+                var totalLines = api
+                    .column(4, { page: 'all' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return Number(a) + Number(b);
+                    }, 0);
+
+                var totalOnTime = api
+                    .column(5, { page: 'all' })
+                    .data()
+                    .reduce(function (a, b){
+                        return Number(a) + Number(b); 
+                    }, 0);
+
+                var totalLate = api
+                    .column(6, {page :'all'})
+                    .data()
+                    .reduce(function (a, b){
+                        return Number(a) + Number(b);
+                    },0);
+
+
+                var onTimePercent = (totalOnTime / totalLines) * 100; 
+                var latePercent = (totalLate / totalLines) * 100; 
+                
+                $(api.column(2).footer()).html(`${onTimePercent.toFixed(2)}%`); 
+                $(api.column(3).footer()).html(`${latePercent.toFixed(2)}%`)
+                $(api.column(4).footer()).html(totalLines);
+                $(api.column(5).footer()).html(totalOnTime);
+                $(api.column(6).footer()).html(totalLate);
             }
         });
 
@@ -237,9 +304,55 @@
         });
 
 
+        table.on('init', function(){
+            const dateForm = document.getElementById('date-range-form'); 
+
+            $('.datepicker').flatpickr(); 
+            if( dateForm )
+            {
+                dateForm.addEventListener('submit', function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Plese wait...',
+                        text: 'Fetching new data...', 
+                        icon: 'info', 
+                        showConfirmButton: false, 
+                        allowOutsideClick: true,
+                        willOpen: () =>{
+                            Swal.showLoading(); 
+                        } 
+                    })
+
+                    formData = new FormData(dateForm);
+                    url = '<?= base_url('vendors/performance/new-data') ?>'; 
+
+                    fetch(url, {
+                        method : 'POST', 
+                        body : formData,
+                    }).then(response => response.json())
+                        .then(data => {
+                            if(data.success)
+                            {
+                                table.clear(); 
+                                table.rows.add(data.data).draw(); 
+                                Swal.close();
+                                showAlert(data)
+
+                                setTimeout(() => {
+                                    Swal.close();
+                                }, 1000);
+
+                            }
+                        });
+
+                });
+            }
+
+        })
+
         table.off('select').on('select', function (e, dt, type, indexes) {
             row = dt.row('.selected').node(); 
-            id = row.dataset.target;  
+            id = row.dataset.vendor_id;  
             handlePost(vendorModalUrl, {id: id})
                 .then(content => {
                     handleShowModal(mainModalEl, mainModal, content); 
@@ -248,21 +361,6 @@
                     showAlert( error );
                 });
         });
-
-        if(vatap == 'http://vatap/')
-        {
-            Swal.fire({
-                icon: 'info',
-                title: 'Welcome',
-                html: `
-                    <p>It looks like you came from <b>vatap</b>.</p>
-                    <p>This is our new service and request ticket entry system. Everything has been moved here for a smoother experience.</p>
-                `,
-                confirmButtonText: 'Continue',
-                confirmButtonColor: '#3085d6'
-            });
-        }
-
 
     })
 </script>

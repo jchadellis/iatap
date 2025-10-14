@@ -330,13 +330,19 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('data', 'Vendors\Performance\Index::get_data'); 
             $routes->post('vendor', 'Vendors\Performance\Index::get_vendor'); 
             $routes->post('email-vendor', 'Vendors\Performance\Index::send_email');
+            $routes->post('new-data', 'Vendors\Performance\Index::get_new_data');
         }); 
-        
         
         $routes->get('jcp-report', 'Vendors\JCPReport\Index::index');
         $routes->get('jcp-report/data', 'Vendors\JCPReport\Index::get_data'); 
         $routes->get('list', 'Vendors\List\Index::index'); 
         $routes->get('list/data', 'Vendors\List\Index::get_data'); 
+    });
+
+    $routes->group('as9100', static function($routes){
+        $routes->get('', 'AS9100\Index::index'); 
+        $routes->get('engineering-performance', 'AS9100\Departments\Performance\Index::index'); 
+        $routes->post('engineering-performance', 'AS9100\Departments\Performance\Index::index'); 
     });
 
     // Warehouse Routes
@@ -423,7 +429,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
 $routes->group('service', static function($routes) {
     $routes->get('', 'ServiceTicket\Index::index');
     $routes->group('tickets', static function($routes){
-
+        $routes->get('performance', 'ServiceTicket\Tickets\Index::get_performance'); 
         $routes->get('data/(:segment)', 'ServiceTicket\Tickets\Index::get_data/$1');
         $routes->get('process', 'ServiceTicket\Tickets\Index::get_old'); 
         $routes->get('process/(:segment)', 'ServiceTicket\Tickets\Index::get_old/$1'); 
@@ -433,6 +439,8 @@ $routes->group('service', static function($routes) {
         $routes->post('save', 'ServiceTicket\Tickets\Index::save_ticket'); 
         $routes->post('close', 'ServiceTicket\Tickets\Index::delete');
         $routes->post('get', 'ServiceTicket\Tickets\Index::get_ticket'); 
+
+        
         
     });
 });

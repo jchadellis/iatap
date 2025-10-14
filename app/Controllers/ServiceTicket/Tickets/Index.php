@@ -690,6 +690,15 @@ class Index extends BaseController
         print_array($tickets); 
     }
 
+    public function get_performance($type = 'engineering')
+    {
+        $model = new ServiceTicketModel();
+
+        $performance = $model->getPerformance($type);
+
+        print_array($performance);
+    }
+
     
 
 }

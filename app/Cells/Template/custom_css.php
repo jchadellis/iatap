@@ -24,7 +24,7 @@
             justify-content: space-between;
         }
         .sidebar a {
-            color: white;
+            color: #feffe9ff;
             text-decoration: none;
             display: block;
             padding: 0.5rem 0;

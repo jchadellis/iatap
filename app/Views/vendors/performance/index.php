@@ -1,5 +1,28 @@
 <table class="table table-bordered table-striped" id="vendorTable">
-
+    <thead></thead>
+    <tbody></tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th class="text-end"></th>
+            <th class="text-end"></th>
+            <th class="text-end"></th>
+            <th class="text-end"></th>
+            <th class="text-end"></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tfoot>
 </table>
 
 
