@@ -331,6 +331,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->post('vendor', 'Vendors\Performance\Index::get_vendor'); 
             $routes->post('email-vendor', 'Vendors\Performance\Index::send_email');
             $routes->post('new-data', 'Vendors\Performance\Index::get_new_data');
+            $routes->get('open-lines/(:segment)', 'Vendors\Performance\Index::get_open_lines/$1'); 
         }); 
         
         $routes->get('jcp-report', 'Vendors\JCPReport\Index::index');

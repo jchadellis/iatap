@@ -105,6 +105,11 @@
                         <label for="purchase_order">Purchase Order</label>
                     </div>
                 </div>
+                <div class="col-4">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <button class="btn btn-info" id="purchase-order-modal-btn" data-id="<?= $data->vendor_id ?>"><i class="bi bi-binoculars" ></i>&nbsp;Vendor POs</button>
+                    </div>
+                </div>
             </div>
             <div class="row mb-2">
                 <div class="col-12">
@@ -146,9 +151,3 @@
     <?php endif; ?>
 </div>
 </form>
-
-<script>
-    $(document).ready(function(){
-
-    })
-</script>

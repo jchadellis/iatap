@@ -28,7 +28,7 @@ class Index extends BaseController
             ],
             'title' => 'Department Performance', 
             'content' => view('as9100/departments/performance/index',[
-                'engineering_data' => $model->getPerformance('engineering', $start, $end),
+                'engineering_data' => $model->getPerformance('engineering', $start, $end, true),
             ]),
             'js' => view('as9100/departments/performance//index.js.php'), 
         ];

@@ -2,6 +2,8 @@
     document.addEventListener('DOMContentLoaded', ()=>{
         const mainModalEl = document.getElementById('main-modal');
         const mainModal = new bootstrap.Modal(mainModalEl); 
+        const secondaryModalEl = document.getElementById('secondary-modal');
+        const secondaryModal = new bootstrap.Modal(secondaryModalEl);
         const vendorModalUrl = "<?= base_url('vendors/performance/vendor') ?>"; 
         const vendorEmailBtn = document.getElementById('vendor-email-btn');
         const vendorEmailForm = document.getElementById('vendor-email-form'); 
@@ -60,7 +62,14 @@
                 {data: "total_lines", title: "Lines"},
                 {data: "total_on_time", title: "On Time"},
                 {data: "total_late", title: "Late"},
-
+                {
+                    data: 'open_purchase_orders', 
+                    title: 'Open',
+                    // render: function(data, type, row)
+                    // {
+                    //     return `<button type="button" class="btn btn-link open-pos-btn text-decoration-none">${data}</button>`;
+                    // }
+                },
                 {data: 'street_1', title: 'Street 1'},
                 {data: "street_2", title: "Street 2", render:function(data, type, row){ return data ? data : '&nbsp;'}},
                 {data: "city", title: "City"},
@@ -72,7 +81,6 @@
                 {data: "ncp", title: "NCP"},
                 {data: "start_date", title: "Start Date"},
                 {data: "end_date", title: "End Date"},
-                {data: 'open_purchase_orders', title: 'Open'},
                
             ],
             select: true, 
@@ -177,10 +185,10 @@
             },
             columnDefs:[
                 {targets:[0,16], width: '10%'},
-                {targets:[0,2,3,4,5], orderable: false},
+                {targets:[0,2,3,4,5,7], orderable: false},
                 {targets:[0,1,16], className : 'text-center'},
                 {targets:[2,3,4,5,6], className: 'text-end'},
-                {targets:[7,8,9,10,11,12,13,14,15,16,17],  visible: false }
+                {targets:[8,9,10,11,12,13,14,15,16,17],  visible: false }
             ],
             createdRow: function( row, data, dataIndex ){
                 $(row).attr('data-target', data.id );
@@ -257,9 +265,26 @@
                 height: 50,
                 autogrow: true,
             });
-
-
             modal.show(); 
+            const modalBtn = modalBody.querySelector('#purchase-order-modal-btn');
+            modalBtn.addEventListener('click', function(e){
+                e.preventDefault();
+                url = `<?= base_url('vendors/performance/open-lines/') ?>${this.dataset.id}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data =>{
+                        if(data.success)
+                        {
+                            secondaryModalContent = secondaryModalEl.querySelector(".modal-content"); 
+                            secondaryModalBody = secondaryModalContent.querySelector('.modal-body'); 
+                            secondaryModalBody.innerHTML = data.data; 
+                        }else{
+                            showAlert(data);
+                        }
+                    });
+                secondaryModal.show(); 
+            })
         }
 
         function showAlert(data)
@@ -306,6 +331,7 @@
 
         table.on('init', function(){
             const dateForm = document.getElementById('date-range-form'); 
+            const getPoBtns = document.querySelector('.open-pos-btn'); 
 
             $('.datepicker').flatpickr(); 
             if( dateForm )

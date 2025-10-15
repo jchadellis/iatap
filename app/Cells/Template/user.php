@@ -22,7 +22,7 @@
                 <li><a class="dropdown-item" href="<?= base_url('logout') ?>">Logout</a></li>
                 <?php if($user->inGroup('it')) : ?>
                     <li>
-                        <a href="<?= base_url('it') ?>" class="dropdown-item">
+                        <a href="<?= base_url('service/tickets/it') ?>" class="dropdown-item">
                             IT Service Tickets 
                             <span class="badge text-bg-primary">
                             <?= ($count) ?? '' ?>

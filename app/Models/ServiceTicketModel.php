@@ -64,7 +64,7 @@ class ServiceTicketModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getPerformance($type, $start_date, $end_date)
+    public function getPerformance($type, $start_date = null, $end_date = null, $by_need_date = false)
     {
                
         $today = (new \DateTime())->format('Y-m-d'); 
@@ -74,9 +74,16 @@ class ServiceTicketModel extends Model
         $start_date = (!isset($start_date) ) ? (new \DateTime())->modify('-90 days') : new \DateTime($start_date) ; 
         $start_date = $start_date->format('Y-m-d'); 
 
+        if( !$by_need_date )
+        {
+           $where = "created_at BETWEEN '{$start_date}' AND '{$end_date}'";
+        }else{
+            $where = "need_date BETWEEN '{$start_date}' AND '{$end_date}'";
+        }
+
         $tickets = $this
             ->where('type', $type)
-            ->where("created_at BETWEEN '{$start_date}' AND '{$end_date}'")
+            ->where($where)
             ->withDeleted()
             ->findAll(); 
 
@@ -114,10 +121,10 @@ class ServiceTicketModel extends Model
             'start_date' => $start_date,
             //'tickets' => $tickets,
             'message'   => $hasData ? '' : 'No data available', 
-            'labels' => ['On Time', 'Late', 'Not Due'],
+            'labels' => ['On Time', 'Late'],
             'datasetLabel' => "Performace {$start_date} - {$end_date}",
-            'data' => [$total_on_time, $total_late, $total_not_due],
-            'backgroundColor'  => ['#3396D3','#EBCB90', '#9ECAD6'],
+            'data' => [$total_on_time, $total_late],
+            'backgroundColor'  => ['#3396D3','#EBCB90'],
             'total' => $total,
             'percentage_on_time' => $total != 0 ? ($total_on_time / $total ) * 100 : 0,
         ];

@@ -83,6 +83,33 @@ class Index extends BaseController
         ]);
     }
 
+    public function get_open_lines($vendor)
+    {
+        $model = new SqlbaseModel(); 
+        $url = "http://vatap/mvc/public/api/getallvendorpolines/{$vendor}";
+        $result = $model->getData($url); 
+
+
+        //return view('vendors/performance/lines-table', ['lines' => $result] );
+
+        if($result){
+            return $this->response->setJSON([
+                'success' => true, 
+                'data' => view('vendors/performance/lines-table', ['lines' => $result] ), 
+                'icon' => 'success', 
+                'title' => 'Success!', 
+                'html' => "<p>Successfully retreived open lines for {$vendor}</p>",
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'success' => false,
+            'title' => 'Error', 
+            'icon' => 'warning', 
+            'html' => '<p>There was an error processing your request</p>',
+        ]);
+    }
+
     public function send_email()
     {
         $file = $this->request->getFile('file'); 
