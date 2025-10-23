@@ -258,7 +258,7 @@
                 }
             ],
             columnDefs:[
-                { targets: [1,2,3], orderable: false, },                
+                //{ targets: [], orderable: false, },                
                 { targets: [0], width: '2%',orderable: false,},
                 { targets: [1,2,3,4,5], width: '10%', className: 'text-center'},
                 { targets: [7], className:'text-center'}

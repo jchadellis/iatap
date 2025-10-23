@@ -1,3 +1,7 @@
+<style>
+    .table.dataTable td, .table.dataTable th { font-size: .88em; }
+</style>
+<script src="<?= base_url(MANAGEDASSETS.'datatables.net-plugins/dataRender/ellipsis.min.js')?>"></script>
 <script>
     $(document).ready(function(){
         $.extend(true, $.fn.dataTable.Buttons.defaults, {
@@ -27,7 +31,7 @@
             ajax:{
                 url: '<?= base_url('purchasing/orders/data') ?>', 
                 dataSrc: 'data',
-            },        
+            },
             pageLength: 200,    
             responsive: true,
             order:[[3, 'desc']],
@@ -41,54 +45,111 @@
             },
             columns:[
                 {
-                    data: 'vendor_id', //0 5%
+                    data: 'vendor_id',
                     title: 'Vendor',  
-                },
+                    width: '5%',
+                    className: 'text-center',
+                }, //0
                 {
-                    data: 'base_id', //1 10%
-                    title: 'WO ID',
-                },
+                    data: 'base_id',
+                    title: 'ID',
+                    width: "5%",
+                    className: 'text-center',
+                }, //1
                 {
-                    data: 'desired_want_date', //2 
+                    data: 'desired_want_date',
                     title: 'Want Date', 
                     visible: false,
-                },
+                    
+                },//2
                 {
-                    data: 'order_date', //3 10%
-                    title: 'Order'
-                },
+                    data: 'part_id',
+                    title: 'Part ID', 
+                    width: '10%',
+                    className: 'text-center',
+                },//3
                 {
-                    data: 'qty_to_order', //4 5%
-                    title: 'Qty', 
+                    data: 'description', 
+                    title: 'Description',
+                    orderable:false,
+                    width: '20%',
+                    className: 'text-truncate',
+                },//4
+                {
+                    data: 'order_date',
+                    title: 'Order By',
+                    width: '8%',
+                    className: 'text-center',
+                },//5
+                {
+                    data: 'qty_to_order',
+                    title: 'QTO', 
                     render: function(data, type, row)
                     {
                         return  row.qty_to_order + ' ' + row.stock_um; 
-                    }
-                },
+                    },
+                     width: "10%",
+                     orderable:false,
+                     className: 'text-center',
+                },//6
                 {
-                    data: 'part_id',   //5 20%
-                    title: 'Part ID', 
-                },
+                    data: 'qty_on_hand', 
+                    title: 'QOH', 
+                    width: "5%",
+                    orderable:false,
+                    className: 'text-center',
+                },//7
                 {
-                    data: 'description',   //6  20%
-                    title: 'Description',
-                },
+                    data: 'qty_on_order',
+                    title: 'QOO',
+                    width: "5%",
+                    orderable:false,
+                    className: 'text-center',
+                },//8
                 {
-                    data: 'certificates',  //7 5%
+                    data: 'qty_remaining',
+                    title: 'RQ',
+                    width: "5%",
+                    orderable:false,
+                    className: 'text-center',
+                },//9
+                {
+                    data: 'qty_in_demand',
+                    title: 'QOD',
+                    width: "5%",
+                    orderable:false,
+                    className: 'text-center',
+                },//10
+                {
+                    data: 'certificates',
                     title: 'Certs', 
-                },
+                    width: "7%",
+                    orderable:false,
+                    className: 'text-center',
+                },//11
                 {
-                    data : 'dpas_rating',  //8 5%
+                    data : 'dpas_rating',
                     title: 'DPAS', 
+                    width: "5%",
+                    orderable:false,
+                    className: 'text-center',
                 },
                 {
-                    data: 'contract_no', //9 5%
+                    data: 'safety_stock',
+                    title: 'SS',
+                    visible: false,
+                },
+                {
+                    data: 'contract_no', 
                     title: 'Contract', 
+                    width: '15%',
+                    className: 'text-center',
                 },
                 {
                     data: 'planner_id', 
                     title: 'Type', 
                     visible: false,
+                    
                 },
                 {
                     data: 'truck',
@@ -103,25 +164,29 @@
                     className: 'dt-center', 
                 },
                 {
-                    orderable: false,
-                    targets:[4,7,8,9]
-                },
-                {
-                    targets:[0,4],
-                    width: '5%'
-                },
-                {
-                    targets:[3],
-                    width: '8%'
-                },
-                {
-                    targets:[7,8,9],
-                    width: '10%'
-                },
-                {
-                    targets:[5,6],
-                    width: '20%'
+                    targets:[11,12],
+                    render: DataTable.render.ellipsis(10,true),
                 }
+                // {
+                //     orderable: false,
+                //     targets:[4,7,8,9]
+                // },
+                // {
+                //     targets:[0,4],
+                //     width: '5%'
+                // },
+                // {
+                //     targets:[3],
+                //     width: '8%'
+                // },
+                // {
+                //     targets:[7,8,9],
+                //     width: '10%'
+                // },
+                // {
+                //     targets:[5,6],
+                //     width: '20%'
+                // }
             ],
             layout:{
                 topStart:{
@@ -152,7 +217,7 @@
                                     text: 'Hardware',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(10).search('^$', true, false).draw(); 
+                                        dt.column(15).search('(^$|null)', true, false).column(16).search('0',true, false).draw(); 
                                         $('#label').html('Showing Hardware Work Orders')
                                     }
                                 },
@@ -160,7 +225,7 @@
                                     text: 'Wire',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(10).search('W', true, false).draw(); 
+                                        dt.column(15).search('W', true, false).draw(); 
                                        $('#label').html('Showing Wire Work Orders')
                                     }
                                 },
@@ -168,7 +233,7 @@
                                     text: 'Chemical',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(10).search('C', true, false).draw(); 
+                                        dt.column(15).search('C', true, false).draw(); 
                                         $('#label').html('Showing Chemical Work Orders')
                                     }
                                 },
@@ -176,7 +241,7 @@
                                     text: 'Paint',
                                     action: function(e, dt, node, config)
                                     {                                        
-                                        dt.column(10).search('P', true, false).draw(); 
+                                        dt.column(15).search('P', true, false).draw(); 
                                         $('#label').html('Showing Paint Work Orders')
                                     }
                                 },
@@ -184,7 +249,7 @@
                                     text: 'Material',
                                     action: function(e, dt, node, config)
                                     {
-                                         dt.column(10).search('M', true, false).draw(); 
+                                         dt.column(15).search('M', true, false).draw(); 
                                          $('#label').html('Showing Material Work Orders')
                                     }
                                 },
@@ -192,7 +257,7 @@
                                     text: 'Fabricated',
                                     action: function(e, dt, node, config)
                                     {
-                                         dt.column(10).search('D', true, false).draw(); 
+                                         dt.column(15).search('D', true, false).draw(); 
                                          $('#label').html('Showing Fabricated Work Orders')
                                     }
                                 },
@@ -200,7 +265,7 @@
                                     text: 'Trucks', 
                                     action: function(e, dt, node, config)
                                     {
-                                        dt.column(11).search('1', true, false).draw(); 
+                                        dt.column(16).search('1', true, false).draw(); 
                                         $('#label').html('Showing 5K, 7K, DHC Trucks');
                                     }
                                 },
@@ -208,7 +273,7 @@
                                     text: 'All',
                                     action: function(e, dt, node, config)
                                     {
-                                        dt.column(10).search('', true, false).draw();
+                                        dt.column(15).search('', true, false).draw();
                                         $('#label').html('Showing All Work Orders')
                                     }
                                 }
@@ -236,8 +301,8 @@
         });
 
         table.on('init', function(){
-            table.column(10).search('(^$|null)', true, false);
-            table.column(11).search('0',true, false);
+            table.column(15).search('(^$|null)', true, false);
+            table.column(16).search('0',true, false);
             table.draw(); 
         });
 

@@ -20,8 +20,8 @@ class LeaveRequest extends Controller
         $postData = $this->request->getGet(); 
 
         $fields = [
-            'current_date'           => ['text' =>  $postDate['current_date'] ?? date('m-d-Y')],
-            'event_date'             => ['text' =>  $postDate['event_date'] ?? date('m-d-Y')],
+            'current_date'           => ['text' =>  $postData['current_date'] ?? date('m-d-Y')],
+            'event_date'             => ['text' =>  $postData['event_date'] ?? date('m-d-Y')],
             'employee_name'          => ['text' =>  $postData['employee_name'] ?? '' ],
             'badge_number'           => ['text' =>  $postData['badge_number'] ?? '' ],
             'department'             => ['text' =>  $postData['department'] ?? 'N/A'],

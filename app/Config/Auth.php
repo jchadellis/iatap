@@ -51,7 +51,7 @@ class Auth extends ShieldAuth
         //'login'                       => '\CodeIgniter\Shield\Views\login',
         'login'                       => '\App\Views\Shield\login.php',
         'register'                    => '\App\Views\Shield\register.php',
-        'layout'                      => '\CodeIgniter\Shield\Views\layout',
+        'layout'                      => '\App\Views\Shield\layout.php',
         'action_email_2fa'            => '\CodeIgniter\Shield\Views\email_2fa_show',
         'action_email_2fa_verify'     => '\CodeIgniter\Shield\Views\email_2fa_verify',
         'action_email_2fa_email'      => '\CodeIgniter\Shield\Views\Email\email_2fa_email',

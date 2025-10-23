@@ -14,7 +14,7 @@
                     <div style="width: 55px">
                         <?= view($card['icon']) ?>
                     </div>
-                    <div class="d-flex justify-content-center w-100">
+                    <div class="d-flex ms-3 w-100">
                         <h6 class="h6 pb-0 m-0 text-center"><?= $card['name'] ?></h6>
                     </div>
                     

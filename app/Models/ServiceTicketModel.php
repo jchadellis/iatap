@@ -112,21 +112,20 @@ class ServiceTicketModel extends Model
                 $total_late++;
             }
         }
+        $title = ucwords($type);
 
-        $hasData = ($total_on_time + $total_late + $total_not_due ) > 0; 
+        $on_time_percentage = round( $total != 0 ? ($total_on_time / $total ) * 100 : 0 , 2);
+        $late_percentage =  round( $total != 0 ? ($total_late / $total ) * 100 : 0, 2);
         return [
-            'hasData' => $hasData, 
-
-            'end_date' => $end_date,
-            'start_date' => $start_date,
-            //'tickets' => $tickets,
-            'message'   => $hasData ? '' : 'No data available', 
-            'labels' => ['On Time', 'Late'],
-            'datasetLabel' => "Performace {$start_date} - {$end_date}",
             'data' => [$total_on_time, $total_late],
-            'backgroundColor'  => ['#3396D3','#EBCB90'],
-            'total' => $total,
-            'percentage_on_time' => $total != 0 ? ($total_on_time / $total ) * 100 : 0,
+            'labels' => ["{$total_on_time} On Time {$on_time_percentage}%", "{$total_late} Late {$late_percentage}%"],
+            'datasetLabel' => "{$title} Performace",
+            'total_lines' => $total,
+            'total_on_time' => $total_on_time,
+            'total_late' => $total_late,
+            'on_time_percentage' => $on_time_percentage,
+            'late_percentage' => $late_percentage,
+            'chart' => "{$type}Chart",
         ];
     }
 

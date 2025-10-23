@@ -16,6 +16,15 @@
             }
         });
 
+        Swal.fire({
+            title: 'Loading',
+            text: 'Please wait while the vendor list is loading...', 
+            icon: 'info', 
+            didOpen: ()=>{
+                Swal.showLoading(); 
+            }
+        })
+
         const table = new DataTable('#vendorTable', {
             ajax: function(data, callback, settings){ 
                 $.ajax({
@@ -24,6 +33,11 @@
                     dataType: 'json', 
                     success: function(response){
                         callback(response); 
+                        Swal.fire({
+                            title: response.title, 
+                            html: response.html, 
+                            icon: response.icon,
+                        })
                     },
                     error: function(xhr, status, error){
                     }
@@ -172,10 +186,10 @@
                                     <div class="col-10"> 
                                         <div class="input-group"> 
                                             <span class="input-group-text" >Start Date</span>
-                                            <input type="text" name="start_date" class="form-control form-control-sm  datepicker">
+                                            <input type="text" name="start_date" class="form-control form-control-sm  datepicker text-center">
                                             <span class="input-group-text">-</span>
                                             <span class="input-group-text">End Date</span>
-                                            <input type="text" name="end_date" class="form-control form-control-sm  datepicker">
+                                            <input type="text" name="end_date" class="form-control form-control-sm  datepicker text-center">
                                             <button type="submit" class="btn btn-primary">Update</button>
                                         </div>
                                     </div>
@@ -292,7 +306,7 @@
 
             Swal.fire({
                 title: data.title, 
-                html: data.message, 
+                html: data.html, 
                 icon: data.icon,
                 sanitize: false,
             })
@@ -328,8 +342,8 @@
             }
         });
 
-
         table.on('init', function(){
+            Swal.close(); 
             const dateForm = document.getElementById('date-range-form'); 
             const getPoBtns = document.querySelector('.open-pos-btn'); 
 
@@ -350,7 +364,7 @@
                     })
 
                     formData = new FormData(dateForm);
-                    url = '<?= base_url('vendors/performance/new-data') ?>'; 
+                    url = '<?= base_url('vendors/performance/data') ?>'; 
 
                     fetch(url, {
                         method : 'POST', 
@@ -366,7 +380,7 @@
 
                                 setTimeout(() => {
                                     Swal.close();
-                                }, 1000);
+                                }, 3000);
 
                             }
                         });

@@ -4,6 +4,7 @@ namespace App\Controllers\Sales;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\SqlbaseModel; 
 
 class Index extends BaseController
 {
@@ -51,9 +52,38 @@ class Index extends BaseController
     private $groups = ['sales'];
 
     private $secured_cards = [];
+
+    private $documents = [
+        [
+            'name' => 'Financial Obligation Chart', 
+            'url' => 'assets/documents/sales/financial-obligation-chart.pdf',
+            'btn_text' => 'Download', 
+            'icon' => 'components/icon/pdf-icon',
+            'color' => 'text-dark',  
+        ],   
+        [
+            'name' => 'Return Process', 
+            'url' => 'assets/documents/sales/return-process.pdf',
+            'btn_text' => 'Download', 
+            'icon' => 'components/icon/pdf-icon',
+            'color' => 'text-dark',  
+        ],   
+        [
+            'name' => 'Risk Assessment', 
+            'url' => 'assets/documents/sales/risk-assessment.pdf',
+            'btn_text' => 'Download', 
+            'icon' => 'components/icon/pdf-icon',
+            'color' => 'text-dark',  
+        ],        
+    ];
     
     public function index()
     {
+        $model = new SqlbaseModel(); 
+
+        $salesUrl = "http://vatap/mvc/public/api/getsalesperformance/1"; 
+
+        $salesPerformance = $model->getData($salesUrl); 
 
         $data = [
             'site_name' => 'iATAP', 
@@ -66,11 +96,15 @@ class Index extends BaseController
                 'tool_cards' => $this->tool_cards,
                 'secured_cards' => $this->secured_cards, 
                 'groups' => $this->groups, 
+                'documents' => $this->documents, 
+                'salesData' => $salesPerformance,
                 'user' => auth()->user() ?? null, 
                 'title' => 'Sales Dept.'
             ]),
             'js' => view('sales/index.js.php'), 
         ];
+
+
 
         return view('template/index', $data); 
     }

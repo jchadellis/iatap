@@ -31,7 +31,46 @@ class Index extends BaseController
     }
 
     public function get_data()
-    {
+    {        
+        $session = session();
+        $remote = new SqlbaseModel(); 
+
+        if($this->request->getMethod() === 'POST')
+        {
+            $post = $this->request->getPost(); 
+            $remote = new SqlbaseModel(); 
+            $url = "http://vatap/mvc/public/api/vendor_performance/0/{$post['start_date']}/{$post['end_date']}";
+            $start = (new \DateTime($post['start_date']))->format('m-d-Y'); 
+            $end = (new \DateTime($post['end_date']))->format('m-d-Y'); 
+            $data = $remote->getData($url); 
+            return $this->response->setJSON([
+                    'success' => true, 
+                    'data' => $data, 
+                    'icon' => 'success', 
+                    'title' => 'Success', 
+                    'html' => "<p>Showing Vendor Performance</p><p><strong>{$start} - {$end}</strong></p>",
+                ]
+            );
+        }
+
+        if($session->getTempdata('performance_start_date') !== null ){
+            $start = $session->getTempdata('performance_start_date'); 
+            $end = $session->getTempdata('performance_end_date'); 
+            $url = "http://vatap/mvc/public/api/vendor_performance/0/{$start}/{$end}"; 
+            $data = $remote->getData($url); 
+
+            $start = (new \DateTime($start))->format('m-d-Y'); 
+            $end = (new \DateTime($end))->format('m-d-Y');
+            return $this->response->setJSON([
+                    'success' => true, 
+                    'data' => $data, 
+                    'icon' => 'success', 
+                    'title' => 'Success', 
+                    'html' => "<p>Showing Vendor Performance</p><p><strong>{$start} - {$end}</strong></p>",
+                ]
+            );
+        }
+    
         foreach($this->data as $row)
         {
             //Convert date strings to date objects
@@ -39,7 +78,13 @@ class Index extends BaseController
             $row->modify_date = new \DateTime($row->modify_date); 
         }
 
-        return $this->response->setJSON(['data' => $this->data]); 
+        return $this->response->setJSON([
+            'success' => true, 
+            'data' => $this->data,
+            'icon' => 'success', 
+            'title' => 'Success', 
+            'html' => "<p>Showing Vendor Performance</p><p><strong>Last 90 days</strong></p>",
+        ]); 
     }
 
     public function get_vendor()
@@ -229,31 +274,31 @@ class Index extends BaseController
         
     }
 
-    public function get_new_data()
-    {
+    // public function get_new_data()
+    // {
 
-        $post = $this->request->getPost(); 
+    //     $post = $this->request->getPost(); 
 
-        $remote = new SqlbaseModel(); 
-        $url = "http://vatap/mvc/public/api/getvendors/{$post['start_date']}/{$post['end_date']}";
-        $data = $remote->getData($url); 
+    //     $remote = new SqlbaseModel(); 
+    //     $url = "http://vatap/mvc/public/api/getvendors/{$post['start_date']}/{$post['end_date']}";
+    //     $data = $remote->getData($url); 
 
 
-        if($data)
-        {
-            return $this->response->setJSON([
-                'success' => true, 
-                'data' => $data, 
-                'icon' => 'success', 
-                'title' => 'Updated', 
-            ]);
-        }
+    //     if($data)
+    //     {
+    //         return $this->response->setJSON([
+    //             'success' => true, 
+    //             'data' => $data, 
+    //             'icon' => 'success', 
+    //             'title' => 'Updated', 
+    //         ]);
+    //     }
 
-        return $this->response->setJSON([
-            'success' => false, 
-            'icon' => 'warning', 
-            'title' => 'Error', 
-            'text' => 'There was a problem getting the vendor list', 
-        ]);
-    }
+    //     return $this->response->setJSON([
+    //         'success' => false, 
+    //         'icon' => 'warning', 
+    //         'title' => 'Error', 
+    //         'text' => 'There was a problem getting the vendor list', 
+    //     ]);
+    // }
 }

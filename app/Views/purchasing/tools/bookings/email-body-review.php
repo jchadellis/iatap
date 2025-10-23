@@ -1,6 +1,7 @@
 <?php 
     $vendor_id = $data[0][0]->id;
     $vendor_name = $data[0][0]->name;  
+    $total_lines = $data[0][0]->performance['total_lines'];
     $percent = $data[0][0]->performance['on_time_percentage']; 
     $start_date = $data[0][0]->performance['start_date'];
     $end_date = $data[0][0]->performance['end_date'];
@@ -94,8 +95,9 @@
             <p>If multiple delivery dates are scheduled, please reference the line number, part number, and nomenclature from our purchase order when responding.</p>
 
             <p><strong>We encourage all our vendors to meet a 90% on-time delivery target.</strong></p>
+            <?php if($total_lines > 0) : ?>
             <p>Your current on-time delivery percentage is:  <b><?= $percent; ?>%</b> for the period of <b> <?= ( new \DateTime($start_date ))->format('m-d-Y') ?> - <?= ( new \DateTime    ($end_date ))->format('m-d-Y') ?></b></p>
-        
+            <?php endif; ?>
             <p>Thank You, </p>
             <p style="margin-top: 30px"><b>ATAP, inc. Purchase Dept.</b><br>P: 256-362-2221<br>F: 256-362-2220<br>130 Industry Way <br>Eastaboga, AL 36260</p>
         </div>

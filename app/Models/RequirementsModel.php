@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class RequirementsModel extends Model
 {
-    protected $DBGroup = 'visual_cache';
+    protected $DBGroup          = 'visual_cache';
     protected $table            = 'requirements_cache';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

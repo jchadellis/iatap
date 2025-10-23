@@ -299,8 +299,13 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             });
         });
 
-       
-        
+        $routes->group('performance', static function($routes){
+            $routes->get('(:segment)/(:segment)', 'Sales\Performance\Index::index/$1/$2'); 
+            $routes->get('data/(:segment)/(:segment)', 'Sales\Performance\Index::get_data/$1/$2');            
+            $routes->get('data', 'Sales\Performance\Index::get_data'); 
+            $routes->post('data', 'Sales\Performance\Index::get_data');
+            $routes->get('', 'Sales\Performance\Index::index'); 
+        });
 
         $routes->group('', ['filter' => 'edereport'], function($routes){
             $routes->group('ede', static function($routes) {
@@ -310,8 +315,10 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             });
         });
 
-
-
+        $routes->group('order-board', static function($routes){
+            $routes->get('', 'Sales\OrderBoard\Index::index'); 
+            $routes->get('data', 'Sales\OrderBoard\Index::get_data');
+        });
     });
 
     // Vendor Routes
@@ -328,6 +335,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->group('performance', static function($routes){
             $routes->get('', 'Vendors\Performance\Index::index'); 
             $routes->get('data', 'Vendors\Performance\Index::get_data'); 
+            $routes->post('data', 'Vendors\Performance\Index::get_data'); 
             $routes->post('vendor', 'Vendors\Performance\Index::get_vendor'); 
             $routes->post('email-vendor', 'Vendors\Performance\Index::send_email');
             $routes->post('new-data', 'Vendors\Performance\Index::get_new_data');
@@ -341,9 +349,15 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     });
 
     $routes->group('as9100', static function($routes){
-        $routes->get('', 'AS9100\Index::index'); 
-        $routes->get('engineering-performance', 'AS9100\Departments\Performance\Index::index'); 
-        $routes->post('engineering-performance', 'AS9100\Departments\Performance\Index::index'); 
+        //$routes->get('', 'AS9100\Index::index'); 
+        // $routes->get('engineering-performance', 'AS9100\Departments\Performance\Index::index'); 
+        // $routes->post('engineering-performance', 'AS9100\Departments\Performance\Index::index'); 
+        $routes->group('performance-charts', static function($routes){
+            $routes->get('', 'AS9100\Performance\Index::index'); 
+            $routes->get('data', 'AS9100\Performance\Index::get_data'); 
+            $routes->post('data','AS9100\Performance\Index::get_data');
+            $routes->get('reset', 'AS9100\Performance\Index::reset_period'); 
+        });
     });
 
     // Warehouse Routes
@@ -410,6 +424,9 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     // Engineering Routes
     $routes->group('engineering', static function($routes) {
         $routes->get('/', 'Engineering\Index::index');
+        $routes->group('performance', static function($routes){
+            $routes->get('', 'Engineering\Performance\Index::index'); 
+        });
     });
 
     //HR Routes
@@ -420,6 +437,47 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('management/data', 'HR\Employee\Management\Index::get_data');
             $routes->post('management/employee', 'HR\Employee\Management\Index::get_employee');
             $routes->post('management/employee/save', 'HR\Employee\Management\Index::save_employee');
+        });
+    });
+
+    $routes->group('quality', static function($routes){
+        $routes->group('ncp', static function($routes){
+            $routes->get('', 'Quality\NCPs\Index::index');
+            $routes->get('data', 'Quality\NCPs\Index::get_data'); 
+            $routes->post('data', 'Quality\NCPs\Index::get_data'); 
+        });
+
+        $routes->group('internal-audit', static function($routes){
+            $routes->get('', 'Quality\InternalAudit\Index::index'); 
+            $routes->get('data', 'Quality\InternalAudit\Index::get_data'); 
+            $routes->post('data', 'Quality\InternalAudit\Index::get_data'); 
+        });
+
+        $routes->group('corrective-actions', static function($routes){
+            $routes->get('', 'Quality\CorrectiveActions\Index::index');
+            $routes->get('data', 'Quality\CorrectiveActions\Index::get_data'); 
+            $routes->get('data', 'Quality\CorrectiveActions\Index::get_data'); 
+        });
+        
+    });
+
+    $routes->group('shipping', static function($routes){
+        $routes->get('', 'Shipping\Index::index'); 
+        $routes->group('performance', static function($routes){
+            $routes->get('', 'Shipping\Performance\Index::index'); 
+            $routes->get('data', 'Shipping\Performance\Index::get_data');
+            $routes->post('data', 'Shipping\Performance\Index::get_data');
+        });
+
+        $routes->group('rmas', static function($routes){
+            $routes->get('', 'Shipping\RMAs\Index::index'); 
+            $routes->get('data', 'Shipping\RMAs\Index::get_data');
+            $routes->post('data', 'Shipping\RMAs\Index::get_data');
+        });
+
+        $routes->group('order-board', static function($routes){
+            $routes->get('', 'Shipping\OrderBoard\Index::index'); 
+            $routes->get('data', 'Shipping\OrderBoard\Index::get_data');
         });
     });
 

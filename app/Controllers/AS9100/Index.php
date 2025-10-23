@@ -11,23 +11,23 @@ class Index extends BaseController
 
     private $cards = [
         [
-            'name' => "Vendor Performance", 
-            'description' =>  'List of vendors and their on-time delivery performance over last ninty days or enter a custom range.',
-            'url' => 'vendors/performance', 
+            'name' => "Performance & Compliance", 
+            'description' =>  'A summary of key performance indicators supporting AS9100 compliance, including delivery performance, engineering efficiency, sales activity, audit results, and corrective actions.',
+            'url' => 'as9100/performance', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/chart-bar',
             'color' => 'text-dark',
             'enabled' => true,  
         ],
-        [
-            'name' => "Engineering Performance", 
-            'description' =>  'List of Engineering Depts on-time  performance over last ninty days or enter a custom range.',
-            'url' => 'as9100/engineering-performance', 
-            'btn_text' => 'View', 
-            'icon' => 'components/icon/chart-bar',
-            'color' => 'text-dark',
-            'enabled' => true,  
-        ],
+        // [
+        //     'name' => "Engineering Performance", 
+        //     'description' =>  'List of Engineering Depts on-time  performance over last ninty days or enter a custom range.',
+        //     'url' => 'as9100/engineering-performance', 
+        //     'btn_text' => 'View', 
+        //     'icon' => 'components/icon/chart-bar',
+        //     'color' => 'text-dark',
+        //     'enabled' => true,  
+        // ],
     ];
 
     public function __construct()

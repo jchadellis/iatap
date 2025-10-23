@@ -14,6 +14,9 @@
     
     <!-- Bootstrap CSS -->
     <link href="<?= base_url(ASSETSPATH.'css/custom-bootstrap.css')?>" rel="stylesheet" >
+
+        <!-- DataTables Styles --> 
+    <link rel="stylesheet" href="<?= base_url(MANAGEDASSETS.'datatables.net-bs5/css/dataTables.bootstrap5.css')?>">
         
     <style>
 
@@ -49,6 +52,10 @@
         <script src="<?= base_url(MANAGEDASSETS.'jquery/dist/jquery.js') ?>"></script>
         <script src="<?= base_url(MANAGEDASSETS.'bootstrap/dist/js/bootstrap.bundle.js') ?>"></script>
 
+        <!-- DataTable --> 
+        <script src="<?= base_url(MANAGEDASSETS.'datatables.net/js/dataTables.js') ?>"></script>
+        <script src="<?= base_url(MANAGEDASSETS.'datatables.net-bs5/js/dataTables.bootstrap5.js') ?>"></script>
+        <script src="<?= base_url(MANAGEDASSETS.'datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') ?>"></script>
         <script>
             $(document).ready(function(){
                 $('.part-row').click(function(){

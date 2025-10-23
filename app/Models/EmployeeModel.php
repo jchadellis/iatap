@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class EmployeeModel extends Model
 {
-    protected $DBGroup = 'visual_cache';
+    protected $DBGroup          = 'visual_cache';
     protected $table            = 'employees';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
