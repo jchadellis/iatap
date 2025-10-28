@@ -21,7 +21,7 @@ class Index extends BaseController
         [
             'name' => "Open Customer Orders", 
             'description' =>  'List of customer orders where there is qty on hand.',
-            'url' => 'sales/customers/orders/open', 
+            'url' => 'sales/customers/open-orders', 
             'btn_text' => 'View', 
             'icon' => 'components/icon/table-icon',
             'color' => 'text-dark',

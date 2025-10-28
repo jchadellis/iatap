@@ -163,4 +163,14 @@
         font-size: 2.5rem; 
         color:rgb(244, 244, 244);
     }
+
+    .bg-indigo{
+        background-color: #471396;
+    }
+
+    .text-indigo{
+        color: #471396; 
+    }
+
+
 </style>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ddf7dfed311c1ef4ca4bbad10021c05",
+    "content-hash": "2684cc07d5a92b2ab54a6eb79f19975d",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -287,6 +287,57 @@
                 }
             ],
             "time": "2024-11-12T16:29:46+00:00"
+        },
+        {
+            "name": "geeklabs/ci4-breadcrumbs",
+            "version": "v2.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeekLabsUK/CI4-Breadcrumbs.git",
+                "reference": "309f95d93e22dcd17b701ce2b6775eff1d8cafcc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeekLabsUK/CI4-Breadcrumbs/zipball/309f95d93e22dcd17b701ce2b6775eff1d8cafcc",
+                "reference": "309f95d93e22dcd17b701ce2b6775eff1d8cafcc",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "spark-commands": [
+                    "Geeklabs\\Breadcrumbs\\Commands\\BreadcrumbPublish"
+                ]
+            },
+            "autoload": {
+                "psr-4": {
+                    "Geeklabs\\Breadcrumbs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Geeklabs",
+                    "email": "geeklabsonline@gmail.com"
+                }
+            ],
+            "description": "Breadcrumb navigation for CodeIgniter 4",
+            "keywords": [
+                "CodeIgniter 4",
+                "breadcrumbs",
+                "menu",
+                "navigation"
+            ],
+            "support": {
+                "issues": "https://github.com/GeekLabsUK/CI4-Breadcrumbs/issues",
+                "source": "https://github.com/GeekLabsUK/CI4-Breadcrumbs/tree/v2.0.9"
+            },
+            "time": "2022-12-18T12:10:19+00:00"
         },
         {
             "name": "laminas/laminas-escaper",

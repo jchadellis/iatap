@@ -140,7 +140,7 @@ class LeaveRequestForm extends Fpdi
         $x = 13; 
         $y = $y + 10; 
         $this->pdf->SetXY($x, $y); 
-        $this->pdf->Write(10, 'Excepteur laboris Lorem commodo proident ipsum dolor sunt anim est elit aute dolore enim.ipsum dolor sunt anim est elit aute dolore enim.'); 
+        $this->pdf->Write(10, ''); 
 
         //Date Free Day Taken
         $x = 38; 
@@ -246,10 +246,14 @@ class LeaveRequestForm extends Fpdi
         {
             if($key == 'clock_out_time' || $key == 'clock_in_time')
             {
-                $date = date('Y-m-d'.$value['text']); 
-                $time = new \DateTime($date); 
+                if( $value['text'] != '')
+                {
+                    $date = date('Y-m-d'.$value['text']); 
+                    $time = new \DateTime($date); 
 
-                $value['text'] = $time->format('h:i A');
+                    $value['text'] = $time->format('h:i A');
+                }
+
             }
 
             $this->pdf->setXY( $value['x'], $value['y']);

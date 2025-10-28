@@ -6,6 +6,10 @@ use App\Controllers\BaseController;
 use App\Models\ServiceTicketModel;
 use App\Models\UserModel; 
 use App\Models\DeptModel; 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Index extends BaseController
 {
@@ -699,6 +703,186 @@ class Index extends BaseController
         print_array($performance);
     }
 
-    
+    public function get_spreadsheet($type = 'engineering')
+    {
+        $model = new ServiceTicketModel();
+        $session = session(); 
+        $spreadsheet = new Spreadsheet();
+
+        $data = $model->getTicketsRange($type);
+
+        if( $session->has('performance_start_date') )
+        {
+            $start = $session->get('performance_start_date');
+            $end = $session->get('performance_end_date');       
+            $data = $model->getTicketsRange($type, $start, $end);
+        }
+
+        $start = isset($start)
+            ? new \DateTime($start) 
+            : (new \DateTime())->modify('-90 Days'); 
+
+
+        $end = isset($end)
+            ? new \DateTime($end) 
+            : new \DateTime(); 
+ 
+        //Setup Headers
+        $headers = [
+            'TICKET ID', 
+            'TITLE',
+            'NEED DATE',
+            'NAME',
+            'ON TIME',
+            'LATE', 
+        ];
+
+        // Style title
+        $titleStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 14,
+                'color' => ['argb' => 'FF000000']
+            ],
+        ];
+
+        // Style headers
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+                'color' => ['argb' => 'FFFFFFFF']
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FF471396'], 
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF757575'],
+                ],
+            ],
+
+        ];
+
+        //Alternate Row Style
+        $alternateRowStyle = [
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFccbce5'] 
+            ],
+        ];
+
+        //Totals Row Style
+        $totalsRowStyle = [
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FF96ff9d']
+            ],
+        ];
+
+        //Set the default style for the spreadsheet
+        $spreadsheet->getDefaultStyle()
+            ->getFont()
+            ->setName('Arial')
+            ->setSize(12);
+
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        //Get the end column index
+        $endColumn = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(count($headers));
+
+        // Set sheet title
+        $title = 'Engineering Performance Report'; 
+        $sheet->setTitle($title);
+
+        $formatted_start = $start->format('Y-m-d'); 
+        $formatted_end = $end->format('Y-m-d'); 
+        $sheet->setCellValue('A1', 'Engineering Performance - ' . $formatted_start . ' / ' .$formatted_end);
+        $sheet->getStyle('A1:'.$endColumn .'1')->applyFromArray($titleStyle);
+        $spreadsheet->getActiveSheet()->mergeCells('A1:'. $endColumn .'1');
+
+        // Set headers
+        $sheet->fromArray([$headers], null, 'A2');       
+        $headerRange = 'A2:' . $endColumn . '2';
+        $sheet->getStyle($headerRange)->applyFromArray($headerStyle);
+
+        $row = 3;
+
+        foreach($data['tickets'] as $item) {
+
+            $first_name = $item->first_name ?? '';
+            $last_name = $item->last_name ?? ''; 
+            $rowData = [
+                $item->id ?? '',
+                $item->title ?? '',
+                $item->need_date ? (new \DateTime($item->need_date))->format('Y-m-d') : '', 
+                $first_name . ' ' . $last_name, 
+                $item->on_time ? 'ON TIME' : '',
+                !$item->on_time ? 'LATE' : '',
+                $item->total_late ?? '', 
+            ];
+            
+            // Add the rest of the row data starting from column B
+            $sheet->fromArray([$rowData], null, 'A' . $row);
+            $rowRange = 'A' . $row . ':' . $endColumn . $row;
+            if( $row % 2 == 0){
+                $sheet->getStyle($rowRange)->applyFromArray($alternateRowStyle);
+            }
+
+            $row++;
+        }
+
+
+        //Write totals to last row. 
+        $totals = [
+            'TOTAL LINES:',
+            $data['totals']['total_lines'],
+            $data['totals']['total_on_time'] . ' ( ' . $data['totals']['on_time_percentage'] . ' )', 
+            $data['totals']['total_late'] . ' ( ' . $data['totals']['late_percentage'] . ' )',
+        ];
+        $rowRange = 'C' . $row . ':' . $endColumn . $row; 
+        $sheet->fromArray([$totals], null, 'C' . $row);
+        //$sheet->getStyle($rowRange)->applyFromArray($totalsRowStyle);
+        // $rowRange = 'B' . $row . ':' . $endColumn . $row; 
+        // $sheet->getStyle('B'.$row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $sheet->getStyle( $rowRange)->getFont()->setBold(true);
+
+        // Auto-size columns
+        for($col = 1; $col <= count($headers); $col++) {
+            $sheet->getColumnDimension(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col))->setAutoSize(true);
+        }
+
+        $sheet->getStyle('F:G')
+            ->getNumberFormat()
+            ->setFormatCode('0.00%');
+
+        $sheet->getStyle('A')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('C:G')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $filename = "Engineering-Performance.xlsx";
+        
+        // Create temporary file
+        $tempFile = tempnam(sys_get_temp_dir(), 'excel');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($tempFile);
+        
+        // Read and return file content
+        $fileContent = file_get_contents($tempFile);
+        unlink($tempFile);
+        
+        return $this->response
+            ->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody($fileContent);
+
+
+    }
 
 }

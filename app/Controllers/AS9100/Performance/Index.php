@@ -10,13 +10,84 @@ use App\Models\ServiceTicketModel;
 class Index extends BaseController
 {
 
-    public function __construct()
-    {
-        // initialize default models and parameters
-    }
+
 
     public function index()
     {
+
+        $chart_data = $this->get_data(); 
+
+        $top_chart_data = (array) $chart_data['counts'][0]->data;
+
+        $top_cards = [
+            [
+                'title' => 'Shipments', 
+                'counts' => $top_chart_data[0], 
+                'id' => 'shipment-count', 
+                'icon' => 'bi bi-truck', 
+                'color' => 'primary',
+                'date_range' => 'Past 90 Days',
+                'url' => base_url('shipping/performance'), 
+            ],
+            [
+                'title' => 'RMAs', 
+                'counts' => $top_chart_data[1], 
+                'id' => 'rma-count', 
+                'icon' => 'bi bi-arrow-return-left', 
+                'date_range' => 'Past 90 Days',
+                'color' => 'warning',
+                'url' => base_url('shipping/rmas'), 
+            ],
+            [
+                'title' => 'NCPs', 
+                'counts' => $top_chart_data[2], 
+                'id' => 'ncp-count', 
+                'icon' => 'bi  bi-exclamation-circle', 
+                'date_range' => 'Past 90 Days',
+                'color' => 'danger',
+                'url' => base_url('quality/ncp'), 
+            ],
+            [
+                'title' => 'Internal Audits', 
+                'counts' => $top_chart_data[3], 
+                'id' => 'audit-count', 
+                'icon' => 'bi bi-flag', 
+                'date_range' => 'Past 90 Days',
+                'color' => 'success',
+                'url' => base_url('quality/internal-audit'), 
+            ],
+        ];
+
+        $chart_cards = [
+            [
+                'title' => 'Sales Performance',
+                'chart_id' => 'sales-chart', 
+                'color' => 'primary', 
+                'date_range' => 'Past 90 Days',
+                'report_url' => base_url('sales/performance'),
+                'download_url' => base_url('sales/performance/spreadsheet'),
+                'print_url' => '#!', 
+            ],
+            [
+                'title' => 'Engineering Performance',
+                'chart_id' => 'engineering-chart', 
+                'color' => 'indigo', 
+                'date_range' => 'Past 90 Days',
+                'report_url' => base_url('service/tickets/engineering'),
+                'download_url' => base_url('service/tickets/spreadsheet/engineering'),
+                'print_url' => '#!', 
+            ],
+            [
+                'title' => 'Vendor Performance',
+                'chart_id' => 'vendor-chart', 
+                'color' => 'success', 
+                'date_range' => 'Past 90 Days',
+                'report_url' => base_url('vendors/performance'),
+                'download_url' => base_url('vendors/performance/spreadsheet'),
+                'print_url' => '#!', 
+            ],
+        ];
+
         $data = [
             'site_name' => 'iATAP', 
             'breadcrumbs' => [
@@ -25,7 +96,7 @@ class Index extends BaseController
 				['name' => 'Performance & Compliance', 'is_active' => true, 'url' => '#']
             ],
             'title' => 'Performance & Compliance', 
-            'content' => view('as9100/performance/index',['data' => $this->get_data()]),
+            'content' => view('as9100/performance/index',['data' => $chart_data , 'top_cards' => $top_cards, 'chart_cards' => $chart_cards]),
            'js' => view('as9100/performance/index.js.php'), 
         ];
         return view('template/index', $data); 
@@ -37,8 +108,9 @@ class Index extends BaseController
         $session = session(); 
         $performanceModel = new ServiceTicketModel(); 
         $model = new SqlbaseModel(); 
-        $start = isset($post['start_date']) ? $post['start_date'] : (new \DateTime())->modify('-90 days')->format('Y-m-d') ;
-        $end = isset($post['end_date']) ? $post['end_date'] :  (new \DateTime())->format('Y-m-d');
+
+        $start = (new \DateTime())->modify('-90 days')->format('Y-m-d') ;
+        $end = (new \DateTime())->format('Y-m-d');
         
         $salesUrl = "http://vatap/mvc/public/api/getsalesperformance/1"; 
         $vendorUrl = "http://vatap/mvc/public/api/vendor_performance/1";
@@ -53,35 +125,60 @@ class Index extends BaseController
         {
             $post = $this->request->getJSON(); 
 
+            $dates = explode(' to ', $post->date_range); 
 
-            $start = $post->start;
-            $end = $post->end;
+            $start = $dates[0];
+            $end = $dates[1];
 
             $session->setTempdata('performance_start_date', $start);
             $session->setTempdata('performance_end_date', $end); 
-
-            if( $start === '' || $end === '')
-            {
-                return $this->response->setJSON([
-                    'success' => false, 
-                    'icon' => 'warning', 
-                    'html' => '<p>Please enter a valid date</p>',
-                    'title' => 'Error',
-                ]);
-            }
 
             $salesUrl = "http://vatap/mvc/public/api/getsalesperformance/1/{$start}/{$end}";
             $vendorUrl = "http://vatap/mvc/public/api/vendor_performance/1/{$start}/{$end}";
             $countsUrl = "http://vatap/mvc/public/api/get_counts/{$start}/{$end}";
             $engineeringData = $performanceModel->getPerformance('engineering', $start, $end, true);
 
-            $salesData = $model->getData($salesUrl); 
-            $vendorData = $model->getData($vendorUrl); 
-            $countsData = $model->getData($countsUrl);
+            try {
+                 $salesData = $model->getData($salesUrl);
+            } catch(\Exception $e){
+                $message = 'Please check the date range there was not result for this range';  
+                return $this->response->setJSON([
+                    'success' => false, 
+                    'icon' => 'warning', 
+                    'title' => 'Error', 
+                    'html' => "<p>{$message}</p>", 
+                ]);
+            }
+
+            try {
+                 $vendorData = $model->getData($vendorUrl);
+            } catch(\Exception $e){
+                $message = 'Please check the date range there was not result for this range'; 
+                return $this->response->setJSON([
+                    'success' => false, 
+                    'icon' => 'warning', 
+                    'title' => 'Error', 
+                    'html' => "<p>{$message}</p>", 
+                ]);
+            }
+
+            try {
+                 $countsData = $model->getData($countsUrl);
+            } catch(\Exception $e){
+                $message = 'Please check the date range there was not result for this range'; 
+                return $this->response->setJSON([
+                    'success' => false, 
+                    'icon' => 'warning', 
+                    'title' => 'Error', 
+                    'html' => "<p>{$message}</p>", 
+                ]);
+            }
                 
+            $start = (new \DateTime($start))->format('m-d-Y'); 
+            $end = (new \DateTime($end))->format('m-d-Y'); 
             return $this->response->setJSON([
                     'success' => true, 
-                    'data' => [$salesData[0], $engineeringData, $vendorData[0], $countsData[0]], 
+                    'data' => [ 'charts' => [ $salesData[0], $engineeringData, $vendorData[0] ], 'counts' => (array)[ $countsData[0] ], 'date_range' => "{$start} / {$end}" ], 
                     'title' => 'Success', 
                     'html' => '<p>Retrieve Data</p>',
                     'icon' => 'success',
@@ -91,9 +188,8 @@ class Index extends BaseController
         $salesData = $model->getData($salesUrl); 
         $vendorData = $model->getData($vendorUrl); 
         $countsData = $model->getData($countsUrl);
-
      
-        return [$salesData[0], $engineeringData, $vendorData[0], $countsData] ;
+        return ['charts' => [$salesData[0], $engineeringData, $vendorData[0]], 'counts' => (array)[ $countsData[0] ]] ;
         
     }
 

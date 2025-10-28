@@ -81,6 +81,8 @@ class ServiceTicketModel extends Model
             $where = "need_date BETWEEN '{$start_date}' AND '{$end_date}'";
         }
 
+        $where = "need_date BETWEEN '{$start_date}' AND '{$end_date}'";
+
         $tickets = $this
             ->where('type', $type)
             ->where($where)
@@ -170,5 +172,68 @@ class ServiceTicketModel extends Model
             'backgroundColor' => ['#AADEA7', '#64C2A6', '#2D87BB']
         ];       
     }
+
+    public function getTicketsRange($type, $start_date = null, $end_date = null, $by_need_date = false)
+    {
+        $today = (new \DateTime())->format('Y-m-d'); 
+
+        $end_date = (!isset($end_date)) ? new \DateTime() : new \DateTime($end_date); 
+        $end_date = $end_date->format('Y-m-d');
+        $start_date = (!isset($start_date) ) ? (new \DateTime())->modify('-90 days') : new \DateTime($start_date) ; 
+        $start_date = $start_date->format('Y-m-d'); 
+
+        $where = "need_date BETWEEN '{$start_date}' AND '{$end_date}'";
+
+        $tickets = $this
+            ->where('type', $type)
+            ->where($where)
+            ->withDeleted()
+            ->findAll(); 
+
+        $total = count($tickets); 
+        $total_on_time = 0; 
+        $total_early = 0;
+        $total_late = 0; 
+        $total_not_due = 0; 
+
+        foreach ($tickets as $ticket) {
+            $expected_date = (new \DateTime($ticket->need_date))->format('Y-m-d');
+            $completed_date = $ticket->deleted_at ? (new \DateTime($ticket->deleted_at))->format('Y-m-d') : null;
+            $ticket->on_time = true; 
+            if ($completed_date) {
+                // Completed: check if on time or late
+                if ($completed_date <= $expected_date) {
+                    
+                    $total_on_time++;
+                } else {
+                    $ticket->on_time = false; 
+                    $total_late++;
+                }
+            } elseif ($expected_date > $today) {
+                // Not Due: due in the future, not completed
+                $total_not_due++;
+            } else {
+                // Not completed and due date has passed or is today: late
+                $ticket->on_time = false; 
+                $total_late++;
+            }
+        }
+
+        $totals = [
+            'total_lines' => $total, 
+            'total_on_time' => $total_on_time, 
+            'total_late' => $total_late,
+            'on_time_percentage' => (number_format( $total_on_time / $total, 4) * 100 ) . '%', 
+            'late_percentage' => (number_format( $total_late / $total, 4) * 100 ). '%', 
+        ];
+
+        $data = [
+            'tickets' => $tickets, 
+            'totals' => $totals, 
+        ];
+
+        return $data;
+    }
+
 
 }

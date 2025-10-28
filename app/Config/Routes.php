@@ -28,6 +28,12 @@ $routes->group('', static function($routes) {
     });
 });
 
+$routes->group('test', static function($routes){
+    $routes->get('', 'Test\Test\Index::index'); 
+    $routes->post('data', 'Test\Test\Index::print_data'); 
+});
+
+
 // Directory Routes
 $routes->group('directory', static function($routes) {
     $routes->get('/', 'Directory::index');
@@ -47,7 +53,13 @@ $routes->group('', static function($routes) {
 $routes->get('leave/requestform', 'Forms\LeaveRequest::getPdf');
 
 // Employee Public Routes
+
+$routes->group('employee-resources', static function($routes){
+    $routes->get('', 'Employee\Index::index');
+});
+
 $routes->group('employee', static function($routes) {
+
     $routes->get('resources', 'Employee\Index::index');
     $routes->get('leave/request', 'Employee\Leave::index');
     $routes->get('training', 'Employee\Training\Index::index');
@@ -284,13 +296,11 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->group('', ['filter' => 'secured_group:sales'], static function($routes) {
             $routes->group('customers', static function($routes){
                 $routes->get('', 'Sales\Customers\Index::index');
-                $routes->get('get', 'Sales\Customers\Index::get_data');
+                $routes->get('data', 'Sales\Customers\Index::get_data');
 
-                $routes->group('orders', static function($routes){
-                    $routes->group('open', static function ($routes){
-                        $routes->get('', 'Sales\Customers\Orders\Open\Index::index'); 
-                        $routes->get('data', 'Sales\Customers\Orders\Open\Index::get_data'); 
-                    });
+                $routes->group('open-orders', static function($routes){
+                    $routes->get('', 'Sales\Customers\Orders\Open\Index::index'); 
+                    $routes->get('data', 'Sales\Customers\Orders\Open\Index::get_data'); 
                 });
             }); 
 
@@ -304,6 +314,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('data/(:segment)/(:segment)', 'Sales\Performance\Index::get_data/$1/$2');            
             $routes->get('data', 'Sales\Performance\Index::get_data'); 
             $routes->post('data', 'Sales\Performance\Index::get_data');
+            $routes->get('spreadsheet', 'Sales\Performance\Index::get_spreadsheet'); 
             $routes->get('', 'Sales\Performance\Index::index'); 
         });
 
@@ -340,6 +351,7 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->post('email-vendor', 'Vendors\Performance\Index::send_email');
             $routes->post('new-data', 'Vendors\Performance\Index::get_new_data');
             $routes->get('open-lines/(:segment)', 'Vendors\Performance\Index::get_open_lines/$1'); 
+            $routes->get('spreadsheet', 'Vendors\Performance\Index::get_spreadsheet');
         }); 
         
         $routes->get('jcp-report', 'Vendors\JCPReport\Index::index');
@@ -441,6 +453,9 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     });
 
     $routes->group('quality', static function($routes){
+
+        $routes->get('', 'Quality\Index::index'); 
+
         $routes->group('ncp', static function($routes){
             $routes->get('', 'Quality\NCPs\Index::index');
             $routes->get('data', 'Quality\NCPs\Index::get_data'); 
@@ -490,6 +505,7 @@ $routes->group('service', static function($routes) {
     $routes->group('tickets', static function($routes){
         $routes->get('performance', 'ServiceTicket\Tickets\Index::get_performance'); 
         $routes->get('data/(:segment)', 'ServiceTicket\Tickets\Index::get_data/$1');
+        $routes->get('spreadsheet/(:segment)', 'ServiceTicket\Tickets\Index::get_spreadsheet/$1');
         $routes->get('process', 'ServiceTicket\Tickets\Index::get_old'); 
         $routes->get('process/(:segment)', 'ServiceTicket\Tickets\Index::get_old/$1'); 
         $routes->get('(:segment)', 'ServiceTicket\Tickets\Index::index/$1');

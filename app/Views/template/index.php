@@ -48,7 +48,7 @@
                 
                 <main class="mt-4 px-4 ">
 
-                    <?= view_cell('App\Cells\Template\BreadCrumbsCell', ['breadcrumbs' => (isset($breadcrumbs)) ? $breadcrumbs : '' ]) ?>
+                    <?= view_cell('App\Cells\Template\BreadCrumbsCell', ['breadcrumbs' => (isset($breadcrumbs)) ? $breadcrumbs : '', 'page' => $page ?? '' ]) ?>
 
                     <?= view_cell('App\Cells\Alerts\ErrorCell'); ?>
                     <?= view_cell('App\Cells\Alerts\MessageCell'); ?>
@@ -71,7 +71,8 @@
                 </main>
                 
                 <!-- Sticky Footer -->
-                <footer class="footer text-body-tertiary"><span><?= (isset($site_name)) ? $site_name : ''  ?> <?= date('Y'); ?></span></footer>
+                 <?php //(isset($site_name)) ? $site_name : ''  ?> 
+                <footer class="footer text-body-tertiary"><span>iatap&nbsp;<?= date('Y'); ?></span></footer>
             </div>
         </div>
     </div>

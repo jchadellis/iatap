@@ -3,7 +3,7 @@
         'name' => 'codeigniter4/appstarter',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '9cbb2b287bae21366525d6f34c45ba6b5a95906d',
+        'reference' => '3599990b1dfd0e465e595f3c2ecc56fb85020048',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'codeigniter4/appstarter' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9cbb2b287bae21366525d6f34c45ba6b5a95906d',
+            'reference' => '3599990b1dfd0e465e595f3c2ecc56fb85020048',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -69,6 +69,15 @@
             'install_path' => __DIR__ . '/../fakerphp/faker',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'geeklabs/ci4-breadcrumbs' => array(
+            'pretty_version' => 'v2.0.9',
+            'version' => '2.0.9.0',
+            'reference' => '309f95d93e22dcd17b701ce2b6775eff1d8cafcc',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../geeklabs/ci4-breadcrumbs',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'laminas/laminas-escaper' => array(
             'pretty_version' => '2.16.0',

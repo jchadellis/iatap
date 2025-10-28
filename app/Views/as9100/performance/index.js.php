@@ -5,13 +5,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const ctx2 = document.getElementById('engineering-chart');
     const ctx3 = document.getElementById('vendor-chart');
     const ctx4 = document.getElementById('counts-chart'); 
+    const shipmentCount = document.getElementById('shipment-count'); 
+    const rmaCount = document.getElementById('rma-count'); 
+    const ncpCount = document.getElementById('ncp-count'); 
+    const auditCount = document.getElementById('audit-count'); 
+    const dateRangeFields = document.querySelectorAll('.date-range'); 
 
-    const autocolors = window['chartjs-plugin-autocolors'];
 
-    const sales_data = <?= json_encode( $data[0] ) ?>;
-    const engineering_data = <?= json_encode( $data[1] ) ?>; 
-    const vendor_data = <?= json_encode($data[0]) ?>; 
-    const counts_data = <?= json_encode($data[3][0]) ?>; 
+    const sales_data = <?= json_encode( $data['charts'][0] ) ?>;
+    const engineering_data = <?= json_encode( $data['charts'][1] ) ?>; 
+    const vendor_data = <?= json_encode($data['charts'][2]) ?>; 
     var start_date = null;
     var end_date = null;
 
@@ -41,9 +44,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
             Swal.close();
             if( result.success)
             {
-                Object.values(result.data).forEach((data)=>{
+                Object.values(result.data.charts).forEach((data)=>{
                     handleUpdateChart(charts[data.chart], data.data, data.labels);
                 })
+                shipmentCount.innerHTML  = result.data.counts[0].data[0]; 
+                rmaCount.innerHTML = result.data.counts[0].data[1]; 
+                ncpCount.innerHTML = result.data.counts[0].data[2]; 
+                auditCount.innerHTML = result.data.counts[0].data[3];
+                dateRangeFields.forEach((field) =>{
+                    field.innerHTML = result.data.date_range; 
+                })
+            }else{
+                Swal.fire(result); 
             }
 
             return;          
@@ -58,35 +70,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
         chart.update();
     }
 
-    const lateColor = '#ff4c4c';
-    const onTimeColor = '#00c853';
-    const shipmentColor = '#74b9ff';
-    const rmaColor = '#fdcb6e';
-    const ncpColor = '#a29bfe';
-    const auditColor = '#55efc4'; 
- 
-    Chart.register(autocolors);
-
-
     charts['salesChart'] = new Chart(ctx1, {
         type: 'pie', 
         data: {
             labels: sales_data.labels, 
             datasets: [{
                 data: sales_data.data, 
-                //backgroundColor: [onTimeColor,lateColor ],
-                label: sales_data.datasetLabel,
+                backgroundColor: ['#42699b', '#7993b5'],
+                //label: sales_data.datasetLabel,
             }]
         },
         options: {
             legend: {display : false},
             plugins: {
-                autocolors:{
-                    mode:'data',
-                    offset:1,
-                },
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Sales Performance' 
                 },
             }
@@ -99,20 +97,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
             labels: engineering_data.labels, 
             datasets: [{
                 data: engineering_data.data, 
-                label: engineering_data.datasetLabel,
+                backgroundColor: ['#471396', '#9c75d5ff'],
+                //label: engineering_data.datasetLabel,
             }]
         },
         options: {
             legend: {display : false},
             plugins: {
-                autocolors:{
-                    mode:'data',
-                    offset:2,
-                },
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Engineering Performance' 
-                }
+                },
             }
         }
     });
@@ -123,49 +118,25 @@ document.addEventListener("DOMContentLoaded", (event) => {
             labels: vendor_data.labels, 
             datasets: [{
                 data: vendor_data.data, 
-                label: vendor_data.datasetLabel,
+                backgroundColor: ['#acce5b', '#dcfa96'],
+                //label: vendor_data.datasetLabel,
             }]
         },
         options: {
             legend: {display : false},
             plugins: {
-                autocolors:{
-                    mode:'data',
-                    offset:3,
-                },
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Vendor Performance' 
-                }
-            }
-        }
-    });
-
-    charts['countsChart'] = new Chart(ctx4, {
-        type: 'pie', 
-        data: {
-            labels: counts_data.labels, 
-            datasets: [{
-                data: counts_data.data, 
-                label: counts_data.datasetLabel,
-            }]
-        },
-        options: {
-            legend: {display : false},
-            plugins: {
-                autocolors:{
-                    mode:'data',
-                    offset:4,
                 },
-                title: {
-                    display: true,
-                    text: 'Other' 
-                }
             }
         }
     });
 
-    $('.datepicker').flatpickr(); 
+    $('.datepicker').flatpickr({
+        mode: 'range',
+        weekNumbers: true,
+    }); 
 
 });
 </script>

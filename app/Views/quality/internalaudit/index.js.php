@@ -80,14 +80,14 @@
                         'pageLength', 
                         {
                             extend: 'excelHtml5', 
-                            title: 'Custom Title', 
+                            title: 'Internal Audits', 
                             filename: function() {
                                 return 'Custom_File_Name_' + new Date().toISOString().slice(0,10);
                             }
                         },
                         {
                             extend: 'pdf', 
-                            title: 'Custom Title', 
+                            title: 'Internal Audits', 
                             filename: function() {
                                 return 'Custom_File_Name_' + new Date().toISOString().slice(0,10);
                             },

@@ -18,7 +18,7 @@ class Index extends BaseController
     public function index()
     {
         $urls = [
-            'data' => base_url('sales/customers/orders/open/data'),
+            'data' => base_url('sales/customers/open-orders/data'),
         ];
         $data = [
             'site_name' => 'iATAP', 

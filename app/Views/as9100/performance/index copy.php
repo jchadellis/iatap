@@ -1,10 +1,12 @@
 <div class="row mt-2">
      <form action="" id="date-form">
-    <div class="col-12 col-md-12 col-lg-11 col-xl-9 col-xxl-8 mx-auto">
+    <div class="col-12 col-xl-11 mx-auto d-sm-none d-lg-block">
         <form action="" id="date-form">
             <div class="input-group">
-                <span class="input-group-text">Select Range</span>
-                <input type="text" name="date_range" class="form-control datepicker text-center" placeholder="" id="">
+                <span class="input-group-text">Start Date</span>
+                <input type="text" name="start" class="form-control datepicker text-center" placeholder="" id="">
+                <span class="input-group-text">End Date</span>
+                <input type="text" name="end" class="form-control datepicker text-center" placeholder="" id="">
                 <button type="submit" class="btn btn-primary"><i class="bi bi-bar-chart-fill"></i>&nbsp;Update Charts</button>
                 <a type="submit" class="btn btn-outline-secondary" href="<?= base_url('as9100/performance-charts/reset') ?>"><i class="bi bi-arrow-clockwise"></i>&nbsp;Reset Charts</a>
             </div>
@@ -55,7 +57,7 @@
                     </div>
                     <div class="d-flex align-item-center justify-content-end text-<?= $card['color'] ?> flex-fill">
                         <a href="<?= $card['download_url'] ?>" class="btn btn-link text-decoration-none text-<?= $card['color'] ?>"><i class="bi bi-arrow-down-circle fs-4"></i></a>
-                        
+                        <a href="<?= $card['print_url'] ?>" class="btn btn-link text-decoration-none text-<?= $card['color'] ?>"><i class="bi bi-printer fs-4"></i></a>
                     </div>
                 </div>
             </div>

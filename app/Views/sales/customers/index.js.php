@@ -3,7 +3,7 @@
         const table = new DataTable('.table', {
             select : true, 
             ajax: {
-                url : `<?= base_url('sales/customers/get'); ?>`,
+                url : `<?= base_url('sales/customers/data'); ?>`,
                 dataSrc: 'data', 
             },
             columns: [
