@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Controllers\Purchasing\WorkRequest;
+namespace App\Controllers\Production\WorkRequest;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -34,16 +34,28 @@ class Index extends BaseController
 
     public function index()
     {
+        $urls = [
+            'data' => base_url('production/work-request/data'),
+            'get' => base_url('production/work-request/get'), 
+            'update' =>  base_url('production/work-request/update'), 
+            'close' => base_url('purchasing/work-request/close'), 
+
+        ]; 
         $data = [
             'site_name' => 'iATAP', 
             'breadcrumbs' => [
                 ['name' => 'Dashboard', 'is_active' => false, 'url' => '/dashboard' ],
-				['name' => 'Purchasing', 'is_active' => false, 'url' => 'purchasing'],
+				['name' => 'Production', 'is_active' => false, 'url' => 'production'],
 				['name' => 'Work Request', 'is_active' => true, 'url' => '#']
             ],
             'title' => 'Work Request', 
-            'content' => view('purchasing/work_request/index',['cards' => $this->cards, 'demand_types' => $this->demand_types, 'inspection_levels' => $this->inspection_levels]),
-            'js' => view('purchasing/work_request/index.js.php'), 
+            'content' => view('production/work_request/index',[
+                'cards' => $this->cards, 
+                'demand_types' => $this->demand_types, 
+                'inspection_levels' => $this->inspection_levels,
+                'urls' => $urls]
+            ),
+            'js' => view('production/work_request/index.js.php'), 
         ];
 
         return view('template/index', $data); 
@@ -93,7 +105,7 @@ class Index extends BaseController
             return $this->response->setJSON(
                 [
                     'title' => 'Data Received', 
-                    'data' => view('purchasing/work_request/modal', ['data' => $data, 'demand_types' => $this->demand_types, 'inspection_levels' => $this->inspection_levels]), 
+                    'data' => view('production/work_request/modal', ['data' => $data, 'demand_types' => $this->demand_types, 'inspection_levels' => $this->inspection_levels]), 
                     'success' => true,
                     'message' => 'Retrieved Data',
                 ]

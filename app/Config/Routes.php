@@ -178,12 +178,6 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
     // Purchasing Routes
     $routes->group('purchasing', static function($routes) {
         $routes->get('/', 'Purchasing\Index::index');
-        // $routes->get('fabrication-report', 'Purchasing\Fabrication\Index::index');
-        // $routes->get('fabrication-report/data', 'Purchasing\Fabrication\Index::get_data');
-        // $routes->get('paint-report', 'Purchasing\Paint\Index::index');
-        // $routes->get('paint-report/data', 'Purchasing\Paint\Index::get_data');
-        // $routes->get('safety-stock', 'Purchasing\Stock\Index::index');
-        // $routes->get('safety-stock/data', 'Purchasing\Stock\Index::get_data');
         
         $routes->group('fabrication-report', static function($routes){
             $routes->get('', 'Purchasing\Fabrication\Index::index'); 
@@ -234,16 +228,6 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('data', 'Purchasing\Orders\Index::get_data');
         });
 
-        $routes->group('work-request', static function($routes){
-            $routes->get('/', 'Purchasing\WorkRequest\Index::index'); 
-            $routes->get('data', 'Purchasing\WorkRequest\Index::get_data'); 
-            $routes->post('get', 'Purchasing\WorkRequest\Index::get_request');  
-            $routes->post('update', 'Purchasing\WorkRequest\Index::update_request'); 
-            $routes->post('save', 'Purchasing\WorkRequest\Index::save_request');  
-            $routes->post('close', 'Purchasing\WorkRequest\Index::close_request'); 
-            $routes->post('restore', 'Purchasing\WorkRequest\Index::restore_request'); 
-        });
-
         $routes->group('part', static function($routes){
             $routes->group('name', static function($routes){
                 $routes->group('generator', static function($routes){
@@ -285,14 +269,15 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('paint/data', 'Production\Requirements\Paint\Index::get_data'); 
         });
         
-        // $routes->group('schedule', static function($routes) {
-        //     $routes->get('/', 'Production\Schedule\Index::index');
-        //     $routes->get('data', 'Production\Schedule\Index::get_data');
-        //     $routes->get('data/(:segment)', 'Production\Schedule\Index::get_data/$1');
-        //     $routes->post('mark-complete', 'Production\Schedule\Index::set_operation_complete');
-        //     $routes->get('shop-view', 'Production\Schedule\Index::shop_view');
-        //     $routes->get('shop-view/(:segment)', 'Production\Schedule\Index::shop_view/$1');
-        // });
+        $routes->group('work-request', static function($routes){
+            $routes->get('', 'Production\WorkRequest\Index::index'); 
+            $routes->get('data', 'Production\WorkRequest\Index::get_data'); 
+            $routes->post('get', 'Production\WorkRequest\Index::get_request');  
+            $routes->post('update', 'Production\WorkRequest\Index::update_request'); 
+            $routes->post('save', 'Production\WorkRequest\Index::save_request');  
+            $routes->post('close', 'Production\WorkRequest\Index::close_request'); 
+            $routes->post('restore', 'Production\WorkRequest\Index::restore_request'); 
+        });
     });
 
     // Sales Routes
