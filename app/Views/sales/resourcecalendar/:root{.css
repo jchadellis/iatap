@@ -1,0 +1,50 @@
+ :root{
+    --num-columns:3; 
+ }
+  body {
+    font-family: sans-serif;
+    margin: 0;
+  }
+  .calendar {
+    display: grid;
+    grid-template-columns: 100px repeat(var(--num-columns), 1fr); 
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .calendar-header {
+    background: #9bf2f8ff;
+    color: #3e3e3eff;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #707070ff;
+    padding: 6px;
+  }
+  .time-cell {
+    background: #f0f0f0;
+    text-align: right;
+    padding: 4px;
+    font-size: 0.8rem;
+    border: 1px solid #ddd;
+  }
+  .cell {
+    border: 1px solid #ddd;
+    height: 40px; /* one time slot */
+    position: relative;
+  }
+  .event {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    height: calc(100% - 4px);
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-align: center;
+    line-height: 36px;
+  }
+
+  .highlight{
+    background: #bffff7ff; 
+  }

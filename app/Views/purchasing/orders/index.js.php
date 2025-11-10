@@ -53,7 +53,7 @@
                 {
                     data: 'base_id',
                     title: 'ID',
-                    width: "5%",
+                    width: "10%",
                     className: 'text-center',
                 }, //1
                 {
@@ -257,7 +257,7 @@
                                     text: 'Fabricated',
                                     action: function(e, dt, node, config)
                                     {
-                                         dt.column(15).search('D', true, false).draw(); 
+                                         dt.column(15).search('D', true, false).column(16).search('0',true, false).draw(); 
                                          $('#label').html('Showing Fabricated Work Orders')
                                     }
                                 },

@@ -11,6 +11,10 @@ public/assets/video
 
 public/assets/scripts
 
+public/writable/backups
+
 
 # Ignore macOS metadata files (these files, starting with ._, are generated automatically)
 ._*
+writable/backups/site_files/iatap_backup_20250923_064955.tar.gz
+writable/backups/site_files/iatap_backup_20250923_064955.tar.gz

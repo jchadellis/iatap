@@ -227,6 +227,9 @@
                     data: 'user', 
                     title: 'Request By', 
                     render: function(data, type, row){
+                        if( row.user_id == 5 || row.user_id == 0 ){
+                            return row.first_name + ' ' + row.last_name; 
+                        }
                         return data.first_name + ' ' + data.last_name;
                     }
                 },

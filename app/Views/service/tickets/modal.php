@@ -35,7 +35,7 @@
     <div class="col-6">
         <div class="form-floating">
             <select name="dept_id" id="" class="form-select">
-                <option value="">Select Requesting Dept.</option>
+                <option value="0">Select Requesting Dept.</option>
                 <?php if($depts) : ?>
                     <?php foreach($depts as $option) : ?>
                         <option value="<?= $option->id ?>" <?= $ticket->dept_id == $option->id ? 'selected' : '' ?>><?= $option->name ?></option>

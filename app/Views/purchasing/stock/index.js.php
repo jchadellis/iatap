@@ -7,6 +7,7 @@
                 url: '<?= base_url('purchasing/safety-stock/data') ?>',
                 dataSrc: 'data', 
             },
+            order: [[10, 'desc'], [0, 'asc']],
             processing: false, 
             pageLength: 100,
             select: true,
@@ -26,6 +27,7 @@
                     }).format(data);
                 }},
                 {data: "maximum_order_qty", title: "MAX"},
+                {data: 'is_out', visible: false}
             ],
             columnDefs:[
                 {targets:[2,3,4,5,6,7,8,9], orderable: false},

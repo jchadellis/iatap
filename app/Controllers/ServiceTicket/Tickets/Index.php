@@ -168,6 +168,28 @@ class Index extends BaseController
        ]);
     }  
 
+    public function get_raw_data($type = 'it')
+    {
+        $model = new ServiceTicketModel();
+        // $user_model = new UserModel(); 
+
+        // $user = $user_model->find(5) ;
+
+        // print_array($user); 
+
+        // return; 
+        $inGroup = $this->inGroup($type); 
+
+        $data = ($inGroup) 
+            ? $model->orderBy('created_at', 'asc')->where('type', $type)->withDeleted()->findAll()
+            : $model->orderBy('created_at', 'asc')->where('type', $type)->findAll();
+
+        return $this->response->setJSON([
+            'data' =>   $data,
+       ]);
+    }  
+
+
     private function inGroup($type)
     {
         $user = auth()->user(); 
@@ -423,7 +445,7 @@ class Index extends BaseController
             $assigned_user = $user_model->find($service_ticket->assigned_to) ?? (object)[];
             $service_ticket->user = $user;
             $service_ticket->assigned_to_user = $assigned_user; 
-            if ($service_ticket->user_id == 0 || $service_ticket->user_id == 5) 
+            if ((int)$service_ticket->user_id == 0 || (int)$service_ticket->user_id == 5) 
             {
                 $user->first_name = $service_ticket->first_name;
                 $user->last_name = $service_ticket->last_name;
@@ -533,15 +555,13 @@ class Index extends BaseController
 
             // Use bulk-fetched user or fallback
             $user = $users[$service_ticket->user_id] ?? (object)[];
+            $service_ticket->array = $user_ids; 
             $assigned_user = $assigned_users[$service_ticket->assigned_to] ?? (object)[]; 
             $service_ticket->user = $user; 
             $service_ticket->assigned_to_user = $assigned_user; 
+            $first_name = $service_ticket->first_name; 
+            $last_name = $service_ticket->last_name; 
 
-            if( $service_ticket->user_id == 0 || $service_ticket->user_id == 5 )
-            {
-                $user->first_name = $service_ticket->first_name; 
-                $user->last_name = $service_ticket->last_name;
-            }
             $service_ticket->title = $service_ticket->title;
             $row_color = ''; 
             $status = ''; 

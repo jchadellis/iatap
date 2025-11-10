@@ -190,6 +190,13 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
             $routes->get('data', 'Purchasing\Fabrication\Index::get_data'); 
         }); 
 
+
+        $routes->group('paint-issued', static function($routes){
+            $routes->get('', 'Purchasing\Paint\Issued\Index::index'); 
+            $routes->get('data', 'Purchasing\Paint\Issued\Index::get_data'); 
+        });
+
+
         $routes->group('paint-report', static function($routes){
             $routes->get('', 'Purchasing\Paint\Index::index');
             $routes->get('data', 'Purchasing\Paint\Index::get_data');
@@ -329,6 +336,18 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->group('order-board', static function($routes){
             $routes->get('', 'Sales\OrderBoard\Index::index'); 
             $routes->get('data', 'Sales\OrderBoard\Index::get_data');
+        });
+
+        $routes->group('resource-calendar', static function($routes){
+            $routes->get('', 'Sales\ResourceCalendar\Index::index'); 
+            $routes->get('events/(:any)', 'Sales\ResourceCalendar\Index::get_events/$1'); 
+            $routes->get('events', 'Sales\ResourceCalendar\Index::get_events'); 
+            $routes->post('save', 'Sales\ResourceCalendar\Index::save_event'); 
+            $routes->post('delete', 'Sales\ResourceCalendar\Index::delete_event'); 
+            
+            $routes->get('add', 'Sales\ResourceCalendar\Index::add_event'); 
+            $routes->post('add', 'Sales\ResourceCalendar\Index::add_event'); 
+            $routes->post('update', 'Sales\ResourceCalendar\Index::update_event'); 
         });
     });
 

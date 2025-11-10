@@ -20,13 +20,19 @@ class SqlbaseModel extends Model
         if($response->getStatusCode() === 200){
             $result = json_decode($response->getBody(), true); 
             $array = [];
-            foreach($result as $row)
-            {
-                $array[] = (object) $row; 
-            }
-            $result = $array; 
 
-            return $result; 
+            if($result){
+                
+                foreach($result as $row)
+                {
+                    $array[] = (object) $row; 
+                }
+
+                $result = $array; 
+
+                return $result; 
+            }
+
         }
 
         return null; 

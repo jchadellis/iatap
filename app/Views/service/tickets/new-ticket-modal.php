@@ -43,7 +43,7 @@
                                 <?php foreach($dept_users as $dept_user ) : ?>
                                     <option value="<?= $dept_user->id ?>"><?= $dept_user->first_name . ' ' . $dept_user->last_name ?></option>
                                 <?php endforeach; ?>
-                                <!-- <option value="1">Jeremy Ellis</option> -->
+                                <option value="1">Jeremy Ellis</option>
                             </select>
                             <label for="priority">Assign To</label>
                         </div>

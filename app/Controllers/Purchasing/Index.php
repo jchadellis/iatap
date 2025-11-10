@@ -3,6 +3,7 @@
 namespace App\Controllers\Purchasing;
 
 use App\Controllers\BaseController; 
+use App\Models\SqlbaseModel;
 
 
 class Index extends BaseController
@@ -112,19 +113,31 @@ class Index extends BaseController
             ['name' => 'Purchasing', 'is_active' => true, 'url' => '#'],
         ];
 
+        $model = new SqlbaseModel();
+        $url = "http://vatap/mvc/public/api/total_purchase_orders"; 
+        
+        $totals = $model->getData($url); 
+
+        $url = "http://vatap/mvc/public/api/vendor_performance/1"; 
+
+        $performance = $model->getData($url); 
+
+
         $this->data = [
             'site_name' => 'iATAP', 
             'breadcrumbs' => $breadcrumbs, 
             'title' => 'Purchasing', 
-            'js' => view('purchasing/index.js.php'),
-            'content' => view('template/dept-index', [
+            'content' => view('purchasing/index', [
+                'totals' => $totals[0], 
+                'performance' => $performance[0],
                 'tool_cards' => $this->tool_cards, 
                 'documents' => $this->documents,
                 'secured_cards' => $this->secured_cards,
                 'groups' => $this->groups, 
                 'user' => auth()->user(),
                 'title' => 'Purchasing Dept.', 
-            ])
+            ] ),
+            'js' => view('purchasing/index.js.php')
         ];
         return view('template/index', $this->data);
     }

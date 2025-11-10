@@ -34,10 +34,6 @@ class Index extends BaseController
 
     public function get_data($date = '2027-01-01')
     {
-        // if(!$date)
-        // {
-        //     $date = date('Y-m-d');
-        // }
 
         $data = $this->remote->getData("http://vatap/mvc/public/api/getpurchseworkorders/{$date}");
 

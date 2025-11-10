@@ -46,7 +46,7 @@
 <div class="row mt-3 g-2">
     <?php foreach($chart_cards as $card) : ?>
     <div class="col-12 col-lg-4">
-        <div class="card shadow rounded-1">
+        <div class="card shadow-sm rounded-1">
             <div class="card-header bg-white">
                 <div class="d-flex justify-content-between align-items-center text-dark">
                     <div>
