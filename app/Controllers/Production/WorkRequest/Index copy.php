@@ -284,7 +284,7 @@ class Index extends BaseController
         ];
 
         $id = $json->id ?? null;
-        $status = 0; 
+
         if(isset($json->id)){
             $array['id'] = $json->id;
             $array['updated_by_id'] = $user->id;
@@ -292,12 +292,11 @@ class Index extends BaseController
             $array['created_by_id'] = $user->id;
         }
 
-        if($array['work_order'] != ''){
-            $status = 1;
-        }
 
+        //Save / Update the work request 
         if( $model->save($array) ){
             if(!isset($json->id)) {
+                //If the work request is new get the last insert id
                 $id = $model->getInsertId();
             }
             $result = $model->find($id); 
@@ -329,7 +328,6 @@ class Index extends BaseController
                 $result->demand_type = ($type->id === $result->demand_type) ? $type->name : $result->demand_type; 
             }
 
-            $this->send_email($id, $status);
 
             return $this->response->setJSON(
                 [
@@ -357,9 +355,6 @@ class Index extends BaseController
     private function update_history($id, $old, $new){
         $history_model = new WorkRequestHistoryModel(); 
         $model = new WorkRequestModel(); 
-
-        if( empty($old) || empty($new) ) return; 
-            
         $data = array_diff_assoc($old, $new); 
         $user = auth()->user(); 
 
@@ -399,8 +394,6 @@ class Index extends BaseController
                 } elseif( $key === 'want_date') {
                     $old[$key] = date('Y-m-d', strtotime($old[$key]));
                     $new[$key] = date('Y-m-d', strtotime($new[$key]));   
-                } elseif( $key === 'updated_by_id'){
-                    continue; 
                 }
 
                 $changes[] = ['field_name' => $fields[$key], 'old_value' => $old[$key] , 'new_value' => $new[$key] ]; 
@@ -418,87 +411,182 @@ class Index extends BaseController
         return false; 
     }
 
-    public function send_email($id = 18, $status_code = 0)
+    public function update_request()
+    {
+        $post = $this->request->getPost();
+        $workRequest = new WorkRequestModel();
+        $workRequestHistory = new WorkRequestHistoryModel(); 
+
+        $user = auth()->user(); 
+
+        $columns = [
+            'id', 
+            'work_order', 
+            'mfg_email', 
+            'request_id', 
+            'request_by_email', 
+            'qty', 
+            'part_id', 
+            'due_date', 
+            'demand_type', 
+            'demand_id', 
+            'qar', 
+            'coc', 
+            'dpas_rating', 
+            'contract', 
+            'end_user', 
+            'notes'
+        ];
+
+        $select = implode(',',$columns); 
+
+        $currentData = $workRequest->select($select)->where('id', $post['id'])->get()->getResult('array');
+
+        $currentRecord = $currentData[0] ?? [];
+
+        $differance = array_diff($currentRecord, $post);
+        
+        if(count($differance) > 0 )
+        {
+            $fields = []; 
+            foreach($differance as $field => $value) 
+            {
+                $backupData[$field] = $currentRecord[$field];
+                $saveData[$field] = $post[$field];  
+                $fields[] = $field; 
+            }
+            $saveData['id'] = $post['id'];
+
+            if( $workRequest->save($saveData))
+            {
+                unset($saveData['id']);
+                $update = [
+                    'work_request_id' => $post['request_id'],
+                    'updated_by'            => $user->first_name . ' ' . $user->last_name,  
+                    'updated_by_email'      => $user->email,
+                    'part_id'         => $post['part_id'], 
+                    'due_date'        => $post['due_date'],
+                    'updated_fields'  => json_encode($backupData),
+                ];
+
+                if( $workRequestHistory->save($update))
+                {
+                    return $this->response->setJSON(
+                        [
+                            'title' => 'Data Saved', 
+                            'success' => true,
+                            'message' => 'The work request was successfully updated.',
+                        ]
+                    );
+                }
+
+                return $this->response->setJSON(
+                    [
+                        'title' => 'Failed!',
+                        'success' => false, 
+                        'message' => "There was an error updating the Work Request : {$post['id']}", 
+                    ]
+                );  
+            }
+        }
+
+        return $this->response->setJSON(
+            [
+                'title' => 'Warning',
+                'success' => false, 
+                'message' => "The submitted data has not changed. So, now changes where saved.", 
+            ]
+        );  
+
+    }
+
+    public function close_request()
+    {
+        $post = $this->request->getPost(); 
+        $workRequest = new WorkRequestModel();
+        $workRequestHistory = new WorkRequestHistoryModel(); 
+
+        $user = auth()->user(); 
+
+        $workRequest->delete($post['id']); 
+
+        $workRequestHistory->save([
+            'work_request_id' => $post['request_id'],
+            'updated_by'            => $user->first_name . ' ' . $user->last_name,  
+            'updated_by_email'      => $user->email,
+            'part_id'         => null, 
+            'due_date'        => null,
+            'updated_fields'  => json_encode(['work_request' => 'closed']),
+        ]);
+
+        return $this->response->setJSON([
+            'data' => null, 
+            'title' => 'Closed', 
+            'message' => 'Work Request was successfully closed.', 
+            'success' => true, 
+        ]);
+
+    }
+
+    public function restore_request()
+    {
+        $workRequest = new WorkRequestModel();
+        
+        $user = auth()->user(); 
+
+        $workRequest->update($post['id'], ['deleted_at' => null]);
+    
+        $workRequestHistory->save([
+            'work_request_id' => $post['request_id'],
+            'updated_by'            => $user->first_name . ' ' . $user->last_name,  
+            'updated_by_email'      => $user->email,
+            'part_id'         => null, 
+            'due_date'        => null,
+            'updated_fields'  => json_encode(['work_request' => 're-opened']),
+        ]);
+
+        $data = $workRequest->find($post['id']);
+        
+        return $this->response->setJSON([
+            'data' => $data, 
+            'success' => true, 
+            'message'   => 'Work Request was successfully restored.', 
+        ]);
+
+    }
+
+
+
+    public function send_email()
     {
         $model = new WorkRequestModel(); 
         $history = new WorkRequestHistoryModel(); 
-        $user_model = new UserModel(); 
-        $email = service('email');
 
-        $request = $model->find($id); 
+        $request = $model->find(115); 
 
         if(!$request) return; 
         $request->history = $history->where('work_request_id', $request->id)->findAll(); 
 
-        $status = [
-           0 => [ 
-            'title' => sprintf('New IWR Submitted - P/N: %s', $request->part_id ), 
-            'badge' => '<span style="display: inline-block; padding: 0.35em 0.65em; font-size: 0.75em; font-weight: 700; line-height: 1; color: #fff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.375rem; background-color: #53abf7ff;">New</span>',
-        ], 
-           1 => [ 
-            'title' => sprintf('Updated IWR - W/O : %s - P/N: %s', $request->work_order, $request->part_id), 
-            'badge' => '<span style="display: inline-block; padding: 0.35em 0.65em; font-size: 0.75em; font-weight: 700; line-height: 1; color: #3b3b3bff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.375rem; background-color: #90ff7eff;">Updated</span>',
-        ], 
-           2 => [ 
-            'title' => sprintf('Closed IWR - W/O : %s - P/N: %s', $request->work_order, $request->part_id), 
-            'badge' => '<span style="display: inline-block; padding: 0.35em 0.65em; font-size: 0.75em; font-weight: 700; line-height: 1; color: #3b3b3bff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.375rem; background-color: #fcb824ff;">Closed</span>',
-        ], 
-        ];
-
         foreach($this->demand_types as $type){
             if( $type->id === $request->demand_type){
-                $request->demand_type_id = $request->demand_type; 
                 $request->demand_type = $type->name;
             } 
         }
 
         foreach($this->inspection_levels as $type){
-            if( $type->id === $request->inspection_level_id){
-                $request->inspection_level = $type->name; 
+            if( $type->id === $request->inspection_level){
+                $request->inspection_type = $type->name; 
             }
         }
 
- 
 
-
-        foreach (['created', 'updated'] as $type) {
-
-            $id = $request->{$type . '_by_id'} ?? null;
-
-            if ($id !== null && $id !== '') {
-                if ($user = $user_model->find($id)) {
-                    $request->{$type . '_by_name'}  = trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? ''));
-                    $request->{$type . '_by_email'} = $user->email ?? '';
-                    continue;
-                }
-            }
-        }
-                        
-
-        foreach($request->history as $update){
-            $update->updated_fields = json_decode($update->updated_fields);
-            $user = $user_model->find($update->user_id);
-            $update->user_name = $user->first_name . ' ' . $user->last_name; 
-            $update->user_email = $user->email; 
-        }
-
-        $request->title = $status[$status_code]['title']; 
-        $request->status_badge = $status[$status_code]['badge'];
-
-
-        $body =  view('production/work_request/email-body', ['request' => $request]);
-        $subject = $status[$status_code]['title']; 
+        print_array($request); 
+        return; 
         
-        $email->setFrom('manufacturing@atap.com', 'IWR Queue'); 
-        $email->setReplyTo('patrick.porteous@atap.com', 'Support');
-        $email->setTo('jeremy.ellis@atap.com'); 
-        $email->setSubject($subject);
-        $email->setMessage($body); 
-
-        if( $email->send() ){
-            return true; 
-        } 
-        return false;
-
+        $request->title = 'New Work Request : ' . $request->part_id; 
+        $request_by = str_replace(['.', '@atap', 'com'], [' '], $request->request_by_email); 
+        $request_by = ucwords(implode(' ', explode(' ', trim($request_by))));
+        $request->requested_by = $request_by; 
+        return view('production/work_request/email-body', ['request' => $request]); 
     }
 }

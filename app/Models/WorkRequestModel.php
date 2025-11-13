@@ -13,31 +13,22 @@ class WorkRequestModel extends Model
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'request_id',
-        'request_email',
+        'vatp_request_id', 
+        'created_by_id', 
         'part_id',
         'qty', 
-        'due_date',
+        'want_date',
         'demand_type',
         'demand_id',
-        'is_applicable', 
-        'qar',
-        'coc',
-        'contract',
+        'qar_signoff',
+        'coc_required',
+        'contract_no',
         'end_user',
         'dpas_rating',
         'notes',
         'work_order',
-        'mfg_email',
-        //'history',
-        //'status',
-        // 'gov_sign',
-        // 'cust_sign',
-        // 'atap_req',
-        // 'fmc_req',
-        // 'test_rep_req',
-        // 'fai_req',
-        // 'drawing_level'
+        'updated_by_id', 
+        'inspection_level_id', 
     ];
 
     protected bool $allowEmptyInserts = false;

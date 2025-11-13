@@ -130,6 +130,12 @@
             'icon' => 'bi bi-file-earmark-pdf',
             'color' => 'danger', 
             'url' => "http://connectportal/assets/documents/purchasing/return-process.pdf", 
+        ],
+        [
+            'title' => 'Vendor Action Request',
+            'icon' => 'bi bi-file-earmark-pdf',
+            'color' => 'danger', 
+            'url' => "http://connectportal/assets/documents/purchasing/vendor-action-request.pdf", 
         ]
     ];
 ?>

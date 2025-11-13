@@ -12,7 +12,7 @@ class WorkRequestHistoryModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['work_request_id', 'updated_by', 'updated_by_email', 'part_id', 'due_date', 'updated_fields'];
+    protected $allowedFields    = ['work_request_id', 'user_id', 'updated_fields'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

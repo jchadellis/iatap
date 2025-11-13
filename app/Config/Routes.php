@@ -272,11 +272,17 @@ $routes->group('', ['filter' => 'session'], static function($routes) {
         $routes->group('work-request', static function($routes){
             $routes->get('', 'Production\WorkRequest\Index::index'); 
             $routes->get('data', 'Production\WorkRequest\Index::get_data'); 
-            $routes->post('get', 'Production\WorkRequest\Index::get_request');  
+            $routes->post('get', 'Production\WorkRequest\Index::get');  
+            $routes->post('new', 'Production\WorkRequest\Index::new'); 
+            $routes->get('email', 'Production\WorkRequest\Index::send_email'); 
+            $routes->post('save', 'Production\WorkRequest\Index::save'); 
+
+
             $routes->post('update', 'Production\WorkRequest\Index::update_request'); 
-            $routes->post('save', 'Production\WorkRequest\Index::save_request');  
+            // $routes->post('save', 'Production\WorkRequest\Index::save_request');  
             $routes->post('close', 'Production\WorkRequest\Index::close_request'); 
             $routes->post('restore', 'Production\WorkRequest\Index::restore_request'); 
+
         });
     });
 

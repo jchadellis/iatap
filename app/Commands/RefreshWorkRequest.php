@@ -104,6 +104,7 @@ class RefreshWorkRequest extends BaseCommand
 
             $request->history_parts = [];
             foreach($request->history as $historyLine) {
+
                 // Updated pattern to handle any email domain and part numbers with dashes
                 if (preg_match('/Modified:\s*([^-]+)-([^-]+@[^-]+\.[^-]+)-P\/N:\s*(.+?)-Due:\s*(.+)/', $historyLine, $matches)) {
 
@@ -132,12 +133,19 @@ class RefreshWorkRequest extends BaseCommand
 
             if($key !== false)
             {
-                
                 $completed_date = $workorders[$key]->close_date;
                 $request->deleted_at = $completed_date 
                                         ? (new \DateTime($completed_date))->format('Y-m-d H:i:s')
                                         : (new \DateTime())->format('Y-m-d H:i:s');
             }
+
+            $email = strtolower($request->request_email); 
+
+            $emailParts = explode('@', $email); 
+
+            $nameParts = explode('.', $emailParts[0]);
+
+            $name = ucfirst($nameParts[0]) . ' ' . ucfirst($nameParts[1]);
 
             $demand_type_parts = explode('-', $request->demand_type);
 
@@ -147,14 +155,15 @@ class RefreshWorkRequest extends BaseCommand
 
             $data[] = [
                 'request_id'        => $request->request_id, 
-                'request_by_email'  => strtolower($request->request_email), 
+                'request_by'        => $name, 
+                'request_by_email'  => $email, 
                 'part_id'           => $request->part_id, 
                 'qty'               => $request->req_qty, 
                 'due_date'          => $request->due_date, 
                 'demand_id'         => ($demand_type_id == 2 ) ? null : $request->demand_id, 
                 'demand_type'       => $demand_type_id,
-                'qar'               => $request->qar, 
-                'coc'               => $request->coc, 
+                'qar'               => ( $request->qar === 'YES' ) ? true : false , 
+                'coc'               => ( $request->coc === 'YES' ) ? true : false, 
                 'contract'          => $request->contract, 
                 'end_user'          => $request->end_user, 
                 'dpas_rating'       => $request->dpas_rating, 

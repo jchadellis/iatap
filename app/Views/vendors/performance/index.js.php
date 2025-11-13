@@ -63,7 +63,7 @@
                 },
                 {
                     data: 'late_percentage', 
-                    title : 'On Late %',
+                    title : 'Late %',
                     render: function(data, type, row){
                         return `
                             <div class="progress w-100" role="progressbar" aria-label="Basic example" aria-valuenow="${data}" aria-valuemin="0" aria-valuemax="100">
